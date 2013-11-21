@@ -12,6 +12,6 @@ public class Main {
 		cfg.height = 720;
 		cfg.fullscreen = false;
 		
-		new LwjglApplication(new Demo(), cfg);
+		new LwjglApplication(new Gravitation(), cfg);
 	}
 }

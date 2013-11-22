@@ -1,7 +1,5 @@
 package se.fredin.gravitation.entity;
 
-import se.fredin.gravitation.Gravitation;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
@@ -33,12 +31,15 @@ public class Player {
 	private Vector2 movement;
 	private GamePad gamePad;
 	private float speed = 100000f;
+	private final float HALF_WIDTH = 10f, HALF_HEIGHT = 6.5f;
+	private FixtureDef fixtureDef;
 	
 	public Player(Vector2 position, String texturePath, World world) {
 		this.world = world;
 		Texture texture = new Texture(Gdx.files.internal(texturePath).path());
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		this.sprite = new Sprite(texture);
+		this.fixtureDef = new FixtureDef();
 		this.movement = new Vector2(0, 0);
 		this.position = position;
 		this.body = getBody();
@@ -50,25 +51,23 @@ public class Player {
 	private Body getBody() {
 		// Body definition
 		BodyDef bodyDef = new BodyDef();
-		FixtureDef fixtureDef = new FixtureDef();
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(this.position);
 				
 		// Box shape
 		PolygonShape boxShape = new PolygonShape();
-		float halfWidth = 10f, halfHeight = 10f;
-		boxShape.setAsBox(halfWidth, halfHeight);
+		boxShape.setAsBox(HALF_WIDTH, HALF_HEIGHT);
 				
 		// fixture definition
 		fixtureDef.shape = boxShape;
 		fixtureDef.friction = .75f;
 		fixtureDef.restitution = .1f;
-		fixtureDef.density = 5;
+		fixtureDef.density = 10;
 				
 		// add to world
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
-		sprite.setSize(halfWidth * 2, halfHeight * 2);
+		sprite.setSize(HALF_WIDTH * 2, HALF_HEIGHT * 2);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		body.setUserData(sprite);
 		boxShape.dispose();
@@ -85,7 +84,6 @@ public class Player {
 		bounds.setPosition(body.getPosition());
 		sprite.setPosition(body.getPosition().x - sprite.getWidth() / 2, body.getPosition().y - sprite.getHeight() / 2);
 		sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-		System.out.println("body pos " + body.getPosition().toString() + " sprite pos " + sprite.getX());
 	}
 	
 	public Rectangle getBounds() {
@@ -95,7 +93,8 @@ public class Player {
 		return body.getPosition();
 	}
 	public void setPosition(float x, float y) {
-		body.getPosition().set(x, y);
+		body.setTransform(x, y, 0);
+		body.setLinearVelocity(0, 0);
 	}
 	public void setMovement(float x, float y) {
 		this.movement.set(x, y);
@@ -118,17 +117,20 @@ public class Player {
 				break;
 			case Keys.DOWN:
 				movement.y = -speed;
+				movement.x = body.getAngle() * -5000;
 				break;
 			case Keys.LEFT:
-				body.applyAngularImpulse(50000, true);
-				movement.x = -speed;
+				body.applyAngularImpulse(10000, true);
+				System.out.println(body.getAngle());
+				///movement.x = -speed;
 				break;
 			case Keys.RIGHT:
-				body.applyAngularImpulse(-50000, true);
-				movement.x = speed;
+				body.applyAngularImpulse(-10000, true);
+				//movement.x = speed;
 				break;
 			case Keys.UP:
 				movement.y = speed;
+				movement.x = body.getAngle() * -5000;
 				break;
 			}
 			return true;
@@ -150,7 +152,6 @@ public class Player {
 	public class GamePad extends ControllerAdapter {
 		@Override
 		public boolean povMoved(Controller controller, int povIndex, PovDirection value) {
-			Gdx.app.log(Gravitation.LOG, "#" + (controller) + ", pov " + povIndex + " pressed, direction = " + value);
 			switch(value) {
 			case west:
 				body.applyAngularImpulse(50000, true);
@@ -169,19 +170,27 @@ public class Player {
 			default:
 				break;
 			}
-			return false;
+			return true;
 		}
           
 		@Override
 		public boolean buttonDown(Controller controller, int buttonIndex) {
-			Gdx.app.log(Gravitation.LOG, "#" + (controller) + ", button " + buttonIndex + " pressed");
-			return false;
+			switch(buttonIndex) {
+			case 0:
+				movement.y = speed;
+				break;
+			}
+			return true;
 		}
           
 		@Override
 		public boolean buttonUp(Controller controller, int buttonIndex) {
-			Gdx.app.log(Gravitation.LOG, "#" + (controller) + ", button " + buttonIndex + " released");
-			return false;
+			switch(buttonIndex) {
+			case 0:
+				movement.y = 0;
+				break;
+			}
+			return true;
 		}
 	}
 	

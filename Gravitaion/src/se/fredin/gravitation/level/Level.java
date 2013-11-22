@@ -16,7 +16,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -34,18 +33,14 @@ public class Level implements LevelBase, Disposable {
 	private Array<RectangleMapObject> hardBlocks;
 	private Vector2 spawnPoint;
 	public static final String CONTROLLER = "Controller";
-	private GameScreen gameScreen;
-	private Array<Body> bodies;
 	
 	private final float TIMESTEP = 1 / 60f;
 	private final int VELOCITYITERARIONS = 8;
 	private final int POSITIONITERATIONS = 3;
 	
 	public Level(String levelPath, GameScreen gameScreen) {
-		this.gameScreen = gameScreen;
 		this.world = new World(new Vector2(0, -9.81f), true);
 		this.box2DRenderer = new Box2DDebugRenderer();
-		this.bodies = new Array<Body>();
 		
 		TmxMapLoader mapLoader = new TmxMapLoader();
 		map = mapLoader.load(Gdx.files.internal(levelPath).path());
@@ -78,7 +73,6 @@ public class Level implements LevelBase, Disposable {
 	private void checkForCollision() {
 		for(RectangleMapObject rect : hardBlocks) {
 			if(player.getBounds().overlaps(rect.getRectangle())) {
-				System.out.println("collision");
 				player.setPosition(spawnPoint.x, spawnPoint.y);
 				player.setMovement(0, 0);
 			}
@@ -130,6 +124,7 @@ public class Level implements LevelBase, Disposable {
 	public void dispose() {
 		map.dispose();
 		mapRenderer.dispose();
+		player.dispose();
 	}
 	
 }

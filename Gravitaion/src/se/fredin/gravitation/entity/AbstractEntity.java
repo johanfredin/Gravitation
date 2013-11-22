@@ -36,6 +36,8 @@ public abstract class AbstractEntity implements Entity {
 		this.bounds = new Rectangle(position.x, position.y, sprite.getWidth(), sprite.getHeight());
 	}
 	
+	
+	
 	@Override
 	public Vector2 getPosition() {
 		return this.position;

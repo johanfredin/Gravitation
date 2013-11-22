@@ -186,7 +186,7 @@ public class Demo extends Game {
 		}
 		batch.end();
 		
-		//debugRenderer.render(world, camera.combined);
+		debugRenderer.render(world, camera.combined);
 		
 	};
 	

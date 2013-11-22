@@ -9,7 +9,6 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -17,6 +16,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -35,6 +35,7 @@ public class Level implements LevelBase, Disposable {
 	private Vector2 spawnPoint;
 	public static final String CONTROLLER = "Controller";
 	private GameScreen gameScreen;
+	private Array<Body> bodies;
 	
 	private final float TIMESTEP = 1 / 60f;
 	private final int VELOCITYITERARIONS = 8;
@@ -44,6 +45,7 @@ public class Level implements LevelBase, Disposable {
 		this.gameScreen = gameScreen;
 		this.world = new World(new Vector2(0, -9.81f), true);
 		this.box2DRenderer = new Box2DDebugRenderer();
+		this.bodies = new Array<Body>();
 		
 		TmxMapLoader mapLoader = new TmxMapLoader();
 		map = mapLoader.load(Gdx.files.internal(levelPath).path());
@@ -52,7 +54,7 @@ public class Level implements LevelBase, Disposable {
 		MAP_HEIGHT = (Integer) map.getProperties().get("height") * (Integer) map.getProperties().get("tileheight");
 		MapProperties spawnProperties = map.getLayers().get("spawn-points").getObjects().get("start").getProperties();
 		spawnPoint = new Vector2((Float)spawnProperties.get("x"), (Float)spawnProperties.get("y"));
-		player = new Player(spawnPoint, Paths.SHIP_TEXTUREPATH, TextureFilter.Linear, this.world);
+		player = new Player(spawnPoint, Paths.SHIP_TEXTUREPATH, this.world);
 		hardBlocks = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
 		
 		for(Controller controller: Controllers.getControllers()) {
@@ -63,27 +65,22 @@ public class Level implements LevelBase, Disposable {
 	
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void restart() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void end(boolean cleared) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	private void checkForCollision() {
 		for(RectangleMapObject rect : hardBlocks) {
 			if(player.getBounds().overlaps(rect.getRectangle())) {
+				System.out.println("collision");
 				player.setPosition(spawnPoint.x, spawnPoint.y);
-				player.setVelocity(0, 0);
+				player.setMovement(0, 0);
 			}
 		}
 	}

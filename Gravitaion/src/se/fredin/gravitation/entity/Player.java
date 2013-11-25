@@ -30,16 +30,15 @@ public class Player {
 	private Sprite sprite;
 	private Vector2 movement;
 	private GamePad gamePad;
-	private float speed = 100000f;
-	private final float HALF_WIDTH = 10f, HALF_HEIGHT = 6.5f;
-	private FixtureDef fixtureDef;
+	private float speed = 5000f;
+	private final float HALF_WIDTH = 2f, HALF_HEIGHT = 2f;
+	private final float MAX_TURN_DEG = (float) (Math.PI);
 	
 	public Player(Vector2 position, String texturePath, World world) {
 		this.world = world;
 		Texture texture = new Texture(Gdx.files.internal(texturePath).path());
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		this.sprite = new Sprite(texture);
-		this.fixtureDef = new FixtureDef();
 		this.movement = new Vector2(0, 0);
 		this.position = position;
 		this.body = getBody();
@@ -59,6 +58,7 @@ public class Player {
 		boxShape.setAsBox(HALF_WIDTH, HALF_HEIGHT);
 				
 		// fixture definition
+		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = boxShape;
 		fixtureDef.friction = .75f;
 		fixtureDef.restitution = .1f;
@@ -70,7 +70,11 @@ public class Player {
 		sprite.setSize(HALF_WIDTH * 2, HALF_HEIGHT * 2);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		body.setUserData(sprite);
+		
+		body.setAngularDamping(1.1f);
+		body.setLinearDamping(0.5f);
 		boxShape.dispose();
+		
 		
 		return body;
 	}
@@ -80,10 +84,18 @@ public class Player {
 	}
 	
 	public void tick(float delta) {
-		body.applyForceToCenter(movement.x, movement.y, true);
+		body.applyForceToCenter(movement, true);
 		bounds.setPosition(body.getPosition());
 		sprite.setPosition(body.getPosition().x - sprite.getWidth() / 2, body.getPosition().y - sprite.getHeight() / 2);
 		sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+		/*
+		 * float rot = (float)(chassis.getTransform().getRotation() + Math.PI / 2);
+		float x = MathUtils.cos(rot);
+		float y = MathUtils.sin(rot);
+		
+		chassis.applyForce(tmp.set(leftAcc * x, leftAcc * y), chassis.getWorldPoint(tmp2.set(-width / 2, 0)), true);
+		chassis.applyForce(tmp.set(rightAcc * x, rightAcc * y), chassis.getWorldPoint(tmp2.set(width / 2, 0)), true);
+		 */
 	}
 	
 	public Rectangle getBounds() {
@@ -117,21 +129,20 @@ public class Player {
 				break;
 			case Keys.DOWN:
 				movement.y = -speed;
-				movement.x = body.getAngle() * -5000;
 				break;
 			case Keys.LEFT:
-				body.applyAngularImpulse(10000, true);
-				System.out.println(body.getAngle());
-				///movement.x = -speed;
+				body.applyAngularImpulse(MathUtils.radDeg * MAX_TURN_DEG, true);
 				break;
 			case Keys.RIGHT:
-				body.applyAngularImpulse(-10000, true);
-				//movement.x = speed;
+				body.applyAngularImpulse(MathUtils.radDeg * -MAX_TURN_DEG, true);
 				break;
 			case Keys.UP:
-				movement.y = speed;
-				movement.x = body.getAngle() * -5000;
-				break;
+				float rot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
+				float x = MathUtils.cos(rot);
+				float y = MathUtils.sin(rot);
+				movement.set(speed * x, speed * y);
+			default:
+				return false;
 			}
 			return true;
 		}
@@ -140,10 +151,8 @@ public class Player {
 			switch(keycode) {
 			case Keys.UP : case Keys.DOWN:
 				movement.y = 0;
-				break;
 			case Keys.LEFT : case Keys.RIGHT:
 				movement.x = 0;
-				break;
 			}
 			return true;
 		}

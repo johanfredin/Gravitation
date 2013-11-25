@@ -44,13 +44,14 @@ public class Level implements LevelBase, Disposable {
 		
 		TmxMapLoader mapLoader = new TmxMapLoader();
 		map = mapLoader.load(Gdx.files.internal(levelPath).path());
-		mapRenderer = new OrthogonalTiledMapRenderer(map);
-		MAP_WIDTH = (Integer) map.getProperties().get("width") * (Integer) map.getProperties().get("tilewidth");
-		MAP_HEIGHT = (Integer) map.getProperties().get("height") * (Integer) map.getProperties().get("tileheight");
+		mapRenderer = new OrthogonalTiledMapRenderer(map, 1/3f);
+		MAP_WIDTH = (Integer) map.getProperties().get("width") * (Integer) map.getProperties().get("tilewidth") / 3;
+		MAP_HEIGHT = (Integer) map.getProperties().get("height") * (Integer) map.getProperties().get("tileheight") / 3;
 		MapProperties spawnProperties = map.getLayers().get("spawn-points").getObjects().get("start").getProperties();
 		spawnPoint = new Vector2((Float)spawnProperties.get("x"), (Float)spawnProperties.get("y"));
 		player = new Player(spawnPoint, Paths.SHIP_TEXTUREPATH, this.world);
 		hardBlocks = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
+		
 		
 		for(Controller controller: Controllers.getControllers()) {
 			Gdx.app.log(CONTROLLER, "Controller found: " + controller.getName());

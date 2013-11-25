@@ -1,4 +1,4 @@
-package se.fredin.gravitation;
+package se.fredin.gravitation.tutorial;
 
 
 import se.fredin.gravitation.screen.BaseScreen;

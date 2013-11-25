@@ -1,5 +1,6 @@
 package se.fredin.gravitation.level;
 
+import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.Player;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.utils.Paths;
@@ -32,7 +33,6 @@ public class Level implements LevelBase, Disposable {
 	private int MAP_HEIGHT;
 	private Array<RectangleMapObject> hardBlocks;
 	private Vector2 spawnPoint;
-	public static final String CONTROLLER = "Controller";
 	
 	private final float TIMESTEP = 1 / 60f;
 	private final int VELOCITYITERARIONS = 8;
@@ -49,12 +49,12 @@ public class Level implements LevelBase, Disposable {
 		MAP_HEIGHT = (Integer) map.getProperties().get("height") * (Integer) map.getProperties().get("tileheight") / 3;
 		MapProperties spawnProperties = map.getLayers().get("spawn-points").getObjects().get("start").getProperties();
 		spawnPoint = new Vector2((Float)spawnProperties.get("x"), (Float)spawnProperties.get("y"));
-		player = new Player(spawnPoint, Paths.SHIP_TEXTUREPATH, this.world);
+		player = new Player(spawnPoint, Paths.SHIP_TEXTUREPATH, this.world, 1.8f, 1.8f);
 		hardBlocks = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
 		
 		
 		for(Controller controller: Controllers.getControllers()) {
-			Gdx.app.log(CONTROLLER, "Controller found: " + controller.getName());
+			Gdx.app.log(Gravitation.LOG, "Controller found: " + controller.getName());
 			controller.addListener(player.getGamePad());
 		}
 	}
@@ -74,7 +74,7 @@ public class Level implements LevelBase, Disposable {
 	private void checkForCollision() {
 		for(RectangleMapObject rect : hardBlocks) {
 			if(player.getBounds().overlaps(rect.getRectangle())) {
-				player.setPosition(spawnPoint.x, spawnPoint.y);
+				player.setBodyPosition(spawnPoint.x, spawnPoint.y);
 				player.setMovement(0, 0);
 			}
 		}
@@ -109,7 +109,7 @@ public class Level implements LevelBase, Disposable {
 		float centerX = camera.viewportWidth / 2;
 		float centerY = camera.viewportHeight / 2;
 		
-		camera.position.set(gameObject.getPosition().x, gameObject.getPosition().y, 0);
+		camera.position.set(gameObject.getBodyPosition().x, gameObject.getBodyPosition().y, 0);
 				
 		if(camera.position.x - centerX <= 0) 
 			camera.position.x = centerX;

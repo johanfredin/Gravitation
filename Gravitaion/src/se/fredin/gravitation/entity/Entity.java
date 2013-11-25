@@ -11,7 +11,7 @@ public interface Entity extends Disposable {
 	
 	void tick(float delta);
 	
-	Vector2 getPosition();
+	Vector2 getBodyPosition();
 	
 	Rectangle getBounds();
 	

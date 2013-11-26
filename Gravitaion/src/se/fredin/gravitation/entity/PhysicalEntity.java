@@ -14,27 +14,24 @@ public abstract class PhysicalEntity implements Entity {
 	protected World world;
 	protected Body body;
 	protected Rectangle bounds;
-	protected Vector2 position;
 	protected Sprite sprite;
 	protected float bodyWidth, bodyHeight;
-
-	public PhysicalEntity(Vector2 position, String texturePath, World world) {
+	protected final float PIXELS_TO_METER = 1 / 32f;
+	
+	public PhysicalEntity(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
 		this.world = world;
-		this.position = position;
 		Texture texture = new Texture(Gdx.files.internal(texturePath).path());
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		this.sprite = new Sprite(texture);
-	}
-	
-	public PhysicalEntity(Vector2 position, String texturePath, World world, float bodyWidth, float bodyHeight) {
-		this(position, texturePath, world);
+		bodyWidth *= PIXELS_TO_METER;
+		bodyHeight *= PIXELS_TO_METER;
 		this.bodyWidth = bodyWidth;
 		this.bodyHeight = bodyHeight;
-		this.body = getSpecifiedBody(bodyWidth, bodyHeight);
+		this.body = getSpecifiedBody(xPos, yPos, bodyWidth, bodyHeight);
 		this.bounds = new Rectangle(getBodyPosition().x, getBodyPosition().y, sprite.getWidth(), sprite.getHeight());
 	}
 	
-	public abstract Body getSpecifiedBody(float bodyWidth, float bodyHeight);
+	public abstract Body getSpecifiedBody(float xPos, float yPos,float bodyWidth, float bodyHeight);
 	
 	public Rectangle getBounds() {
 		return bounds;
@@ -42,6 +39,10 @@ public abstract class PhysicalEntity implements Entity {
 	
 	public Vector2 getBodyPosition() {
 		return body.getPosition();
+	}
+	
+	public Sprite getSprite() {
+		return sprite;
 	}
 	
 	public void setBodyPosition(float x, float y) {

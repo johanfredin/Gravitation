@@ -1,6 +1,7 @@
 package se.fredin.gravitation.level;
 
 import se.fredin.gravitation.Gravitation;
+import se.fredin.gravitation.entity.LaunchPad;
 import se.fredin.gravitation.entity.Player;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.utils.Paths;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -29,52 +31,73 @@ public class Level implements LevelBase, Disposable {
 	private World world;
 	private TiledMap map;
 	private Player player;
-	private int MAP_WIDTH;
-	private int MAP_HEIGHT;
-	private Array<RectangleMapObject> hardBlocks;
+	private LaunchPad launchPad;
+	private Array<Rectangle> hardBlocks;
+	private Vector2 launchPadPosition;
 	private Vector2 spawnPoint;
 	
+	private final float MAP_WIDTH;
+	private final float MAP_HEIGHT;
+	private final float UNIT_SCALE = 1 / 3.2f;
 	private final float TIMESTEP = 1 / 60f;
 	private final int VELOCITYITERARIONS = 8;
 	private final int POSITIONITERATIONS = 3;
 	
 	public Level(String levelPath, GameScreen gameScreen) {
-		this.world = new World(new Vector2(0, -9.81f), true);
+		// Setup box2d world
+		this.world = new World(new Vector2(0, -9.82f), true);
 		this.box2DRenderer = new Box2DDebugRenderer();
 		
+		// Setup tileMap
 		TmxMapLoader mapLoader = new TmxMapLoader();
-		map = mapLoader.load(Gdx.files.internal(levelPath).path());
-		mapRenderer = new OrthogonalTiledMapRenderer(map, 1/3f);
-		MAP_WIDTH = (Integer) map.getProperties().get("width") * (Integer) map.getProperties().get("tilewidth") / 3;
-		MAP_HEIGHT = (Integer) map.getProperties().get("height") * (Integer) map.getProperties().get("tileheight") / 3;
+		this.map = mapLoader.load(Gdx.files.internal(levelPath).path());
+		this.mapRenderer = new OrthogonalTiledMapRenderer(map, UNIT_SCALE);
+		int tmpMapWidth = (Integer) map.getProperties().get("width") * (Integer) map.getProperties().get("tilewidth");
+		int tmpMapHeight = (Integer) map.getProperties().get("height") * (Integer) map.getProperties().get("tileheight");
+		this.MAP_WIDTH = tmpMapWidth * UNIT_SCALE;
+		this.MAP_HEIGHT = tmpMapHeight * UNIT_SCALE;
 		MapProperties spawnProperties = map.getLayers().get("spawn-points").getObjects().get("start").getProperties();
-		spawnPoint = new Vector2((Float)spawnProperties.get("x"), (Float)spawnProperties.get("y"));
-		player = new Player(spawnPoint, Paths.SHIP_TEXTUREPATH, this.world, 1.8f, 1.8f);
-		hardBlocks = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
 		
+		// Setup launch pad
+		this.launchPadPosition = new Vector2((Float)spawnProperties.get("x"), (Float)spawnProperties.get("y"));
+		this.launchPad = new LaunchPad(launchPadPosition.x, launchPadPosition.y, Paths.LANDING_PAD_TEXTUREPATH, world, 180, 25f);
 		
+		// Setup player
+		this.spawnPoint = new Vector2(launchPadPosition.x + launchPad.getSprite().getWidth() / 4, launchPadPosition.y + launchPad.getSprite().getHeight());
+		this.player = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64);
+		this.hardBlocks = getWorldAdaptedBlocks(map);
+		
+		// Add gamePad support
 		for(Controller controller: Controllers.getControllers()) {
 			Gdx.app.log(Gravitation.LOG, "Controller found: " + controller.getName());
 			controller.addListener(player.getGamePad());
 		}
 	}
 	
-	@Override
-	public void start() {
+	private Array<Rectangle> getWorldAdaptedBlocks(TiledMap map) {
+		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
+		this.hardBlocks = new Array<Rectangle>();
+		for(RectangleMapObject rect : rectangleMapObjects) {
+			rect.getRectangle().set(rect.getRectangle().x * UNIT_SCALE, rect.getRectangle().y * UNIT_SCALE, 
+				 rect.getRectangle().width * UNIT_SCALE, rect.getRectangle().height * UNIT_SCALE);
+			hardBlocks.add(rect.getRectangle());
+		}
+		return hardBlocks;
 	}
 
 	@Override
-	public void restart() {
-	}
+	public void start() {}
 
 	@Override
-	public void end(boolean cleared) {
-	}
+	public void restart() {}
+
+	@Override
+	public void end(boolean cleared) {}
 	
 	private void checkForCollision() {
-		for(RectangleMapObject rect : hardBlocks) {
-			if(player.getBounds().overlaps(rect.getRectangle())) {
-				player.setBodyPosition(spawnPoint.x, spawnPoint.y);
+		for(Rectangle rect : hardBlocks) {
+			if(player.getBounds().overlaps(rect)) {
+				player.setBodyPosition(launchPadPosition.x, launchPadPosition.y);
 				player.setMovement(0, 0);
 			}
 		}
@@ -84,17 +107,18 @@ public class Level implements LevelBase, Disposable {
 	public void render(SpriteBatch batch, OrthographicCamera camera) {	
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
 		mapRenderer.setView(camera);
 		mapRenderer.render();
 		
+		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		player.render(batch);
+		launchPad.render(batch);
 		batch.end();
 		
 		box2DRenderer.render(world, camera.combined);
 		
+		camera.update();
 		moveCamera(player, camera);
 	}
 	
@@ -126,6 +150,7 @@ public class Level implements LevelBase, Disposable {
 		map.dispose();
 		mapRenderer.dispose();
 		player.dispose();
+		launchPad.dispose();
 	}
 	
 }

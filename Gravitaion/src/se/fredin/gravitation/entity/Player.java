@@ -21,25 +21,28 @@ public class Player extends PhysicalEntity {
 	private Vector2 movement;
 	private GamePad gamePad;
 	private float speed = 7500f;
+	private float xSpeed;
+	private float ySpeed;
+	private float rot;
 	private final float MAX_TURN_DEG = (float) (Math.PI);
 	
-	public Player(Vector2 position, String texturePath, World world, float width, float height) {
-		super(position, texturePath, world, width, height);
+	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
+		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
 		this.movement = new Vector2(0, 0);
 		Gdx.input.setInputProcessor(new KeyInput());
 		this.gamePad = new GamePad();
 	}
 	
 	@Override
-	public Body getSpecifiedBody(float width, float height) {
+	public Body getSpecifiedBody(float xPos, float yPos, float bodyWidth, float bodyHeight) {
 		// Body definition
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(this.position);
+		bodyDef.position.set(xPos, yPos);
 				
 		// Box shape
 		PolygonShape boxShape = new PolygonShape();
-		boxShape.setAsBox(width, height);
+		boxShape.setAsBox(bodyWidth, bodyHeight);
 				
 		// fixture definition
 		FixtureDef fixtureDef = new FixtureDef();
@@ -51,7 +54,7 @@ public class Player extends PhysicalEntity {
 		// add to world
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
-		sprite.setSize(width * 2, height * 2);
+		sprite.setSize(bodyWidth * 2, bodyHeight * 2);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		body.setUserData(sprite);
 		
@@ -98,10 +101,10 @@ public class Player extends PhysicalEntity {
 				body.applyAngularImpulse(MathUtils.radDeg * -MAX_TURN_DEG, true);
 				break;
 			case Keys.UP:
-				float rot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
-				float x = MathUtils.cos(rot);
-				float y = MathUtils.sin(rot);
-				movement.set(speed * x, speed * y);
+				rot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
+				xSpeed = MathUtils.cos(rot);
+				ySpeed = MathUtils.sin(rot);
+				movement.set(speed * xSpeed, speed * ySpeed);
 				break;
 			default:
 				return false;
@@ -111,7 +114,7 @@ public class Player extends PhysicalEntity {
 		@Override
 		public boolean keyUp(int keycode) {
 			switch(keycode) {
-			case Keys.UP : case Keys.DOWN:
+			case Keys.UP:
 				movement.set(0, 0);
 				break;
 			default:
@@ -140,7 +143,7 @@ public class Player extends PhysicalEntity {
 				movement.y = -speed;
 				break;
 			default:
-				break;
+				return false;
 			}
 			return true;
 		}
@@ -151,6 +154,8 @@ public class Player extends PhysicalEntity {
 			case 0:
 				movement.y = speed;
 				break;
+			default:
+				return false;
 			}
 			return true;
 		}
@@ -161,6 +166,8 @@ public class Player extends PhysicalEntity {
 			case 0:
 				movement.y = 0;
 				break;
+			default:
+				return false;
 			}
 			return true;
 		}

@@ -1,11 +1,14 @@
 package se.fredin.gravitation.entity;
 
+import se.fredin.gravitation.utils.Paths;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -20,6 +23,7 @@ public class Player extends PhysicalEntity {
 	
 	private Vector2 movement;
 	private GamePad gamePad;
+	private ParticleEffect exhaustEffect;
 	private float speed = 7500f;
 	private float xSpeed;
 	private float ySpeed;
@@ -31,6 +35,14 @@ public class Player extends PhysicalEntity {
 		this.movement = new Vector2(0, 0);
 		Gdx.input.setInputProcessor(new KeyInput());
 		this.gamePad = new GamePad();
+		
+	}
+	
+	public void setupExhaust() {
+		this.exhaustEffect = new ParticleEffect();
+		exhaustEffect.load(Gdx.files.internal(Paths.EXHAUST_PARTICLE_PROPERTIES_PATH), Gdx.files.internal(Paths.EXHAUST_TEXTUREPATH));
+		exhaustEffect.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		exhaustEffect.setFlip(false, true);
 	}
 	
 	@Override
@@ -66,6 +78,7 @@ public class Player extends PhysicalEntity {
 	
 	public void render(SpriteBatch batch) {
 		sprite.draw(batch);
+		//exhaustEffect.draw(batch);
 	}
 	
 	public void tick(float delta) {
@@ -73,6 +86,7 @@ public class Player extends PhysicalEntity {
 		bounds.setPosition(getBodyPosition());
 		sprite.setPosition(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 2);
 		sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+		//exhaustEffect.update(delta);
 	}
 	
 	public void setMovement(float x, float y) {
@@ -105,12 +119,15 @@ public class Player extends PhysicalEntity {
 				xSpeed = MathUtils.cos(rot);
 				ySpeed = MathUtils.sin(rot);
 				movement.set(speed * xSpeed, speed * ySpeed);
+				exhaustEffect.start();
 				break;
 			default:
 				return false;
 			}
 			return true;
+			
 		}
+		
 		@Override
 		public boolean keyUp(int keycode) {
 			switch(keycode) {

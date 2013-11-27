@@ -40,7 +40,7 @@ public class Level implements LevelBase, Disposable {
 	private final float MAP_HEIGHT;
 	private final float UNIT_SCALE = 1 / 3.2f;
 	private final float TIMESTEP = 1 / 60f;
-	private final int VELOCITYITERARIONS = 8;
+	private final int VELOCITYITERATIONS = 8;
 	private final int POSITIONITERATIONS = 3;
 	
 	public Level(String levelPath, GameScreen gameScreen) {
@@ -97,7 +97,7 @@ public class Level implements LevelBase, Disposable {
 	private void checkForCollision() {
 		for(Rectangle rect : hardBlocks) {
 			if(player.getBounds().overlaps(rect)) {
-				player.setBodyPosition(launchPadPosition.x, launchPadPosition.y);
+				player.setBodyPosition(spawnPoint.x, spawnPoint.y);
 				player.setMovement(0, 0);
 			}
 		}
@@ -116,7 +116,9 @@ public class Level implements LevelBase, Disposable {
 		launchPad.render(batch);
 		batch.end();
 		
-		box2DRenderer.render(world, camera.combined);
+		if(Gravitation.DEBUG_MODE) {
+			box2DRenderer.render(world, camera.combined);
+		}
 		
 		camera.update();
 		moveCamera(player, camera);
@@ -124,7 +126,7 @@ public class Level implements LevelBase, Disposable {
 	
 	public void tick(float delta) {
 		player.tick(delta);
-		world.step(TIMESTEP, VELOCITYITERARIONS, POSITIONITERATIONS);
+		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
 		checkForCollision();
 	}
 	

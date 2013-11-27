@@ -9,6 +9,7 @@ public class Gravitation extends Game {
 
 	public static FPSLogger logger;
 	public static final String LOG = "Gravitation";
+	public static final boolean DEBUG_MODE = false;
 	
 	@Override
 	public void create() {
@@ -19,7 +20,9 @@ public class Gravitation extends Game {
 	@Override
 	public void render() {
 		super.render();
-	//	logger.log();
+		if(DEBUG_MODE) {
+			logger.log();
+		}
 	}
 	
 	@Override

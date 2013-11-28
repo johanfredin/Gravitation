@@ -1,5 +1,7 @@
 package se.fredin.gravitation.entity;
 
+import java.io.IOException;
+
 import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Gdx;
@@ -8,7 +10,9 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.PovDirection;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -23,7 +27,7 @@ public class Player extends PhysicalEntity {
 	
 	private Vector2 movement;
 	private GamePad gamePad;
-	private ParticleEffect exhaustEffect;
+	private ParticleEmitter exhaust;
 	private float speed = 7500f;
 	private float xSpeed;
 	private float ySpeed;
@@ -36,13 +40,28 @@ public class Player extends PhysicalEntity {
 		this.movement = new Vector2(0, 0);
 		Gdx.input.setInputProcessor(new KeyInput());
 		this.gamePad = new GamePad();
+		this.exhaust = getExhaustEmitter();
 	}
 	
-	public void setupExhaust() {
-		this.exhaustEffect = new ParticleEffect();
-		exhaustEffect.load(Gdx.files.internal(Paths.EXHAUST_PARTICLE_PROPERTIES_PATH), Gdx.files.internal(Paths.EXHAUST_TEXTUREPATH));
-		exhaustEffect.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-		exhaustEffect.setFlip(false, true);
+	private ParticleEmitter getExhaustEmitter() {
+		ParticleEmitter emitter = new ParticleEmitter();
+		try {
+			emitter.load(Gdx.files.internal(Paths.EXHAUST_PARTICLE_PROPERTIES_PATH).reader(2024));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Texture exhaustTexture = new Texture(Gdx.files.internal(Paths.EXHAUST_TEXTUREPATH));
+		Sprite exhaustSprite = new Sprite(exhaustTexture);
+		emitter.setSprite(exhaustSprite);
+		emitter.getScale().setHigh(0, 3);
+		return emitter;
+	}
+	
+	private void setExhaustRotation() {
+		float angle = (float)(body.getTransform().getRotation());
+		exhaust.getAngle().setLow(angle + 270);
+		exhaust.getAngle().setHighMin(angle + 270 - 90);
+		exhaust.getAngle().setHighMax(angle + 270 + 90);
 	}
 	
 	@Override
@@ -78,7 +97,7 @@ public class Player extends PhysicalEntity {
 	
 	public void render(SpriteBatch batch) {
 		sprite.draw(batch);
-		//exhaustEffect.draw(batch);
+		exhaust.draw(batch);
 	}
 	
 	public void tick(float delta) {
@@ -98,7 +117,12 @@ public class Player extends PhysicalEntity {
 		}
 		sprite.setPosition(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 2);
 		sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-		//exhaustEffect.update(delta);
+		
+		// update exhaust
+		exhaust.setPosition(getBodyPosition().x, getBodyPosition().y);
+		setExhaustRotation();
+		exhaust.update(delta);
+		
 	}
 	
 	public void setMovement(float x, float y) {
@@ -127,9 +151,8 @@ public class Player extends PhysicalEntity {
 				rightPressed = true;
 				break;
 			case Keys.UP:
+				exhaust.getLife().setHighMax(500);
 				gasPressed = true;
-				
-				//exhaustEffect.start();
 				break;
 			default:
 				return false;
@@ -142,6 +165,7 @@ public class Player extends PhysicalEntity {
 		public boolean keyUp(int keycode) {
 			switch(keycode) {
 			case Keys.UP:
+				exhaust.getLife().setHighMax(20);
 				gasPressed = false;
 				movement.set(0, 0);
 				break;
@@ -183,6 +207,7 @@ public class Player extends PhysicalEntity {
 			switch(buttonIndex) {
 			case 0:
 				gasPressed = true;
+				exhaust.getLife().setHighMax(500);
 				break;
 			default:
 				return false;
@@ -196,6 +221,7 @@ public class Player extends PhysicalEntity {
 			case 0:
 				gasPressed = false;
 				movement.set(0, 0);
+				exhaust.getLife().setHighMax(20);
 				break;
 			default:
 				return false;

@@ -58,7 +58,7 @@ public class Player extends PhysicalEntity {
 	}
 	
 	private void setExhaustRotation() {
-		float angle = (float)(body.getTransform().getRotation());
+		float angle = (float)(MathUtils.radDeg * body.getTransform().getRotation());
 		exhaust.getAngle().setLow(angle + 270);
 		exhaust.getAngle().setHighMin(angle + 270 - 90);
 		exhaust.getAngle().setHighMax(angle + 270 + 90);
@@ -199,15 +199,12 @@ public class Player extends PhysicalEntity {
 			}
 			return true;
 		}
-		
-		
           
 		@Override
 		public boolean buttonDown(Controller controller, int buttonIndex) {
 			switch(buttonIndex) {
 			case 0:
 				gasPressed = true;
-				exhaust.getLife().setHighMax(500);
 				break;
 			default:
 				return false;
@@ -221,7 +218,6 @@ public class Player extends PhysicalEntity {
 			case 0:
 				gasPressed = false;
 				movement.set(0, 0);
-				exhaust.getLife().setHighMax(20);
 				break;
 			default:
 				return false;

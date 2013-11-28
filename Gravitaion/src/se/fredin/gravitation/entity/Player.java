@@ -28,14 +28,14 @@ public class Player extends PhysicalEntity {
 	private float xSpeed;
 	private float ySpeed;
 	private float rot;
-	private final float MAX_TURN_DEG = (float) (Math.PI);
+	private final float MAX_TURN_DEG = (float)(Math.PI);
+	private boolean leftPressed, rightPressed, gasPressed;
 	
 	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
 		this.movement = new Vector2(0, 0);
 		Gdx.input.setInputProcessor(new KeyInput());
 		this.gamePad = new GamePad();
-		
 	}
 	
 	public void setupExhaust() {
@@ -70,7 +70,7 @@ public class Player extends PhysicalEntity {
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		body.setUserData(sprite);
 		
-		body.setAngularDamping(1.1f);
+		body.setAngularDamping(3.1f);
 		body.setLinearDamping(0.5f);
 		boxShape.dispose();
 		return body;
@@ -84,6 +84,18 @@ public class Player extends PhysicalEntity {
 	public void tick(float delta) {
 		body.applyForceToCenter(movement, true);
 		bounds.setPosition(getBodyPosition());
+		if(gasPressed) {
+			rot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
+			xSpeed = MathUtils.cos(rot);
+			ySpeed = MathUtils.sin(rot);
+			movement.set(speed * xSpeed, speed * ySpeed);
+		}
+		if(leftPressed) {
+			body.applyAngularImpulse(MathUtils.radDeg * MAX_TURN_DEG, true);
+		}
+		if(rightPressed) {
+			body.applyAngularImpulse(MathUtils.radDeg * -MAX_TURN_DEG, true);
+		}
 		sprite.setPosition(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 2);
 		sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
 		//exhaustEffect.update(delta);
@@ -109,17 +121,15 @@ public class Player extends PhysicalEntity {
 				Gdx.app.exit();
 				break;
 			case Keys.LEFT:
-				body.applyAngularImpulse(MathUtils.radDeg * MAX_TURN_DEG, true);
+				leftPressed = true;
 				break;
 			case Keys.RIGHT:
-				body.applyAngularImpulse(MathUtils.radDeg * -MAX_TURN_DEG, true);
+				rightPressed = true;
 				break;
 			case Keys.UP:
-				rot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
-				xSpeed = MathUtils.cos(rot);
-				ySpeed = MathUtils.sin(rot);
-				movement.set(speed * xSpeed, speed * ySpeed);
-				exhaustEffect.start();
+				gasPressed = true;
+				
+				//exhaustEffect.start();
 				break;
 			default:
 				return false;
@@ -132,7 +142,14 @@ public class Player extends PhysicalEntity {
 		public boolean keyUp(int keycode) {
 			switch(keycode) {
 			case Keys.UP:
+				gasPressed = false;
 				movement.set(0, 0);
+				break;
+			case Keys.RIGHT:
+				rightPressed = false;
+				break;
+			case Keys.LEFT:
+				leftPressed = false;
 				break;
 			default:
 				return false;
@@ -146,30 +163,26 @@ public class Player extends PhysicalEntity {
 		public boolean povMoved(Controller controller, int povIndex, PovDirection value) {
 			switch(value) {
 			case west:
-				body.applyAngularImpulse(50000, true);
-				movement.x = -speed;
+				leftPressed = true;
 				break;
 			case east:
-				movement.x = speed;
-				body.applyAngularImpulse(-50000, true);
-				break;
-			case north:
-				movement.y = speed;
-				break;
-			case south:
-				movement.y = -speed;
+				rightPressed = true;
 				break;
 			default:
-				return false;
+				rightPressed = false;
+				leftPressed = false;
+				break;
 			}
 			return true;
 		}
+		
+		
           
 		@Override
 		public boolean buttonDown(Controller controller, int buttonIndex) {
 			switch(buttonIndex) {
 			case 0:
-				movement.y = speed;
+				gasPressed = true;
 				break;
 			default:
 				return false;
@@ -181,7 +194,8 @@ public class Player extends PhysicalEntity {
 		public boolean buttonUp(Controller controller, int buttonIndex) {
 			switch(buttonIndex) {
 			case 0:
-				movement.y = 0;
+				gasPressed = false;
+				movement.set(0, 0);
 				break;
 			default:
 				return false;

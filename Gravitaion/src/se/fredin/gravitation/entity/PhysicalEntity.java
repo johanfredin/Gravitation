@@ -16,6 +16,7 @@ public abstract class PhysicalEntity implements Entity {
 	protected Rectangle bounds;
 	protected Sprite sprite;
 	protected float bodyWidth, bodyHeight;
+	protected float mass;
 	protected final float PIXELS_TO_METER = 1 / 32f;
 	
 	public PhysicalEntity(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {

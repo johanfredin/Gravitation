@@ -74,6 +74,7 @@ public class Level implements LevelBase, Disposable {
 		}
 	}
 	
+	
 	private Array<Rectangle> getWorldAdaptedBlocks(TiledMap map) {
 		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
 		this.hardBlocks = new Array<Rectangle>();
@@ -94,15 +95,7 @@ public class Level implements LevelBase, Disposable {
 	@Override
 	public void end(boolean cleared) {}
 	
-	private void checkForCollision() {
-		for(Rectangle rect : hardBlocks) {
-			if(player.getBounds().overlaps(rect)) {
-				player.setBodyPosition(spawnPoint.x, spawnPoint.y);
-				player.setMovement(0, 0);
-			}
-		}
-	}
-
+	
 	@Override
 	public void render(SpriteBatch batch, OrthographicCamera camera) {	
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -127,7 +120,7 @@ public class Level implements LevelBase, Disposable {
 	public void tick(float delta) {
 		player.tick(delta);
 		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-		checkForCollision();
+		player.checkForCollision(hardBlocks, spawnPoint);
 	}
 	
 	
@@ -135,8 +128,14 @@ public class Level implements LevelBase, Disposable {
 		float centerX = camera.viewportWidth / 2;
 		float centerY = camera.viewportHeight / 2;
 		
-		camera.position.set(gameObject.getBodyPosition().x, gameObject.getBodyPosition().y, 0);
-				
+		if(player.isCrashed()) {
+			float explosionX = gameObject.getExplosion().getX();
+			float explosionY = gameObject.getExplosion().getY();
+			camera.position.set(explosionX, explosionY, 0);
+		} else {
+			camera.position.set(gameObject.getBodyPosition().x, gameObject.getBodyPosition().y, 0);
+		}
+		
 		if(camera.position.x - centerX <= 0) 
 			camera.position.x = centerX;
 		if(camera.position.x + centerX >= MAP_WIDTH)

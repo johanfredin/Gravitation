@@ -1,8 +1,8 @@
 package se.fredin.gravitation.level;
 
 import se.fredin.gravitation.Gravitation;
-import se.fredin.gravitation.entity.LaunchPad;
-import se.fredin.gravitation.entity.Player;
+import se.fredin.gravitation.entity.physical.LaunchPad;
+import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.utils.Paths;
 
@@ -31,21 +31,22 @@ public class Level implements LevelBase, Disposable {
 	private World world;
 	private TiledMap map;
 	private Player player;
-	private LaunchPad launchPad;
+	private Array<LaunchPad> launchPads;
+	private Array<Vector2> spawnPoints;
 	private Array<Rectangle> hardBlocks;
-	private Vector2 launchPadPosition;
+	private Array<Vector2> launchPadPositions;
 	private Vector2 spawnPoint;
 	
 	private final float MAP_WIDTH;
 	private final float MAP_HEIGHT;
-	private final float UNIT_SCALE = 1 / 3.2f;
+	private final float UNIT_SCALE = 1 / 3.20f;
 	private final float TIMESTEP = 1 / 60f;
 	private final int VELOCITYITERATIONS = 8;
 	private final int POSITIONITERATIONS = 3;
 	
 	public Level(String levelPath, GameScreen gameScreen) {
 		// Setup box2d world
-		this.world = new World(new Vector2(0, -9.82f), true);
+		this.world = new World(new Vector2(0, -12.82f), true);
 		this.box2DRenderer = new Box2DDebugRenderer();
 		
 		// Setup tileMap
@@ -56,14 +57,10 @@ public class Level implements LevelBase, Disposable {
 		int tmpMapHeight = (Integer) map.getProperties().get("height") * (Integer) map.getProperties().get("tileheight");
 		this.MAP_WIDTH = tmpMapWidth * UNIT_SCALE;
 		this.MAP_HEIGHT = tmpMapHeight * UNIT_SCALE;
-		MapProperties spawnProperties = map.getLayers().get("spawn-points").getObjects().get("start").getProperties();
-		
-		// Setup launch pad
-		this.launchPadPosition = new Vector2((Float)spawnProperties.get("x"), (Float)spawnProperties.get("y"));
-		this.launchPad = new LaunchPad(launchPadPosition.x, launchPadPosition.y, Paths.LANDING_PAD_TEXTUREPATH, world, 180, 25f);
-		
+		initLaunchPads();
+	
 		// Setup player
-		this.spawnPoint = new Vector2(launchPadPosition.x + launchPad.getSprite().getWidth() / 4, launchPadPosition.y + launchPad.getSprite().getHeight());
+		this.spawnPoint = getRandomSpawnPoint();
 		this.player = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64);
 		this.hardBlocks = getWorldAdaptedBlocks(map);
 		
@@ -71,6 +68,26 @@ public class Level implements LevelBase, Disposable {
 		for(Controller controller: Controllers.getControllers()) {
 			Gdx.app.log(Gravitation.LOG, "Controller found: " + controller.getName());
 			controller.addListener(player.getGamePad());
+		}
+	}
+	
+	private Vector2 getRandomSpawnPoint() {
+		return new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
+	}
+	
+	private void initLaunchPads() {
+		launchPadPositions = new Array<Vector2>();
+		spawnPoints = new Array<Vector2>();
+		launchPads = new Array<LaunchPad>();
+		for(int i = 1; i <= 4; i++) {
+			MapProperties spawnProperties = map.getLayers().get("spawn-points").getObjects().get("start" + i).getProperties();
+			
+			Vector2 launchPadPosition = new Vector2((Float)spawnProperties.get("x") * UNIT_SCALE, (Float)spawnProperties.get("y") * UNIT_SCALE);
+			this.launchPadPositions.add(launchPadPosition);
+			
+			LaunchPad launchPad = new LaunchPad(launchPadPosition.x, launchPadPosition.y, Paths.LANDING_PAD_TEXTUREPATH, world, 180, 25f);
+			this.launchPads.add(launchPad);
+			this.spawnPoints.add(new Vector2(launchPadPosition.x + launchPad.getSprite().getWidth() / 4, launchPadPosition.y + launchPad.getSprite().getHeight()));
 		}
 	}
 	
@@ -106,7 +123,9 @@ public class Level implements LevelBase, Disposable {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		player.render(batch);
-		launchPad.render(batch);
+		for(LaunchPad launchPad : launchPads) {
+			launchPad.render(batch);
+		}
 		batch.end();
 		
 		if(Gravitation.DEBUG_MODE) {
@@ -120,14 +139,14 @@ public class Level implements LevelBase, Disposable {
 	public void tick(float delta) {
 		player.tick(delta);
 		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-		player.checkForCollision(hardBlocks, spawnPoint);
+		player.checkForCollision(hardBlocks, spawnPoints);
 	}
-	
 	
 	public void moveCamera(Player gameObject, OrthographicCamera camera) {
 		float centerX = camera.viewportWidth / 2;
 		float centerY = camera.viewportHeight / 2;
 		
+		// SET CAMERA TO PLAYER OR EXPLOSION POINT
 		if(player.isCrashed()) {
 			float explosionX = gameObject.getExplosion().getX();
 			float explosionY = gameObject.getExplosion().getY();
@@ -151,7 +170,9 @@ public class Level implements LevelBase, Disposable {
 		map.dispose();
 		mapRenderer.dispose();
 		player.dispose();
-		launchPad.dispose();
+		for(LaunchPad launchPad : launchPads) {
+			launchPad.dispose();
+		}
 	}
 	
 }

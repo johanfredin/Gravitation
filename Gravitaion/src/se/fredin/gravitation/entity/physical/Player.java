@@ -1,5 +1,8 @@
-package se.fredin.gravitation.entity;
+package se.fredin.gravitation.entity.physical;
 
+import java.util.Iterator;
+
+import se.fredin.gravitation.entity.Bullet;
 import se.fredin.gravitation.utils.ParticleLoader;
 import se.fredin.gravitation.utils.Paths;
 
@@ -28,13 +31,18 @@ public class Player extends PhysicalEntity {
 	private GamePad gamePad;
 	private ParticleEmitter exhaust;
 	private ParticleEmitter explosion;
+	private Array<Bullet> bullets;
+	private Iterator<Bullet> bulletIterator;
+	private Bullet bullet;
 	private float speed = 7500f;
 	private float xSpeed;
 	private float ySpeed;
 	private float rot;
 	private final float MAX_TURN_DEG = (float)(Math.PI);
+	private final float RESPAWN_TIME = 2.0f;
 	private boolean leftPressed, rightPressed, gasPressed;
-	private boolean crashed, explosionFinished;
+	private boolean crashed;
+	private boolean ableToShoot = true;
 	private float timePassed;
 	
 	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
@@ -44,19 +52,15 @@ public class Player extends PhysicalEntity {
 		this.gamePad = new GamePad();
 		this.exhaust = ParticleLoader.getEmitter(Paths.EXHAUST_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 2.66f, 3);
 		this.explosion = ParticleLoader.getEmitter(Paths.EXPLOSION_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 4, 4f);
+		this.bullets = new Array<Bullet>();
 	}
+	
 	
 	private void setExhaustRotation() {
 		float angle = sprite.getRotation();
 		exhaust.getAngle().setLow(angle + 270);
 		exhaust.getAngle().setHighMin(angle + 270 - 90);
 		exhaust.getAngle().setHighMax(angle + 270 + 90);
-	}
-	
-	public void setBody(BodyType type) {
-		BodyDef def = new BodyDef();
-		def.type = type;
-		body = world.createBody(def);
 	}
 	
 	@Override
@@ -93,6 +97,12 @@ public class Player extends PhysicalEntity {
 		if(!crashed) {
 			sprite.draw(batch);
 			exhaust.draw(batch);
+		} 
+		// draw bullets
+		bulletIterator = bullets.iterator();
+		while(bulletIterator.hasNext()) {
+			bullet = bulletIterator.next();
+			bullet.render(batch);
 		}
 		explosion.draw(batch);
 	}
@@ -120,55 +130,59 @@ public class Player extends PhysicalEntity {
 		exhaust.update(delta);
 		explosion.update(delta);
 		
+		bulletIterator = bullets.iterator();
+		while(bulletIterator.hasNext()) {
+			bullet = bulletIterator.next();
+			bullet.tick(delta);
+		}
+		
 		if(crashed) {
 			timePassed += delta;
+			ableToShoot = false;
 			playExplosion();
 		}
+	}
+	
+	public void checkForCollision(Array<Rectangle> hardBlocks, Array<Vector2> spawnPoints) {
+		for(Rectangle rect : hardBlocks) {
+			if(bounds.overlaps(rect)) {
+				crashed = true;
+				explosion.setPosition(getBodyPosition().x, getBodyPosition().y);
+				explosion.start();
+				Vector2 spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
+				setBodyPosition(spawnPoint.x, spawnPoint.y);
+			}
+			// check if bullets collided with walls
+			for(int i = 0; i < bullets.size; i++) {
+				if(bullets.get(i).getBounds().overlaps(rect)) {
+					bullets.get(i).dispose();
+					bullets.removeIndex(i);
+				}
+			}
+		}
+	}
+	
+	private void playExplosion() {
+		if(timePassed < RESPAWN_TIME) {
+			setMovement(0, 0);
+		} else {
+			explosion.allowCompletion();
+			crashed = false;
+			timePassed = 0.0f;
+			ableToShoot = true;
+		}
+	}
+	
+	public void setMovement(float x, float y) {
+		this.movement.set(x, y);
 	}
 	
 	public boolean isCrashed() {
 		return crashed;
 	}
 	
-	public void checkForCollision(Array<Rectangle> hardBlocks, Vector2 spawnPoint) {
-		for(Rectangle rect : hardBlocks) {
-			if(bounds.overlaps(rect)) {
-				crashed = true;
-				explosionFinished = false;
-				explosion.setPosition(getBodyPosition().x, getBodyPosition().y);
-				explosion.start();
-				setBodyPosition(spawnPoint.x, spawnPoint.y);
-			}
-		}
-	}
-	
 	public ParticleEmitter getExplosion() {
 		return explosion;
-	}
-	
-	public void playExplosion() {
-		if(timePassed < 2.0f) {
-			setMovement(0, 0);
-		} else {
-			explosionFinished = true;
-			System.out.println("explosion complete");
-			explosion.allowCompletion();
-			crashed = false;
-			timePassed = 0.0f;
-		}
-	}
-	
-	
-	public void setMovement(float x, float y) {
-		this.movement.set(x, y);
-	}
-	
-	public boolean isExplosionFinished() {
-		return explosionFinished;
-	}
-	
-	public void setExplosionFinished(boolean explosionFinished) {
-		this.explosionFinished = explosionFinished;
 	}
 	
 	public GamePad getGamePad() {
@@ -196,6 +210,17 @@ public class Player extends PhysicalEntity {
 				exhaust.start();
 				gasPressed = true;
 				break;
+			case Keys.SPACE:
+				if(ableToShoot) {
+					Bullet tmp = new Bullet(getBodyPosition());
+					float bulletSpeed = 3f;
+					float bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
+					float bulletXSpeed = MathUtils.cos(bulletRot);
+					float bulletYSpeed = MathUtils.sin(bulletRot);
+					tmp.setMovement(bulletSpeed * bulletXSpeed, bulletSpeed * bulletYSpeed);
+					bullets.add(tmp);
+				}
+				break;
 			default:
 				return false;
 			}
@@ -216,6 +241,8 @@ public class Player extends PhysicalEntity {
 				break;
 			case Keys.LEFT:
 				leftPressed = false;
+				break;
+			case Keys.SPACE:
 				break;
 			default:
 				return false;

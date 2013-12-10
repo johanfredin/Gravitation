@@ -1,4 +1,6 @@
-package se.fredin.gravitation.entity;
+package se.fredin.gravitation.entity.physical;
+
+import se.fredin.gravitation.entity.Entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

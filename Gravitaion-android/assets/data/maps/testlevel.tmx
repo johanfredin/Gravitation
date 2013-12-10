@@ -35,6 +35,9 @@
   <properties>
    <property name="start" value=""/>
   </properties>
-  <object name="start" x="96" y="823" width="64" height="11"/>
+  <object name="start1" x="96" y="800" width="64" height="11"/>
+  <object name="start2" x="768" y="832" width="64" height="11"/>
+  <object name="start3" x="64" y="160" width="64" height="11"/>
+  <object name="start4" x="800" y="160" width="64" height="11"/>
  </objectgroup>
 </map>

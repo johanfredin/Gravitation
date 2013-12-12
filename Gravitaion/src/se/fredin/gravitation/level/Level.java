@@ -6,6 +6,7 @@ import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.utils.Paths;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
@@ -60,19 +61,17 @@ public class Level implements LevelBase, Disposable {
 		initLaunchPads();
 	
 		// Setup player
-		this.spawnPoint = getRandomSpawnPoint();
+		this.spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
 		this.player = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64);
 		this.hardBlocks = getWorldAdaptedBlocks(map);
 		
 		// Add gamePad support
-		for(Controller controller: Controllers.getControllers()) {
-			Gdx.app.log(Gravitation.LOG, "Controller found: " + controller.getName());
-			controller.addListener(player.getGamePad());
-		}
-	}
-	
-	private Vector2 getRandomSpawnPoint() {
-		return new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
+		if(Gdx.app.getType() == ApplicationType.Desktop) {
+			for(Controller controller: Controllers.getControllers()) {
+				Gdx.app.log(Gravitation.LOG, "Controller found: " + controller.getName());
+				controller.addListener(player.getGamePad());
+			}
+		} 
 	}
 	
 	private void initLaunchPads() {
@@ -132,8 +131,8 @@ public class Level implements LevelBase, Disposable {
 			box2DRenderer.render(world, camera.combined);
 		}
 		
-		camera.update();
 		moveCamera(player, camera);
+		camera.update();
 	}
 	
 	public void tick(float delta) {

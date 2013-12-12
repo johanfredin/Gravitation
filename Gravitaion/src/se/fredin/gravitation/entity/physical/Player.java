@@ -55,7 +55,6 @@ public class Player extends PhysicalEntity {
 		this.bullets = new Array<Bullet>();
 	}
 	
-	
 	private void setExhaustRotation() {
 		float angle = sprite.getRotation();
 		exhaust.getAngle().setLow(angle + 270);
@@ -193,6 +192,18 @@ public class Player extends PhysicalEntity {
 		super.dispose();
 	}
 	
+	private void shoot() {
+		if(ableToShoot) {
+			Bullet tmp = new Bullet(getBodyPosition());
+			float bulletSpeed = 3f;
+			float bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
+			float bulletXSpeed = MathUtils.cos(bulletRot);
+			float bulletYSpeed = MathUtils.sin(bulletRot);
+			tmp.setMovement(bulletSpeed * bulletXSpeed, bulletSpeed * bulletYSpeed);
+			bullets.add(tmp);
+		}
+	}
+	
 	private class KeyInput extends InputAdapter {
 		@Override
 		public boolean keyDown(int keycode) {
@@ -211,15 +222,7 @@ public class Player extends PhysicalEntity {
 				gasPressed = true;
 				break;
 			case Keys.SPACE:
-				if(ableToShoot) {
-					Bullet tmp = new Bullet(getBodyPosition());
-					float bulletSpeed = 3f;
-					float bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
-					float bulletXSpeed = MathUtils.cos(bulletRot);
-					float bulletYSpeed = MathUtils.sin(bulletRot);
-					tmp.setMovement(bulletSpeed * bulletXSpeed, bulletSpeed * bulletYSpeed);
-					bullets.add(tmp);
-				}
+				shoot();
 				break;
 			default:
 				return false;
@@ -294,6 +297,7 @@ public class Player extends PhysicalEntity {
 			return true;
 		}
 	}
-
+	
+	
 	
 }

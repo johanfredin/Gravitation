@@ -19,7 +19,7 @@ public class GameScreen extends BaseScreen {
 	
 	public GameScreen(Game game) {
 		super(game);
-		level = new Level("data/maps/testlevel.tmx", this);
+		level = new Level("data/maps/level_1.tmx", this);
 	}
 
 	@Override

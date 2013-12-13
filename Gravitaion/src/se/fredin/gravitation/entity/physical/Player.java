@@ -3,15 +3,19 @@ package se.fredin.gravitation.entity.physical;
 import java.util.Iterator;
 
 import se.fredin.gravitation.entity.Bullet;
+import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.utils.ParticleLoader;
 import se.fredin.gravitation.utils.Paths;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -23,11 +27,17 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.utils.Array;
 
 public class Player extends PhysicalEntity {
 	
 	private Vector2 movement;
+	private Touchpad movementTouchPad, gasTouchPad;
+	private Stage touchPadStage;
 	private GamePad gamePad;
 	private ParticleEmitter exhaust;
 	private ParticleEmitter explosion;
@@ -48,11 +58,44 @@ public class Player extends PhysicalEntity {
 	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
 		this.movement = new Vector2(0, 0);
-		Gdx.input.setInputProcessor(new KeyInput());
 		this.gamePad = new GamePad();
 		this.exhaust = ParticleLoader.getEmitter(Paths.EXHAUST_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 2.66f, 3);
 		this.explosion = ParticleLoader.getEmitter(Paths.EXPLOSION_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 4, 4f);
 		this.bullets = new Array<Bullet>();
+		this.movementTouchPad = getTouchPad("data/skins/padbg_s.png", "data/skins/knob_s.png", 0, 0);
+		this.gasTouchPad = getTouchPad("data/skins/padbg_s.png", "data/skins/gasknob.png", 100, 0);
+		this.touchPadStage = new Stage(BaseScreen.VIEWPORT_WIDTH, BaseScreen.VIEWPORT_HEIGHT / 4, true);
+		gasTouchPad.setPosition(touchPadStage.getWidth() - gasTouchPad.getWidth(), 0);
+		touchPadStage.addActor(movementTouchPad);
+		touchPadStage.addActor(gasTouchPad);
+		
+		switch(Gdx.app.getType()) {
+		case Android:
+			Gdx.input.setInputProcessor(touchPadStage);
+			break;
+		case Desktop:
+			Gdx.input.setInputProcessor(new KeyInput());
+			break;
+		default:
+			break;
+		}
+		
+	}
+	
+	private Touchpad getTouchPad(String backgroundTexturePath, String knobTexturePath, float xPos, float yPos) {
+		Skin skin = new Skin();
+		Texture padbgTex = new Texture(Gdx.files.internal(backgroundTexturePath));
+		Texture knobTex = new Texture(Gdx.files.internal(knobTexturePath));
+		padbgTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		knobTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		skin.add("padbg", padbgTex);
+		skin.add("knob", knobTex);
+		TouchpadStyle touchpadStyle = new TouchpadStyle(skin.getDrawable("padbg"), skin.getDrawable("knob"));
+		Touchpad touchpad = new Touchpad(3, touchpadStyle);
+		touchPadStage = new Stage(BaseScreen.VIEWPORT_WIDTH, BaseScreen.VIEWPORT_HEIGHT, true);
+		touchPadStage.addActor(touchpad);
+		touchpad.setPosition(xPos, yPos);
+		return touchpad;
 	}
 	
 	private void setExhaustRotation() {
@@ -86,8 +129,20 @@ public class Player extends PhysicalEntity {
 		sprite.setSize(bodyWidth * 2, bodyHeight * 2);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		body.setUserData(sprite);
-		body.setAngularDamping(3.1f);
-		body.setLinearDamping(0.5f);
+		
+		switch(Gdx.app.getType()) {
+		case Android:
+			body.setAngularDamping(7.1f);
+			body.setLinearDamping(0.5f);
+			break;
+		case Desktop:
+			body.setAngularDamping(3.1f);
+			body.setLinearDamping(0.5f);
+			break;
+		default:
+			break;
+		}
+		
 		boxShape.dispose();
 		return body;
 	}
@@ -104,6 +159,7 @@ public class Player extends PhysicalEntity {
 			bullet.render(batch);
 		}
 		explosion.draw(batch);
+		touchPadStage.draw();
 	}
 	
 	public void tick(float delta) {
@@ -121,8 +177,31 @@ public class Player extends PhysicalEntity {
 		} if(rightPressed) {
 			body.applyAngularImpulse(MathUtils.radDeg * -MAX_TURN_DEG, true);
 		}
+		
+		if(Gdx.app.getType() == ApplicationType.Android) {
+			// Get touch pad movement ------------------------------------------------
+			if(movementTouchPad.isTouched()) {
+				if(movementTouchPad.getKnobX() < 8)
+					body.applyAngularImpulse(MathUtils.radDeg * MAX_TURN_DEG, true);
+				if(movementTouchPad.getKnobX() > 8)
+					body.applyAngularImpulse(MathUtils.radDeg * -MAX_TURN_DEG, true);
+			}
+			
+			if(gasTouchPad.isTouched()) {
+				gasPressed = true;
+			} else if(!gasTouchPad.isTouched()) {
+				gasPressed = false;
+				movement.set(0, 0);
+			}
+			// ------------------------------------------------------------------------
+		}
+		
+		
 		sprite.setPosition(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 2);
 		sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+		
+		
+		touchPadStage.act(delta);
 		
 		// update exhaust
 		exhaust.setPosition(getBodyPosition().x, getBodyPosition().y);
@@ -140,6 +219,7 @@ public class Player extends PhysicalEntity {
 			ableToShoot = false;
 			playExplosion();
 		}
+		
 	}
 	
 	public void checkForCollision(Array<Rectangle> hardBlocks, Array<Vector2> spawnPoints) {
@@ -190,6 +270,7 @@ public class Player extends PhysicalEntity {
 	
 	public void dispose() {
 		super.dispose();
+		touchPadStage.dispose();
 	}
 	
 	private void shoot() {

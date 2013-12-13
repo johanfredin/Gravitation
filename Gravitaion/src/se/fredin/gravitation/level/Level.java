@@ -121,10 +121,10 @@ public class Level implements LevelBase, Disposable {
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		player.render(batch);
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.render(batch);
 		}
+		player.render(batch);
 		batch.end();
 		
 		if(Gravitation.DEBUG_MODE) {

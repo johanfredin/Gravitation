@@ -28,8 +28,8 @@ public abstract class BaseScreen implements Disposable, Screen {
 	public void setScreenSize() {
 		switch(Gdx.app.getType()) {
 		case Android:
-			VIEWPORT_WIDTH = 80;
-			VIEWPORT_HEIGHT = 50;
+			VIEWPORT_WIDTH = 100;
+			VIEWPORT_HEIGHT = 80;
 			break;
 		case Desktop:
 			VIEWPORT_WIDTH = 200;

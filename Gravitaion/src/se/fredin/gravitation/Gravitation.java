@@ -3,6 +3,7 @@ package se.fredin.gravitation;
 import se.fredin.gravitation.screen.GameScreen;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 
 public class Gravitation extends Game {
@@ -32,7 +33,8 @@ public class Gravitation extends Game {
 	
 	@Override
 	public void pause() {
-		super.pause();
+		Gdx.app.exit();
+		//super.pause();
 	}
 	
 	@Override

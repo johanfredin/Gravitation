@@ -132,7 +132,7 @@ public class Player extends PhysicalEntity {
 		
 		switch(Gdx.app.getType()) {
 		case Android:
-			body.setAngularDamping(7.1f);
+			body.setAngularDamping(4.66f);
 			body.setLinearDamping(0.5f);
 			break;
 		case Desktop:
@@ -159,7 +159,10 @@ public class Player extends PhysicalEntity {
 			bullet.render(batch);
 		}
 		explosion.draw(batch);
-		touchPadStage.draw();
+		
+		if(Gdx.app.getType() == ApplicationType.Android) {
+			touchPadStage.draw();
+		}
 	}
 	
 	public void tick(float delta) {
@@ -167,11 +170,7 @@ public class Player extends PhysicalEntity {
 		bounds.setPosition(getBodyPosition());
 		
 		if(gasPressed) {
-			rot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
-			xSpeed = MathUtils.cos(rot);
-			ySpeed = MathUtils.sin(rot);
-			movement.set(speed * xSpeed, speed * ySpeed);
-			setExhaustRotation();
+			accelerate();
 		} if(leftPressed) {
 			body.applyAngularImpulse(MathUtils.radDeg * MAX_TURN_DEG, true);
 		} if(rightPressed) {
@@ -179,29 +178,12 @@ public class Player extends PhysicalEntity {
 		}
 		
 		if(Gdx.app.getType() == ApplicationType.Android) {
-			// Get touch pad movement ------------------------------------------------
-			if(movementTouchPad.isTouched()) {
-				if(movementTouchPad.getKnobX() < 8)
-					body.applyAngularImpulse(MathUtils.radDeg * MAX_TURN_DEG, true);
-				if(movementTouchPad.getKnobX() > 8)
-					body.applyAngularImpulse(MathUtils.radDeg * -MAX_TURN_DEG, true);
-			}
-			
-			if(gasTouchPad.isTouched()) {
-				gasPressed = true;
-			} else if(!gasTouchPad.isTouched()) {
-				gasPressed = false;
-				movement.set(0, 0);
-			}
-			// ------------------------------------------------------------------------
+			handleTouchPadInput();
+			touchPadStage.act(delta);
 		}
-		
 		
 		sprite.setPosition(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 2);
 		sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-		
-		
-		touchPadStage.act(delta);
 		
 		// update exhaust
 		exhaust.setPosition(getBodyPosition().x, getBodyPosition().y);
@@ -220,6 +202,29 @@ public class Player extends PhysicalEntity {
 			playExplosion();
 		}
 		
+	}
+	
+	private void accelerate() {
+		rot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
+		xSpeed = MathUtils.cos(rot);
+		ySpeed = MathUtils.sin(rot);
+		movement.set(speed * xSpeed, speed * ySpeed);
+		setExhaustRotation();
+	}
+	
+	private void handleTouchPadInput() {
+		if(movementTouchPad.isTouched()) {
+			body.applyAngularImpulse(MathUtils.radDeg * -MAX_TURN_DEG * (movementTouchPad.getKnobPercentX() + movementTouchPad.getKnobPercentY()), true);
+		}
+					
+		if(gasTouchPad.isTouched()) {
+			gasPressed = true;
+			exhaust.start();
+		} else {
+			gasPressed = false;
+			movement.set(0, 0);
+			exhaust.allowCompletion();
+		}
 	}
 	
 	public void checkForCollision(Array<Rectangle> hardBlocks, Array<Vector2> spawnPoints) {
@@ -284,6 +289,7 @@ public class Player extends PhysicalEntity {
 			bullets.add(tmp);
 		}
 	}
+	
 	
 	private class KeyInput extends InputAdapter {
 		@Override

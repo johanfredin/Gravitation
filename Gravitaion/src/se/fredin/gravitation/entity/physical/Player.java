@@ -166,9 +166,9 @@ public class Player extends PhysicalEntity {
 	}
 	
 	public void tick(float delta) {
-		body.applyForceToCenter(movement, true);
-		bounds.setPosition(getBodyPosition());
+		super.tick(delta);
 		
+		body.applyForceToCenter(movement, true);
 		if(gasPressed) {
 			accelerate();
 		} if(leftPressed) {

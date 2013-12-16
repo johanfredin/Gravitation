@@ -10,6 +10,8 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class LaunchPad extends PhysicalEntity {
 
+	private boolean isTaken;
+	
 	public LaunchPad(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
 	}
@@ -20,7 +22,18 @@ public class LaunchPad extends PhysicalEntity {
 	}
 
 	@Override
-	public void tick(float delta) {}
+	public void tick(float delta) {
+		bounds.setPosition(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 3);
+	}
+	
+	public void checkIfTaken(Player player, float delta) {
+		if(this.bounds.overlaps(player.getBounds())) {
+			isTaken = true;
+			System.out.println("Launcupad taken");
+		} else {
+			isTaken = false;
+		}
+	}
 
 	@Override
 	public Body getSpecifiedBody(float xPos, float yPos, float bodyWidth, float bodyHeight) {
@@ -43,12 +56,19 @@ public class LaunchPad extends PhysicalEntity {
 		body = world.createBody(bodyDef);
 		body.createFixture(fixtureDef);
 		sprite.setSize(bodyWidth * 2, bodyHeight * 2);
-		sprite.setPosition(xPos- sprite.getWidth() / 2, yPos - sprite.getHeight() / 2);
+		sprite.setPosition(xPos - sprite.getWidth() / 2, yPos);
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		body.setUserData(sprite);
 		
 		boxShape.dispose();
 		return body;
+	}
+	
+	public void setTaken(boolean isTaken) {
+		this.isTaken = isTaken;
+	}
+	public boolean isTaken() {
+		return isTaken;
 	}
 	
 	@Override

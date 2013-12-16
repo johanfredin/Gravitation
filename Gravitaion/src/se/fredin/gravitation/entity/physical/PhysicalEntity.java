@@ -18,7 +18,6 @@ public abstract class PhysicalEntity implements Entity {
 	protected Rectangle bounds;
 	protected Sprite sprite;
 	protected float bodyWidth, bodyHeight;
-	protected float mass;
 	protected final float PIXELS_TO_METER = 1 / 32f;
 	
 	public PhysicalEntity(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
@@ -31,13 +30,18 @@ public abstract class PhysicalEntity implements Entity {
 		this.bodyWidth = bodyWidth;
 		this.bodyHeight = bodyHeight;
 		this.body = getSpecifiedBody(xPos, yPos, bodyWidth, bodyHeight);
-		this.bounds = new Rectangle(getBodyPosition().x, getBodyPosition().y, sprite.getWidth(), sprite.getHeight());
+		this.bounds = new Rectangle(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 2, sprite.getWidth(), sprite.getHeight());
 	}
 	
 	public abstract Body getSpecifiedBody(float xPos, float yPos,float bodyWidth, float bodyHeight);
 	
 	public Rectangle getBounds() {
 		return bounds;
+	}
+	
+	@Override
+	public void tick(float delta) {
+		bounds.setPosition(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 2);
 	}
 	
 	public Vector2 getBodyPosition() {

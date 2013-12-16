@@ -13,6 +13,8 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -28,7 +30,6 @@ import com.badlogic.gdx.utils.Disposable;
 public class Level implements LevelBase, Disposable {
 
 	private OrthogonalTiledMapRenderer mapRenderer;
-	private Box2DDebugRenderer box2DRenderer;
 	private World world;
 	private TiledMap map;
 	private Player player;
@@ -45,10 +46,16 @@ public class Level implements LevelBase, Disposable {
 	private final int VELOCITYITERATIONS = 8;
 	private final int POSITIONITERATIONS = 3;
 	
+	// For debugging
+	private Box2DDebugRenderer box2DRenderer;
+	private ShapeRenderer shapeRenderer;
+	
+	
 	public Level(String levelPath, GameScreen gameScreen) {
 		// Setup box2d world
 		this.world = new World(new Vector2(0, -12.82f), true);
 		this.box2DRenderer = new Box2DDebugRenderer();
+		this.shapeRenderer = new ShapeRenderer();
 		
 		// Setup tileMap
 		TmxMapLoader mapLoader = new TmxMapLoader();
@@ -129,6 +136,13 @@ public class Level implements LevelBase, Disposable {
 		
 		if(Gravitation.DEBUG_MODE) {
 			box2DRenderer.render(world, camera.combined);
+			shapeRenderer.setProjectionMatrix(camera.combined);
+			shapeRenderer.begin(ShapeType.Line);
+			shapeRenderer.rect(player.getBounds().x, player.getBounds().y, player.getBounds().width, player.getBounds().height);
+			for(LaunchPad launchPad : launchPads) {
+				shapeRenderer.rect(launchPad.getBounds().x, launchPad.getBounds().y, launchPad.getBounds().width, launchPad.getBounds().height);
+			}
+			shapeRenderer.end();
 		}
 		
 		moveCamera(player, camera);
@@ -137,6 +151,10 @@ public class Level implements LevelBase, Disposable {
 	
 	public void tick(float delta) {
 		player.tick(delta);
+		for(LaunchPad launchPad : launchPads) {
+			launchPad.tick(delta);
+			launchPad.checkIfTaken(player, delta);
+		}
 		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
 		player.checkForCollision(hardBlocks, spawnPoints);
 	}

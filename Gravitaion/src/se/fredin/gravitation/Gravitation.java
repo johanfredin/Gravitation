@@ -3,14 +3,13 @@ package se.fredin.gravitation;
 import se.fredin.gravitation.screen.GameScreen;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 
 public class Gravitation extends Game {
 
 	public static FPSLogger logger;
 	public static final String LOG = "Gravitation";
-	public static final boolean DEBUG_MODE = false;
+	public static final boolean DEBUG_MODE = true;
 	
 	@Override
 	public void create() {
@@ -33,8 +32,8 @@ public class Gravitation extends Game {
 	
 	@Override
 	public void pause() {
-		Gdx.app.exit();
-		//super.pause();
+		//Gdx.app.exit();
+		super.pause();
 	}
 	
 	@Override

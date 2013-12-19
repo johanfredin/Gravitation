@@ -2,6 +2,7 @@ package se.fredin.gravitation.entity.physical;
 
 import java.util.Iterator;
 
+import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.Bullet;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.utils.ParticleLoader;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
@@ -79,7 +81,31 @@ public class Player extends PhysicalEntity {
 		default:
 			break;
 		}
+	}
+	
+	
+	public void moveCamera(OrthographicCamera camera, int xPos, float mapWidth, float mapHeight) {
+		Gdx.gl.glViewport(xPos, 0, Gravitation.splitScreen ? Gdx.graphics.getWidth() / 2 : Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
+		float centerX = camera.viewportWidth / 2;
+		float centerY = camera.viewportHeight / 2;
+		// SET CAMERA TO PLAYER OR EXPLOSION POINT
+		if(crashed) {
+			float explosionX = explosion.getX();
+			float explosionY = explosion.getY();
+			camera.position.set(explosionX, explosionY, 0);
+		} else {
+			camera.position.set(getBodyPosition().x, getBodyPosition().y, 0);
+		}
+		
+		if(camera.position.x - centerX <= 0) 
+			camera.position.x = centerX;
+		if(camera.position.x + centerX >= mapWidth)
+			camera.position.x = mapWidth - centerX;
+		if(camera.position.y - centerY <= 0)
+			camera.position.y = centerY;
+		if(camera.position.y + centerY >= mapHeight)
+			camera.position.y = mapHeight - centerY;
 	}
 	
 	private Touchpad getTouchPad(String backgroundTexturePath, String knobTexturePath, float xPos, float yPos) {
@@ -227,6 +253,7 @@ public class Player extends PhysicalEntity {
 		}
 	}
 	
+	
 	public void checkForCollision(Array<Rectangle> hardBlocks, Array<Vector2> spawnPoints) {
 		for(Rectangle rect : hardBlocks) {
 			if(bounds.overlaps(rect)) {
@@ -241,7 +268,7 @@ public class Player extends PhysicalEntity {
 				if(bullets.get(i).getBounds().overlaps(rect)) {
 					bullets.get(i).dispose();
 					bullets.removeIndex(i);
-				}
+				} 
 			}
 		}
 	}
@@ -280,7 +307,7 @@ public class Player extends PhysicalEntity {
 	
 	private void shoot() {
 		if(ableToShoot) {
-			Bullet tmp = new Bullet(getBodyPosition());
+			Bullet tmp = new Bullet(getBodyPosition().x, getBodyPosition().y);
 			float bulletSpeed = 3f;
 			float bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
 			float bulletXSpeed = MathUtils.cos(bulletRot);

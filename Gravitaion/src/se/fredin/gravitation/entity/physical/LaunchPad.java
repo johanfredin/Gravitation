@@ -29,7 +29,6 @@ public class LaunchPad extends PhysicalEntity {
 	public void checkIfTaken(Player player, float delta) {
 		if(this.bounds.overlaps(player.getBounds())) {
 			isTaken = true;
-			System.out.println("Launcupad taken");
 		} else {
 			isTaken = false;
 		}

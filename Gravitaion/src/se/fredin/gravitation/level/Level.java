@@ -3,6 +3,7 @@ package se.fredin.gravitation.level;
 import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
+import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.utils.Paths;
 
@@ -32,7 +33,7 @@ public class Level implements LevelBase, Disposable {
 	private OrthogonalTiledMapRenderer mapRenderer;
 	private World world;
 	private TiledMap map;
-	private Player player;
+	private Player player, player2;
 	private Array<LaunchPad> launchPads;
 	private Array<Vector2> spawnPoints;
 	private Array<Rectangle> hardBlocks;
@@ -70,6 +71,8 @@ public class Level implements LevelBase, Disposable {
 		// Setup player
 		this.spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
 		this.player = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64);
+		this.spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
+		this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64);
 		this.hardBlocks = getWorldAdaptedBlocks(map);
 		
 		// Add gamePad support
@@ -132,6 +135,7 @@ public class Level implements LevelBase, Disposable {
 			launchPad.render(batch);
 		}
 		player.render(batch);
+		player2.render(batch);
 		batch.end();
 		
 		if(Gravitation.DEBUG_MODE) {
@@ -142,45 +146,29 @@ public class Level implements LevelBase, Disposable {
 			for(LaunchPad launchPad : launchPads) {
 				shapeRenderer.rect(launchPad.getBounds().x, launchPad.getBounds().y, launchPad.getBounds().width, launchPad.getBounds().height);
 			}
+			for(Rectangle collisionRect : hardBlocks) {
+				shapeRenderer.rect(collisionRect.x, collisionRect.y, collisionRect.width, collisionRect.height);
+			}
 			shapeRenderer.end();
 		}
 		
-		moveCamera(player, camera);
+		player.moveCamera(camera, 0, MAP_WIDTH, MAP_HEIGHT);
+		player2.moveCamera(camera, 0, MAP_WIDTH, MAP_HEIGHT);
 		camera.update();
 	}
 	
 	public void tick(float delta) {
 		player.tick(delta);
+		player2.tick(delta);
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.tick(delta);
 			launchPad.checkIfTaken(player, delta);
 		}
 		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
 		player.checkForCollision(hardBlocks, spawnPoints);
+		player2.checkForCollision(hardBlocks, spawnPoints);
 	}
 	
-	public void moveCamera(Player gameObject, OrthographicCamera camera) {
-		float centerX = camera.viewportWidth / 2;
-		float centerY = camera.viewportHeight / 2;
-		
-		// SET CAMERA TO PLAYER OR EXPLOSION POINT
-		if(player.isCrashed()) {
-			float explosionX = gameObject.getExplosion().getX();
-			float explosionY = gameObject.getExplosion().getY();
-			camera.position.set(explosionX, explosionY, 0);
-		} else {
-			camera.position.set(gameObject.getBodyPosition().x, gameObject.getBodyPosition().y, 0);
-		}
-		
-		if(camera.position.x - centerX <= 0) 
-			camera.position.x = centerX;
-		if(camera.position.x + centerX >= MAP_WIDTH)
-			camera.position.x = MAP_WIDTH - centerX;
-		if(camera.position.y - centerY <= 0)
-			camera.position.y = centerY;
-		if(camera.position.y + centerY >= MAP_HEIGHT)
-			camera.position.y = MAP_HEIGHT - centerY;
-	}
 	
 	@Override
 	public void dispose() {

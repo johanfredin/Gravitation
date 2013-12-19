@@ -9,7 +9,8 @@ public class Gravitation extends Game {
 
 	public static FPSLogger logger;
 	public static final String LOG = "Gravitation";
-	public static final boolean DEBUG_MODE = true;
+	public static final boolean DEBUG_MODE = false;
+	public static boolean splitScreen = true;
 	
 	@Override
 	public void create() {

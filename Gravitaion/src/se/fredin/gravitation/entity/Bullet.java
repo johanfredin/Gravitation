@@ -17,8 +17,8 @@ public class Bullet implements Entity {
 	private Sprite sprite;
 	private boolean isAlive = true;
 	
-	public Bullet(Vector2 position) {
-		this.position = new Vector2(position);
+	public Bullet(float x, float y) {
+		this.position = new Vector2(x, y);
 		this.movement = new Vector2(0, 0);
 		this.bounds = new Rectangle();
 		this.sprite = new Sprite(new Texture(Gdx.files.internal(Paths.BULLET_TEXTUREPATH)));

@@ -15,7 +15,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.PovDirection;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
@@ -37,6 +36,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class Player extends PhysicalEntity {
 	
+	public int PLAYER_NR;
 	private Vector2 movement;
 	private Touchpad movementTouchPad, gasTouchPad;
 	private Stage touchPadStage;
@@ -49,7 +49,7 @@ public class Player extends PhysicalEntity {
 	private float speed = 7500f;
 	private float xSpeed;
 	private float ySpeed;
-	private float rot;
+	private float shipRot;
 	private final float MAX_TURN_DEG = (float)(Math.PI);
 	private final float RESPAWN_TIME = 2.0f;
 	private boolean leftPressed, rightPressed, gasPressed;
@@ -57,8 +57,9 @@ public class Player extends PhysicalEntity {
 	private boolean ableToShoot = true;
 	private float timePassed;
 	
-	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
+	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight, int playerNum) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
+		this.PLAYER_NR = playerNum;
 		this.movement = new Vector2(0, 0);
 		this.gamePad = new GamePad();
 		this.exhaust = ParticleLoader.getEmitter(Paths.EXHAUST_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 2.66f, 3);
@@ -81,31 +82,6 @@ public class Player extends PhysicalEntity {
 		default:
 			break;
 		}
-	}
-	
-	
-	public void moveCamera(OrthographicCamera camera, int xPos, float mapWidth, float mapHeight) {
-		Gdx.gl.glViewport(xPos, 0, Gravitation.splitScreen ? Gdx.graphics.getWidth() / 2 : Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
-		float centerX = camera.viewportWidth / 2;
-		float centerY = camera.viewportHeight / 2;
-		// SET CAMERA TO PLAYER OR EXPLOSION POINT
-		if(crashed) {
-			float explosionX = explosion.getX();
-			float explosionY = explosion.getY();
-			camera.position.set(explosionX, explosionY, 0);
-		} else {
-			camera.position.set(getBodyPosition().x, getBodyPosition().y, 0);
-		}
-		
-		if(camera.position.x - centerX <= 0) 
-			camera.position.x = centerX;
-		if(camera.position.x + centerX >= mapWidth)
-			camera.position.x = mapWidth - centerX;
-		if(camera.position.y - centerY <= 0)
-			camera.position.y = centerY;
-		if(camera.position.y + centerY >= mapHeight)
-			camera.position.y = mapHeight - centerY;
 	}
 	
 	private Touchpad getTouchPad(String backgroundTexturePath, String knobTexturePath, float xPos, float yPos) {
@@ -174,16 +150,16 @@ public class Player extends PhysicalEntity {
 	}
 	
 	public void render(SpriteBatch batch) {
-		if(!crashed) {
-			sprite.draw(batch);
-			exhaust.draw(batch);
-		} 
 		// draw bullets
 		bulletIterator = bullets.iterator();
 		while(bulletIterator.hasNext()) {
 			bullet = bulletIterator.next();
 			bullet.render(batch);
 		}
+		if(!crashed) {
+			exhaust.draw(batch);
+			sprite.draw(batch);
+		} 
 		explosion.draw(batch);
 		
 		if(Gdx.app.getType() == ApplicationType.Android) {
@@ -230,10 +206,22 @@ public class Player extends PhysicalEntity {
 		
 	}
 	
+	private void shoot() {
+		if(ableToShoot) {
+			Bullet tmp = new Bullet(getBodyPosition().x, getBodyPosition().y);
+			float bulletSpeed = 3f;
+			float bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
+			float bulletXSpeed = MathUtils.cos(bulletRot);
+			float bulletYSpeed = MathUtils.sin(bulletRot);
+			tmp.setMovement(bulletSpeed * bulletXSpeed, bulletSpeed * bulletYSpeed);
+			bullets.add(tmp);
+		}
+	}
+	
 	private void accelerate() {
-		rot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
-		xSpeed = MathUtils.cos(rot);
-		ySpeed = MathUtils.sin(rot);
+		shipRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
+		xSpeed = MathUtils.cos(shipRot);
+		ySpeed = MathUtils.sin(shipRot);
 		movement.set(speed * xSpeed, speed * ySpeed);
 		setExhaustRotation();
 	}
@@ -253,15 +241,18 @@ public class Player extends PhysicalEntity {
 		}
 	}
 	
+	public void die(Array<Vector2> spawnPoints) {
+		crashed = true;
+		explosion.setPosition(getBodyPosition().x, getBodyPosition().y);
+		explosion.start();
+		Vector2 spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
+		setBodyPosition(spawnPoint.x, spawnPoint.y);
+	}
 	
-	public void checkForCollision(Array<Rectangle> hardBlocks, Array<Vector2> spawnPoints) {
+	public void checkForCollision(Array<Rectangle> hardBlocks, Array<Vector2> spawnPoints, Player opponent) {
 		for(Rectangle rect : hardBlocks) {
 			if(bounds.overlaps(rect)) {
-				crashed = true;
-				explosion.setPosition(getBodyPosition().x, getBodyPosition().y);
-				explosion.start();
-				Vector2 spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
-				setBodyPosition(spawnPoint.x, spawnPoint.y);
+				die(spawnPoints);
 			}
 			// check if bullets collided with walls
 			for(int i = 0; i < bullets.size; i++) {
@@ -269,6 +260,13 @@ public class Player extends PhysicalEntity {
 					bullets.get(i).dispose();
 					bullets.removeIndex(i);
 				} 
+			}
+		}
+		if(Gravitation.splitScreen) {
+			for(Bullet bullet : bullets) {
+				if(bullet.getBounds().overlaps(opponent.getBounds())) {
+					opponent.die(spawnPoints);
+				}
 			}
 		}
 	}
@@ -305,64 +303,103 @@ public class Player extends PhysicalEntity {
 		touchPadStage.dispose();
 	}
 	
-	private void shoot() {
-		if(ableToShoot) {
-			Bullet tmp = new Bullet(getBodyPosition().x, getBodyPosition().y);
-			float bulletSpeed = 3f;
-			float bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
-			float bulletXSpeed = MathUtils.cos(bulletRot);
-			float bulletYSpeed = MathUtils.sin(bulletRot);
-			tmp.setMovement(bulletSpeed * bulletXSpeed, bulletSpeed * bulletYSpeed);
-			bullets.add(tmp);
-		}
-	}
-	
-	
 	private class KeyInput extends InputAdapter {
 		@Override
 		public boolean keyDown(int keycode) {
-			switch(keycode) {
-			case Keys.ESCAPE:
-				Gdx.app.exit();
+			switch(PLAYER_NR) {
+			case 1:
+				System.out.println("Player 1 pressed " + keycode);
+				switch(keycode) {
+				case Keys.ESCAPE:
+					Gdx.app.exit();
+					break;
+				case Keys.LEFT:
+					leftPressed = true;
+					break;
+				case Keys.RIGHT:
+					rightPressed = true;
+					break;
+				case Keys.UP:
+					exhaust.start();
+					gasPressed = true;
+					break;
+				case Keys.CONTROL_RIGHT:
+					shoot();
+					break;
+				default:
+					break;
+				}
 				break;
-			case Keys.LEFT:
-				leftPressed = true;
-				break;
-			case Keys.RIGHT:
-				rightPressed = true;
-				break;
-			case Keys.UP:
-				exhaust.start();
-				gasPressed = true;
-				break;
-			case Keys.SPACE:
-				shoot();
+			case 2:
+				System.out.println("Player 2 pressed " + keycode);
+				switch(keycode) {
+				case Keys.ESCAPE:
+					Gdx.app.exit();
+					break;
+				case Keys.A:
+					leftPressed = true;
+					break;
+				case Keys.D:
+					rightPressed = true;
+					break;
+				case Keys.W:
+					exhaust.start();
+					gasPressed = true;
+					break;
+				case Keys.SPACE:
+					shoot();
+					break;
+				default:
+					break;
+				}
 				break;
 			default:
 				return false;
 			}
-			return true;
-			
+			return false;
 		}
 		
 		@Override
 		public boolean keyUp(int keycode) {
-			switch(keycode) {
-			case Keys.UP:
-				exhaust.allowCompletion();
-				gasPressed = false;
-				movement.set(0, 0);
+			switch(PLAYER_NR) {
+			case 1:
+				switch(keycode) {
+				case Keys.UP:
+					exhaust.allowCompletion();
+					gasPressed = false;
+					movement.set(0, 0);
+					break;
+				case Keys.RIGHT:
+					rightPressed = false;
+					break;
+				case Keys.LEFT:
+					leftPressed = false;
+					break;
+				case Keys.CONTROL_RIGHT:
+					break;
+				default:
+					return false;
+				}
 				break;
-			case Keys.RIGHT:
-				rightPressed = false;
+			case 2:
+				switch(keycode) {
+				case Keys.W:
+					exhaust.allowCompletion();
+					gasPressed = false;
+					movement.set(0, 0);
+					break;
+				case Keys.D:
+					rightPressed = false;
+					break;
+				case Keys.A:
+					leftPressed = false;
+					break;
+				case Keys.SPACE:
+					break;
+				default:
+					return false;
+				}
 				break;
-			case Keys.LEFT:
-				leftPressed = false;
-				break;
-			case Keys.SPACE:
-				break;
-			default:
-				return false;
 			}
 			return true;
 		}
@@ -391,7 +428,10 @@ public class Player extends PhysicalEntity {
 			switch(buttonIndex) {
 			case 0:
 				gasPressed = true;
+				exhaust.start();
 				break;
+			case 2:
+				shoot();
 			default:
 				return false;
 			}
@@ -404,6 +444,9 @@ public class Player extends PhysicalEntity {
 			case 0:
 				gasPressed = false;
 				movement.set(0, 0);
+				exhaust.allowCompletion();
+				break;
+			case 1:
 				break;
 			default:
 				return false;

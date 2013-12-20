@@ -1,7 +1,10 @@
 package se.fredin.gravitation.screen;
 
 import se.fredin.gravitation.level.Level;
+
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector3;
 
 public class GameScreen extends BaseScreen {
 	
@@ -24,32 +27,20 @@ public class GameScreen extends BaseScreen {
 
 	@Override
 	public void render(float delta) {
-		level.render(batch, camera);
+		level.render(batch, camera, camera2);
 		level.tick(delta);
 	}
 
 	@Override
-	public void show() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void show() {}
 
 	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void hide() {}
 
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() {}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void resume() {}
 
 }

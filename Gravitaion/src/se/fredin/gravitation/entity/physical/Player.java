@@ -10,8 +10,6 @@ import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.PovDirection;
@@ -46,13 +44,13 @@ public class Player extends PhysicalEntity {
 	private Array<Bullet> bullets;
 	private Iterator<Bullet> bulletIterator;
 	private Bullet bullet;
-	private float speed = 7500f;
+	private float speed = 9500f;
 	private float xSpeed;
 	private float ySpeed;
 	private float shipRot;
 	private final float MAX_TURN_DEG = (float)(Math.PI);
 	private final float RESPAWN_TIME = 2.0f;
-	private boolean leftPressed, rightPressed, gasPressed;
+	public boolean leftPressed, rightPressed, gasPressed;
 	private boolean crashed;
 	private boolean ableToShoot = true;
 	private float timePassed;
@@ -75,9 +73,6 @@ public class Player extends PhysicalEntity {
 		switch(Gdx.app.getType()) {
 		case Android:
 			Gdx.input.setInputProcessor(touchPadStage);
-			break;
-		case Desktop:
-			Gdx.input.setInputProcessor(new KeyInput());
 			break;
 		default:
 			break;
@@ -206,7 +201,7 @@ public class Player extends PhysicalEntity {
 		
 	}
 	
-	private void shoot() {
+	public void shoot() {
 		if(ableToShoot) {
 			Bullet tmp = new Bullet(getBodyPosition().x, getBodyPosition().y);
 			float bulletSpeed = 3f;
@@ -262,7 +257,7 @@ public class Player extends PhysicalEntity {
 				} 
 			}
 		}
-		if(Gravitation.splitScreen) {
+		if(Gravitation.multiPlayerMode) {
 			for(Bullet bullet : bullets) {
 				if(bullet.getBounds().overlaps(opponent.getBounds())) {
 					opponent.die(spawnPoints);
@@ -301,108 +296,6 @@ public class Player extends PhysicalEntity {
 	public void dispose() {
 		super.dispose();
 		touchPadStage.dispose();
-	}
-	
-	private class KeyInput extends InputAdapter {
-		@Override
-		public boolean keyDown(int keycode) {
-			switch(PLAYER_NR) {
-			case 1:
-				System.out.println("Player 1 pressed " + keycode);
-				switch(keycode) {
-				case Keys.ESCAPE:
-					Gdx.app.exit();
-					break;
-				case Keys.LEFT:
-					leftPressed = true;
-					break;
-				case Keys.RIGHT:
-					rightPressed = true;
-					break;
-				case Keys.UP:
-					exhaust.start();
-					gasPressed = true;
-					break;
-				case Keys.CONTROL_RIGHT:
-					shoot();
-					break;
-				default:
-					break;
-				}
-				break;
-			case 2:
-				System.out.println("Player 2 pressed " + keycode);
-				switch(keycode) {
-				case Keys.ESCAPE:
-					Gdx.app.exit();
-					break;
-				case Keys.A:
-					leftPressed = true;
-					break;
-				case Keys.D:
-					rightPressed = true;
-					break;
-				case Keys.W:
-					exhaust.start();
-					gasPressed = true;
-					break;
-				case Keys.SPACE:
-					shoot();
-					break;
-				default:
-					break;
-				}
-				break;
-			default:
-				return false;
-			}
-			return false;
-		}
-		
-		@Override
-		public boolean keyUp(int keycode) {
-			switch(PLAYER_NR) {
-			case 1:
-				switch(keycode) {
-				case Keys.UP:
-					exhaust.allowCompletion();
-					gasPressed = false;
-					movement.set(0, 0);
-					break;
-				case Keys.RIGHT:
-					rightPressed = false;
-					break;
-				case Keys.LEFT:
-					leftPressed = false;
-					break;
-				case Keys.CONTROL_RIGHT:
-					break;
-				default:
-					return false;
-				}
-				break;
-			case 2:
-				switch(keycode) {
-				case Keys.W:
-					exhaust.allowCompletion();
-					gasPressed = false;
-					movement.set(0, 0);
-					break;
-				case Keys.D:
-					rightPressed = false;
-					break;
-				case Keys.A:
-					leftPressed = false;
-					break;
-				case Keys.SPACE:
-					break;
-				default:
-					return false;
-				}
-				break;
-			}
-			return true;
-		}
 	}
 	
 	public class GamePad extends ControllerAdapter {
@@ -453,6 +346,10 @@ public class Player extends PhysicalEntity {
 			}
 			return true;
 		}
+	}
+
+	public ParticleEmitter getExhaust() {
+		return exhaust;
 	}
 	
 	

@@ -4,6 +4,7 @@ import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
+import se.fredin.gravitation.utils.KeyInput;
 import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -56,6 +57,7 @@ public class Level implements LevelBase, Disposable {
 		this.world = new World(new Vector2(0, -12.82f), true);
 		this.box2DRenderer = new Box2DDebugRenderer();
 		this.shapeRenderer = new ShapeRenderer();
+		shapeRenderer.setColor(Color.RED);
 		
 		// Setup tileMap
 		TmxMapLoader mapLoader = new TmxMapLoader();
@@ -70,9 +72,14 @@ public class Level implements LevelBase, Disposable {
 		// Setup player
 		this.spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
 		this.player = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1);
-		this.spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
-		this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64, 2);
+		if(Gravitation.multiPlayerMode) {
+			this.spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
+			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64, 2);
+		}
 		this.hardBlocks = getWorldAdaptedBlocks(map);
+		
+		// Add key support
+		Gdx.input.setInputProcessor(new KeyInput(player, player2));
 		
 		// Add gamePad support
 		if(Gdx.app.getType() == ApplicationType.Desktop) {
@@ -122,11 +129,7 @@ public class Level implements LevelBase, Disposable {
 	@Override
 	public void end(boolean cleared) {}
 	
-	
-	public void render(SpriteBatch batch, OrthographicCamera camera, OrthographicCamera camera2) {	
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		// Player 1
+	private void renderHalf(OrthographicCamera camera, SpriteBatch batch, int cameraXPos, boolean leftSide) {
 		mapRenderer.setView(camera);
 		mapRenderer.render();
 		
@@ -140,10 +143,39 @@ public class Level implements LevelBase, Disposable {
 		batch.end();
 		
 		shapeRenderer.setProjectionMatrix(camera.combined);
-		shapeRenderer.setColor(Color.RED);
 		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.rect(camera.position.x - camera.viewportWidth / 2, 0, 4, Gdx.graphics.getHeight());
+		shapeRenderer.rect(leftSide ? camera.position.x - camera.viewportWidth / 2 : camera.position.x + camera.viewportWidth / 2, 0, 2, Gdx.graphics.getHeight());
 		shapeRenderer.end();
+		
+		if(Gravitation.DEBUG_MODE) {
+			debugRender(camera);
+		}
+		
+		moveCamera(camera, (leftSide ? player : player2), cameraXPos, MAP_WIDTH, MAP_HEIGHT);
+		camera.update();
+	}
+	
+	public void render(SpriteBatch batch, OrthographicCamera camera, OrthographicCamera camera2) {	
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		if(Gravitation.multiPlayerMode) {
+			// Player 1
+			renderHalf(camera, batch, 0, true);
+			// Player 2
+			renderHalf(camera2, batch, Gdx.graphics.getWidth() / 2, false);
+			return;
+		}
+		
+		mapRenderer.setView(camera);
+		mapRenderer.render();
+		
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		for(LaunchPad launchPad : launchPads) {
+			launchPad.render(batch);
+		}
+		player.render(batch);
+		batch.end();
 		
 		if(Gravitation.DEBUG_MODE) {
 			debugRender(camera);
@@ -151,32 +183,6 @@ public class Level implements LevelBase, Disposable {
 		
 		moveCamera(camera, player, 0, MAP_WIDTH, MAP_HEIGHT);
 		camera.update();
-		
-		// Player 2
-		mapRenderer.setView(camera2);
-		mapRenderer.render();
-		
-		batch.setProjectionMatrix(camera2.combined);
-		batch.begin();
-		for(LaunchPad launchPad : launchPads) {
-			launchPad.render(batch);
-		}
-		player.render(batch);
-		player2.render(batch);
-		batch.end();
-		
-		shapeRenderer.setProjectionMatrix(camera2.combined);
-		shapeRenderer.setColor(Color.RED);
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.rect(camera2.position.x + camera2.viewportWidth / 2, 0, 4, Gdx.graphics.getHeight());
-		shapeRenderer.end();
-		
-		if(Gravitation.DEBUG_MODE) {
-			debugRender(camera2);
-		}
-		
-		moveCamera(camera2, player2, Gdx.graphics.getWidth() / 2, MAP_WIDTH, MAP_HEIGHT);
-		camera2.update();
 	}
 	
 	private void debugRender(OrthographicCamera camera) {
@@ -196,18 +202,23 @@ public class Level implements LevelBase, Disposable {
 
 	public void tick(float delta) {
 		player.tick(delta);
-		player2.tick(delta);
+		
+		if(Gravitation.multiPlayerMode) {
+			player2.tick(delta);
+			player2.checkForCollision(hardBlocks, spawnPoints, player);
+		}
+		
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.tick(delta);
 			launchPad.checkIfTaken(player, delta);
 		}
 		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-		player.checkForCollision(hardBlocks, spawnPoints, player2);
-		player2.checkForCollision(hardBlocks, spawnPoints, player);
+		player.checkForCollision(hardBlocks, spawnPoints, Gravitation.multiPlayerMode ? player2 : null);
+		
 	}
 	
 	public void moveCamera(OrthographicCamera camera, Player player, int xPos, float mapWidth, float mapHeight) {
-		Gdx.gl.glViewport(xPos, 0, Gravitation.splitScreen ? Gdx.graphics.getWidth() / 2 : Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.gl.glViewport(xPos, 0, Gravitation.multiPlayerMode ? Gdx.graphics.getWidth() / 2 : Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		float centerX = camera.viewportWidth / 2;
 		float centerY = camera.viewportHeight / 2;
@@ -242,10 +253,5 @@ public class Level implements LevelBase, Disposable {
 		}
 	}
 
-	@Override
-	public void render(SpriteBatch renderer, OrthographicCamera camera) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }

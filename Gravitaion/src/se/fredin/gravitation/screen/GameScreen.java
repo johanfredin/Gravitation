@@ -3,8 +3,6 @@ package se.fredin.gravitation.screen;
 import se.fredin.gravitation.level.Level;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector3;
 
 public class GameScreen extends BaseScreen {
 	

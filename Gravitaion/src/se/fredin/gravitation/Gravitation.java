@@ -10,7 +10,7 @@ public class Gravitation extends Game {
 	public static FPSLogger logger;
 	public static final String LOG = "Gravitation";
 	public static final boolean DEBUG_MODE = false;
-	public static boolean splitScreen = true;
+	public static boolean multiPlayerMode = false;
 	
 	@Override
 	public void create() {
@@ -33,7 +33,6 @@ public class Gravitation extends Game {
 	
 	@Override
 	public void pause() {
-		//Gdx.app.exit();
 		super.pause();
 	}
 	

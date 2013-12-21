@@ -1,6 +1,9 @@
 package se.fredin.gravitation.level;
 
 import se.fredin.gravitation.Gravitation;
+import se.fredin.gravitation.entity.item.FasterPlayerPowerup;
+import se.fredin.gravitation.entity.item.Powerup;
+import se.fredin.gravitation.entity.item.SlowerPlayerPowerup;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
@@ -37,6 +40,7 @@ public class Level implements LevelBase, Disposable {
 	private Array<LaunchPad> launchPads;
 	private Array<Vector2> spawnPoints;
 	private Array<Rectangle> hardBlocks;
+	private Array<Powerup> powerups;
 	private Array<Vector2> launchPadPositions;
 	private Vector2 spawnPoint;
 	
@@ -72,10 +76,16 @@ public class Level implements LevelBase, Disposable {
 		// Setup player
 		this.spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
 		this.player = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1);
+		
 		if(Gravitation.multiPlayerMode) {
 			this.spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
 			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64, 2);
+		
 		}
+		
+		// Init powerups ONLY IN 2 PLAYER MODE!
+		this.powerups = getPowerups();
+		
 		this.hardBlocks = getWorldAdaptedBlocks(map);
 		
 		// Add key support
@@ -91,6 +101,13 @@ public class Level implements LevelBase, Disposable {
 				}
 			}
 		} 
+	}
+	
+	private Array<Powerup> getPowerups() {
+		Array<Powerup> powerups = new Array<Powerup>();
+		powerups.add(new SlowerPlayerPowerup(20, 20, 10, 10, player));
+		powerups.add(new FasterPlayerPowerup(50, 25, 10, 10, player));
+		return powerups;
 	}
 	
 	private void initLaunchPads() {
@@ -119,6 +136,13 @@ public class Level implements LevelBase, Disposable {
 		}
 		return hardBlocks;
 	}
+	
+	public void resetPowerups() {
+		for(Powerup powerup : powerups) {
+			powerup.setAlive(true);
+			powerup.removePower(player);
+		}
+	}
 
 	@Override
 	public void start() {}
@@ -140,6 +164,9 @@ public class Level implements LevelBase, Disposable {
 		}
 		player.render(batch);
 		player2.render(batch);
+		for(Powerup powerup : powerups) {
+			powerup.render(batch);
+		}
 		batch.end();
 		
 		shapeRenderer.setProjectionMatrix(camera.combined);
@@ -175,6 +202,13 @@ public class Level implements LevelBase, Disposable {
 			launchPad.render(batch);
 		}
 		player.render(batch);
+		
+		// TODO: Remove this from single player rendering once tested!!
+		for(Powerup powerup : powerups) {
+			powerup.render(batch);
+		}
+		// ------------------------------------------------------------
+		
 		batch.end();
 		
 		if(Gravitation.DEBUG_MODE) {
@@ -203,6 +237,15 @@ public class Level implements LevelBase, Disposable {
 	public void tick(float delta) {
 		player.tick(delta);
 		
+		// TODO: Test in single player mode remove later!
+		for(Powerup powerup : powerups) {
+			powerup.tick(delta);
+		}
+		
+		if(player.isCrashed()) {
+			resetPowerups();
+		}
+		
 		if(Gravitation.multiPlayerMode) {
 			player2.tick(delta);
 			player2.checkForCollision(hardBlocks, spawnPoints, player);
@@ -228,7 +271,7 @@ public class Level implements LevelBase, Disposable {
 			float explosionY = player.getExplosion().getY();
 			camera.position.set(explosionX, explosionY, 0);
 		} else {
-			camera.position.set(player.getBodyPosition().x, player.getBodyPosition().y, 0);
+			camera.position.set(player.getPosition().x, player.getPosition().y, 0);
 		}
 		
 		if(camera.position.x - centerX <= 0) 

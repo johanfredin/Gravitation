@@ -30,7 +30,7 @@ public abstract class PhysicalEntity implements Entity {
 		this.bodyWidth = bodyWidth;
 		this.bodyHeight = bodyHeight;
 		this.body = getSpecifiedBody(xPos, yPos, bodyWidth, bodyHeight);
-		this.bounds = new Rectangle(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 2, sprite.getWidth(), sprite.getHeight());
+		this.bounds = new Rectangle(getPosition().x - sprite.getWidth() / 2, getPosition().y - sprite.getHeight() / 2, sprite.getWidth(), sprite.getHeight());
 	}
 	
 	public abstract Body getSpecifiedBody(float xPos, float yPos,float bodyWidth, float bodyHeight);
@@ -41,10 +41,10 @@ public abstract class PhysicalEntity implements Entity {
 	
 	@Override
 	public void tick(float delta) {
-		bounds.setPosition(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 2);
+		bounds.setPosition(getPosition().x - sprite.getWidth() / 2, getPosition().y - sprite.getHeight() / 2);
 	}
 	
-	public Vector2 getBodyPosition() {
+	public Vector2 getPosition() {
 		return body.getPosition();
 	}
 	

@@ -23,7 +23,7 @@ public class LaunchPad extends PhysicalEntity {
 
 	@Override
 	public void tick(float delta) {
-		bounds.setPosition(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 3);
+		bounds.setPosition(getPosition().x - sprite.getWidth() / 2, getPosition().y - sprite.getHeight() / 3);
 	}
 	
 	public void checkIfTaken(Player player, float delta) {

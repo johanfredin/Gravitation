@@ -7,6 +7,7 @@ import se.fredin.gravitation.entity.Bullet;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.utils.ParticleLoader;
 import se.fredin.gravitation.utils.Paths;
+import se.fredin.gravitation.utils.PlayerDefaults;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -44,7 +45,7 @@ public class Player extends PhysicalEntity {
 	private Array<Bullet> bullets;
 	private Iterator<Bullet> bulletIterator;
 	private Bullet bullet;
-	private float speed = 9500f;
+	private float speed = PlayerDefaults.DEFAULT_SPEED;
 	private float xSpeed;
 	private float ySpeed;
 	private float shipRot;
@@ -179,11 +180,11 @@ public class Player extends PhysicalEntity {
 			touchPadStage.act(delta);
 		}
 		
-		sprite.setPosition(getBodyPosition().x - sprite.getWidth() / 2, getBodyPosition().y - sprite.getHeight() / 2);
+		sprite.setPosition(getPosition().x - sprite.getWidth() / 2, getPosition().y - sprite.getHeight() / 2);
 		sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
 		
 		// update exhaust
-		exhaust.setPosition(getBodyPosition().x, getBodyPosition().y);
+		exhaust.setPosition(getPosition().x, getPosition().y);
 		exhaust.update(delta);
 		explosion.update(delta);
 		
@@ -203,7 +204,7 @@ public class Player extends PhysicalEntity {
 	
 	public void shoot() {
 		if(ableToShoot) {
-			Bullet tmp = new Bullet(getBodyPosition().x, getBodyPosition().y);
+			Bullet tmp = new Bullet(getPosition().x, getPosition().y, 2, 2);
 			float bulletSpeed = 3f;
 			float bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
 			float bulletXSpeed = MathUtils.cos(bulletRot);
@@ -238,7 +239,7 @@ public class Player extends PhysicalEntity {
 	
 	public void die(Array<Vector2> spawnPoints) {
 		crashed = true;
-		explosion.setPosition(getBodyPosition().x, getBodyPosition().y);
+		explosion.setPosition(getPosition().x, getPosition().y);
 		explosion.start();
 		Vector2 spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
 		setBodyPosition(spawnPoint.x, spawnPoint.y);
@@ -264,6 +265,10 @@ public class Player extends PhysicalEntity {
 				}
 			}
 		}
+	}
+	
+	public void setSpeed(float speed) {
+		this.speed = speed;
 	}
 	
 	private void playExplosion() {

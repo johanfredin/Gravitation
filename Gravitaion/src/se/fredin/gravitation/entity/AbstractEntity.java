@@ -44,6 +44,10 @@ public abstract class AbstractEntity implements Entity {
 	public Vector2 getPosition() {
 		return this.position;
 	}
+	
+	public void setPosition(float x, float y) {
+		this.position.set(x, y);
+	}
 
 	@Override
 	public Rectangle getBounds() {

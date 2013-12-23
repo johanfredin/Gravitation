@@ -12,5 +12,8 @@ public class Paths {
 	public static final String LANDING_PAD_TEXTUREPATH = "data/tileset/landing.png";
 	public static final String SLOW_POWERUP_TEXTURE = "data/objects/slowerplayer_powerup.png";
 	public static final String FAST_POWERUP_TEXTURE = "data/objects/fasterplayer_powerup.png";
+	public static final String FASTER_BULLET_TEXTURE = "data/objects/fasterbullet_powerup.png";
+	public static final String SLOWER_BULLET_TEXTURE = "data/objects/slowerbullet_powerup.png";
+	public static final String BOUNCING_BULLET_TEXTURE = "data/objects/bouncingbullet_powerup.png";
 	
 }

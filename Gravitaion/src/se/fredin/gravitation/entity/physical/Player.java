@@ -3,7 +3,7 @@ package se.fredin.gravitation.entity.physical;
 import java.util.Iterator;
 
 import se.fredin.gravitation.Gravitation;
-import se.fredin.gravitation.entity.Bullet;
+import se.fredin.gravitation.entity.item.Bullet;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.utils.ParticleLoader;
 import se.fredin.gravitation.utils.Paths;
@@ -204,13 +204,7 @@ public class Player extends PhysicalEntity {
 	
 	public void shoot() {
 		if(ableToShoot) {
-			Bullet tmp = new Bullet(getPosition().x, getPosition().y, 2, 2);
-			float bulletSpeed = 3f;
-			float bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
-			float bulletXSpeed = MathUtils.cos(bulletRot);
-			float bulletYSpeed = MathUtils.sin(bulletRot);
-			tmp.setMovement(bulletSpeed * bulletXSpeed, bulletSpeed * bulletYSpeed);
-			bullets.add(tmp);
+			bullets.add(new Bullet(getPosition().x, getPosition().y, 2, 2, body));
 		}
 	}
 	
@@ -242,7 +236,13 @@ public class Player extends PhysicalEntity {
 		explosion.setPosition(getPosition().x, getPosition().y);
 		explosion.start();
 		Vector2 spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
-		setBodyPosition(spawnPoint.x, spawnPoint.y);
+		setPosition(spawnPoint.x, spawnPoint.y);
+		if(bullets.size > 0) {
+			for(int i = 0; i < bullets.size; i++) {
+				bullets.get(i).dispose();
+			}
+			bullets.clear();
+		}
 	}
 	
 	public void checkForCollision(Array<Rectangle> hardBlocks, Array<Vector2> spawnPoints, Player opponent) {
@@ -253,8 +253,12 @@ public class Player extends PhysicalEntity {
 			// check if bullets collided with walls
 			for(int i = 0; i < bullets.size; i++) {
 				if(bullets.get(i).getBounds().overlaps(rect)) {
-					bullets.get(i).dispose();
-					bullets.removeIndex(i);
+					if(PlayerDefaults.bouncingBullets) {
+						bullets.get(i).setMovementReversed(true);
+					} else {
+						bullets.get(i).dispose();
+						bullets.removeIndex(i);
+					}
 				} 
 			}
 		}
@@ -265,6 +269,10 @@ public class Player extends PhysicalEntity {
 				}
 			}
 		}
+	}
+	
+	public Array<Bullet> getBullets() {
+		return bullets;
 	}
 	
 	public void setSpeed(float speed) {

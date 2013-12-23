@@ -1,8 +1,12 @@
 package se.fredin.gravitation.level;
 
 import se.fredin.gravitation.Gravitation;
+import se.fredin.gravitation.entity.item.BouncingBulletPowerup;
+import se.fredin.gravitation.entity.item.Bullet;
+import se.fredin.gravitation.entity.item.FasterBulletPowerup;
 import se.fredin.gravitation.entity.item.FasterPlayerPowerup;
 import se.fredin.gravitation.entity.item.Powerup;
+import se.fredin.gravitation.entity.item.SlowerBulletPowerup;
 import se.fredin.gravitation.entity.item.SlowerPlayerPowerup;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
@@ -38,8 +42,8 @@ public class Level implements LevelBase, Disposable {
 	private TiledMap map;
 	private Player player, player2;
 	private Array<LaunchPad> launchPads;
-	private Array<Vector2> spawnPoints;
-	private Array<Rectangle> hardBlocks;
+	private Array<Vector2> playerSpawnPoints;
+	private Array<Rectangle> hardBlocks, powerupLocations;
 	private Array<Powerup> powerups;
 	private Array<Vector2> launchPadPositions;
 	private Vector2 spawnPoint;
@@ -74,19 +78,19 @@ public class Level implements LevelBase, Disposable {
 		initLaunchPads();
 	
 		// Setup player
-		this.spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
+		this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
 		this.player = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1);
 		
 		if(Gravitation.multiPlayerMode) {
-			this.spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
+			this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
 			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64, 2);
-		
 		}
 		
-		// Init powerups ONLY IN 2 PLAYER MODE!
-		this.powerups = getPowerups();
-		
 		this.hardBlocks = getWorldAdaptedBlocks(map);
+		
+		// Init powerups ONLY IN 2 PLAYER MODE	!
+		this.powerupLocations = getWorldAdaptedPowerupLocations(map);
+		this.powerups = getPowerups();
 		
 		// Add key support
 		Gdx.input.setInputProcessor(new KeyInput(player, player2));
@@ -103,16 +107,30 @@ public class Level implements LevelBase, Disposable {
 		} 
 	}
 	
+	private Array<Rectangle> getWorldAdaptedPowerupLocations(TiledMap map2) {
+		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("powerups").getObjects().getByType(RectangleMapObject.class);
+		this.powerupLocations = new Array<Rectangle>();
+		for(RectangleMapObject rect : rectangleMapObjects) {
+			rect.getRectangle().set(rect.getRectangle().x * UNIT_SCALE, rect.getRectangle().y * UNIT_SCALE, 
+				 rect.getRectangle().width * UNIT_SCALE, rect.getRectangle().height * UNIT_SCALE);
+			powerupLocations.add(rect.getRectangle());
+		}
+		return powerupLocations;
+	}
+
 	private Array<Powerup> getPowerups() {
 		Array<Powerup> powerups = new Array<Powerup>();
-		powerups.add(new SlowerPlayerPowerup(20, 20, 10, 10, player));
-		powerups.add(new FasterPlayerPowerup(50, 25, 10, 10, player));
+		powerups.add(new SlowerPlayerPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player));
+		powerups.add(new FasterPlayerPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 10, 10, player));
+		powerups.add(new FasterBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player));
+		powerups.add(new SlowerBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player));
+		powerups.add(new BouncingBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player));
 		return powerups;
 	}
 	
 	private void initLaunchPads() {
 		launchPadPositions = new Array<Vector2>();
-		spawnPoints = new Array<Vector2>();
+		playerSpawnPoints = new Array<Vector2>();
 		launchPads = new Array<LaunchPad>();
 		for(int i = 1; i <= 4; i++) {
 			MapProperties spawnProperties = map.getLayers().get("spawn-points").getObjects().get("start" + i).getProperties();
@@ -122,7 +140,7 @@ public class Level implements LevelBase, Disposable {
 			
 			LaunchPad launchPad = new LaunchPad(launchPadPosition.x, launchPadPosition.y, Paths.LANDING_PAD_TEXTUREPATH, world, 180, 25f);
 			this.launchPads.add(launchPad);
-			this.spawnPoints.add(new Vector2(launchPadPosition.x + launchPad.getSprite().getWidth() / 4, launchPadPosition.y + launchPad.getSprite().getHeight()));
+			this.playerSpawnPoints.add(new Vector2(launchPadPosition.x + launchPad.getSprite().getWidth() / 4, launchPadPosition.y + launchPad.getSprite().getHeight()));
 		}
 	}
 	
@@ -137,11 +155,11 @@ public class Level implements LevelBase, Disposable {
 		return hardBlocks;
 	}
 	
-	public void resetPowerups() {
-		for(Powerup powerup : powerups) {
-			powerup.setAlive(true);
-			powerup.removePower(player);
-		}
+	public void resetPowerup(Powerup powerup) {
+		powerup.setPosition(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y);
+		powerup.setAlive(true);
+		powerup.removePower(player);
+		powerup.setRepositioned(true);
 	}
 
 	@Override
@@ -227,6 +245,9 @@ public class Level implements LevelBase, Disposable {
 		for(LaunchPad launchPad : launchPads) {
 			shapeRenderer.rect(launchPad.getBounds().x, launchPad.getBounds().y, launchPad.getBounds().width, launchPad.getBounds().height);
 		}
+		for(Bullet bullet : player.getBullets()) {
+			shapeRenderer.rect(bullet.getBounds().x, bullet.getBounds().y, bullet.getBounds().width, bullet.getBounds().height);
+		}
 		for(Rectangle collisionRect : hardBlocks) {
 			shapeRenderer.rect(collisionRect.x, collisionRect.y, collisionRect.width, collisionRect.height);
 		}
@@ -243,12 +264,16 @@ public class Level implements LevelBase, Disposable {
 		}
 		
 		if(player.isCrashed()) {
-			resetPowerups();
+			for(Powerup powerup : powerups) {
+				if(!powerup.isAlive() && !powerup.isRepositioned()) {
+					resetPowerup(powerup);
+				}
+			}
 		}
 		
 		if(Gravitation.multiPlayerMode) {
 			player2.tick(delta);
-			player2.checkForCollision(hardBlocks, spawnPoints, player);
+			player2.checkForCollision(hardBlocks, playerSpawnPoints, player);
 		}
 		
 		for(LaunchPad launchPad : launchPads) {
@@ -256,7 +281,7 @@ public class Level implements LevelBase, Disposable {
 			launchPad.checkIfTaken(player, delta);
 		}
 		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-		player.checkForCollision(hardBlocks, spawnPoints, Gravitation.multiPlayerMode ? player2 : null);
+		player.checkForCollision(hardBlocks, playerSpawnPoints, Gravitation.multiPlayerMode ? player2 : null);
 		
 	}
 	

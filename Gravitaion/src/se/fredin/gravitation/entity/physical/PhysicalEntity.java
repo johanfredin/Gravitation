@@ -1,6 +1,6 @@
 package se.fredin.gravitation.entity.physical;
 
-import se.fredin.gravitation.entity.Entity;
+import se.fredin.gravitation.entity.AbstractEntity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,16 +11,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
-public abstract class PhysicalEntity implements Entity {
+public abstract class PhysicalEntity extends AbstractEntity {
 	
 	protected World world;
 	protected Body body;
-	protected Rectangle bounds;
-	protected Sprite sprite;
 	protected float bodyWidth, bodyHeight;
 	protected final float PIXELS_TO_METER = 1 / 32f;
 	
 	public PhysicalEntity(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
+		super(xPos, yPos, bodyWidth, bodyHeight, texturePath);
 		this.world = world;
 		Texture texture = new Texture(Gdx.files.internal(texturePath).path());
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -35,15 +34,12 @@ public abstract class PhysicalEntity implements Entity {
 	
 	public abstract Body getSpecifiedBody(float xPos, float yPos,float bodyWidth, float bodyHeight);
 	
-	public Rectangle getBounds() {
-		return bounds;
-	}
-	
 	@Override
 	public void tick(float delta) {
 		bounds.setPosition(getPosition().x - sprite.getWidth() / 2, getPosition().y - sprite.getHeight() / 2);
 	}
 	
+	@Override
 	public Vector2 getPosition() {
 		return body.getPosition();
 	}
@@ -52,7 +48,8 @@ public abstract class PhysicalEntity implements Entity {
 		return sprite;
 	}
 	
-	public void setBodyPosition(float x, float y) {
+	@Override
+	public void setPosition(float x, float y) {
 		body.setTransform(x, y, 0);
 		body.setLinearVelocity(0, 0);
 	}

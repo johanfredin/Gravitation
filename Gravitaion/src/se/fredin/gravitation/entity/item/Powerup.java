@@ -5,26 +5,30 @@ import se.fredin.gravitation.entity.physical.Player;
 
 public abstract class Powerup extends AbstractEntity {
 
-	protected Player player;
+	protected Player player1, player2;
 	protected boolean isRepositioned;
 	
-	public Powerup(float x, float y, float width, float height, String texturePath, Player player) {
+	public Powerup(float x, float y, float width, float height, String texturePath, Player player1, Player player2) {
 		super(x, y, width, height, texturePath);
-		this.player = player;
+		this.player1 = player1;
+		this.player2 = player2;
 	}
 	
-	public abstract void affectEntity(AbstractEntity entity);
+	public abstract void affectEntity(Player player);
 	
-	public abstract void removePower(AbstractEntity entity);
+	public abstract void removePower(Player player);
 	
 	@Override
 	public void tick(float delta) {
 		super.tick(delta);
-		if(isAlive && player.getBounds().overlaps(bounds)) {
-			if(isAlive) {
-				affectEntity(player);
+		if(isAlive) {
+			if(player1.getBounds().overlaps(bounds)) {
+				affectEntity(player1);
+				isAlive = false;
+			} if(player2.getBounds().overlaps(bounds)) {
+				affectEntity(player2);
+				isAlive = false;
 			}
-			isAlive = false;
 		}
 	}
 

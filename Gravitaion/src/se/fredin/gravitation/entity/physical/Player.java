@@ -37,6 +37,7 @@ public class Player extends PhysicalEntity {
 	
 	public int PLAYER_NR;
 	private Vector2 movement;
+	private float bulletSpeed = PlayerDefaults.DEFAULT_BULLET_SPEED;
 	private Touchpad movementTouchPad, gasTouchPad;
 	private Stage touchPadStage;
 	private GamePad gamePad;
@@ -202,9 +203,13 @@ public class Player extends PhysicalEntity {
 		
 	}
 	
+	public void setBulletSpeed(float bulletSpeed) {
+		this.bulletSpeed = bulletSpeed;
+	}
+	
 	public void shoot() {
 		if(ableToShoot) {
-			bullets.add(new Bullet(getPosition().x, getPosition().y, 2, 2, body));
+			bullets.add(new Bullet(getPosition().x, getPosition().y, 2, 2, bulletSpeed, body));
 		}
 	}
 	

@@ -2,7 +2,6 @@ package se.fredin.gravitation.entity.item;
 
 import se.fredin.gravitation.entity.AbstractEntity;
 import se.fredin.gravitation.utils.Paths;
-import se.fredin.gravitation.utils.PlayerDefaults;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,9 +18,9 @@ public class Bullet extends AbstractEntity {
 	private float bulletXSpeed;
 	private float bulletYSpeed;
 	
-	public Bullet(float x, float y, float width, float height, Body body) {
+	public Bullet(float x, float y, float width, float height, float speed, Body body) {
 		super(x, y, width, height, Gdx.files.internal(Paths.BULLET_TEXTUREPATH).path());
-		this.speed = PlayerDefaults.adaptableBulletSpeed;
+		this.speed = speed;
 		this.bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
 		this.bulletXSpeed = MathUtils.cos(bulletRot);
 		this.bulletYSpeed = MathUtils.sin(bulletRot);

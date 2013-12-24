@@ -40,7 +40,7 @@ public class Level implements LevelBase, Disposable {
 	private OrthogonalTiledMapRenderer mapRenderer;
 	private World world;
 	private TiledMap map;
-	private Player player, player2;
+	private Player player1, player2;
 	private Array<LaunchPad> launchPads;
 	private Array<Vector2> playerSpawnPoints;
 	private Array<Rectangle> hardBlocks, powerupLocations;
@@ -79,27 +79,26 @@ public class Level implements LevelBase, Disposable {
 	
 		// Setup player
 		this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
-		this.player = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1);
+		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1);
 		
 		if(Gravitation.multiPlayerMode) {
 			this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
 			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64, 2);
+			// Init powerups ONLY IN 2 PLAYER MODE	!
+			this.powerupLocations = getWorldAdaptedPowerupLocations(map);
+			this.powerups = getPowerups();
 		}
 		
 		this.hardBlocks = getWorldAdaptedBlocks(map);
 		
-		// Init powerups ONLY IN 2 PLAYER MODE	!
-		this.powerupLocations = getWorldAdaptedPowerupLocations(map);
-		this.powerups = getPowerups();
-		
 		// Add key support
-		Gdx.input.setInputProcessor(new KeyInput(player, player2));
+		Gdx.input.setInputProcessor(new KeyInput(player1, player2));
 		
 		// Add gamePad support
 		if(Gdx.app.getType() == ApplicationType.Desktop) {
 			for(int i = 0; i < Controllers.getControllers().size; i++) {
 				if(i == 0) {
-					Controllers.getControllers().get(i).addListener(player.getGamePad());
+					Controllers.getControllers().get(i).addListener(player1.getGamePad());
 				} else if(i == 1) {
 					Controllers.getControllers().get(i).addListener(player2.getGamePad());
 				}
@@ -120,11 +119,11 @@ public class Level implements LevelBase, Disposable {
 
 	private Array<Powerup> getPowerups() {
 		Array<Powerup> powerups = new Array<Powerup>();
-		powerups.add(new SlowerPlayerPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player));
-		powerups.add(new FasterPlayerPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 10, 10, player));
-		powerups.add(new FasterBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player));
-		powerups.add(new SlowerBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player));
-		powerups.add(new BouncingBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player));
+		powerups.add(new SlowerPlayerPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
+		powerups.add(new FasterPlayerPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 10, 10, player1, player2));
+		powerups.add(new FasterBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
+		powerups.add(new SlowerBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
+		powerups.add(new BouncingBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
 		return powerups;
 	}
 	
@@ -155,10 +154,14 @@ public class Level implements LevelBase, Disposable {
 		return hardBlocks;
 	}
 	
-	public void resetPowerup(Powerup powerup) {
+	public void resetPowerup(Powerup powerup, Player player) {
 		powerup.setPosition(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y);
 		powerup.setAlive(true);
-		powerup.removePower(player);
+		if(player == player1) {
+			powerup.removePower(player1);
+		} else if(player == player2) {
+			powerup.removePower(player2);
+		}
 		powerup.setRepositioned(true);
 	}
 
@@ -180,7 +183,7 @@ public class Level implements LevelBase, Disposable {
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.render(batch);
 		}
-		player.render(batch);
+		player1.render(batch);
 		player2.render(batch);
 		for(Powerup powerup : powerups) {
 			powerup.render(batch);
@@ -196,7 +199,7 @@ public class Level implements LevelBase, Disposable {
 			debugRender(camera);
 		}
 		
-		moveCamera(camera, (leftSide ? player : player2), cameraXPos, MAP_WIDTH, MAP_HEIGHT);
+		moveCamera(camera, (leftSide ? player1 : player2), cameraXPos, MAP_WIDTH, MAP_HEIGHT);
 		camera.update();
 	}
 	
@@ -204,9 +207,7 @@ public class Level implements LevelBase, Disposable {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		if(Gravitation.multiPlayerMode) {
-			// Player 1
 			renderHalf(camera, batch, 0, true);
-			// Player 2
 			renderHalf(camera2, batch, Gdx.graphics.getWidth() / 2, false);
 			return;
 		}
@@ -219,21 +220,14 @@ public class Level implements LevelBase, Disposable {
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.render(batch);
 		}
-		player.render(batch);
-		
-		// TODO: Remove this from single player rendering once tested!!
-		for(Powerup powerup : powerups) {
-			powerup.render(batch);
-		}
-		// ------------------------------------------------------------
-		
+		player1.render(batch);
 		batch.end();
 		
 		if(Gravitation.DEBUG_MODE) {
 			debugRender(camera);
 		}
 		
-		moveCamera(camera, player, 0, MAP_WIDTH, MAP_HEIGHT);
+		moveCamera(camera, player1, 0, MAP_WIDTH, MAP_HEIGHT);
 		camera.update();
 	}
 	
@@ -241,14 +235,12 @@ public class Level implements LevelBase, Disposable {
 		box2DRenderer.render(world, camera.combined);
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.rect(player.getBounds().x, player.getBounds().y, player.getBounds().width, player.getBounds().height);
+		shapeRenderer.rect(player1.getBounds().x, player1.getBounds().y, player1.getBounds().width, player1.getBounds().height);
 		for(LaunchPad launchPad : launchPads) {
 			shapeRenderer.rect(launchPad.getBounds().x, launchPad.getBounds().y, launchPad.getBounds().width, launchPad.getBounds().height);
-		}
-		for(Bullet bullet : player.getBullets()) {
+		} for(Bullet bullet : player1.getBullets()) {
 			shapeRenderer.rect(bullet.getBounds().x, bullet.getBounds().y, bullet.getBounds().width, bullet.getBounds().height);
-		}
-		for(Rectangle collisionRect : hardBlocks) {
+		} for(Rectangle collisionRect : hardBlocks) {
 			shapeRenderer.rect(collisionRect.x, collisionRect.y, collisionRect.width, collisionRect.height);
 		}
 		shapeRenderer.end();
@@ -256,32 +248,30 @@ public class Level implements LevelBase, Disposable {
 	}
 
 	public void tick(float delta) {
-		player.tick(delta);
-		
-		// TODO: Test in single player mode remove later!
-		for(Powerup powerup : powerups) {
-			powerup.tick(delta);
-		}
-		
-		if(player.isCrashed()) {
-			for(Powerup powerup : powerups) {
-				if(!powerup.isAlive() && !powerup.isRepositioned()) {
-					resetPowerup(powerup);
-				}
-			}
-		}
+		player1.tick(delta);
 		
 		if(Gravitation.multiPlayerMode) {
 			player2.tick(delta);
-			player2.checkForCollision(hardBlocks, playerSpawnPoints, player);
+			player2.checkForCollision(hardBlocks, playerSpawnPoints, player1);
+			for(Powerup powerup : powerups) {
+				powerup.tick(delta);
+				if(player1.isCrashed()) {
+					if(!powerup.isAlive() && !powerup.isRepositioned()) {
+						resetPowerup(powerup, player1);
+					}
+				} if(player2.isCrashed()) {
+					if(!powerup.isAlive() && !powerup.isRepositioned()) {
+						resetPowerup(powerup, player2);
+					}
+				}
+			}
 		}
-		
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.tick(delta);
-			launchPad.checkIfTaken(player, delta);
+			launchPad.checkIfTaken(player1, delta);
 		}
 		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-		player.checkForCollision(hardBlocks, playerSpawnPoints, Gravitation.multiPlayerMode ? player2 : null);
+		player1.checkForCollision(hardBlocks, playerSpawnPoints, Gravitation.multiPlayerMode ? player2 : null);
 		
 	}
 	
@@ -314,7 +304,7 @@ public class Level implements LevelBase, Disposable {
 	public void dispose() {
 		map.dispose();
 		mapRenderer.dispose();
-		player.dispose();
+		player1.dispose();
 		player2.dispose();
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.dispose();

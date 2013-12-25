@@ -6,7 +6,7 @@ import se.fredin.gravitation.entity.item.Bullet;
 import se.fredin.gravitation.entity.item.FasterBulletPowerup;
 import se.fredin.gravitation.entity.item.FasterPlayerPowerup;
 import se.fredin.gravitation.entity.item.Powerup;
-import se.fredin.gravitation.entity.item.ReversedStearing;
+import se.fredin.gravitation.entity.item.ReversedStearingPowerup;
 import se.fredin.gravitation.entity.item.SlowerBulletPowerup;
 import se.fredin.gravitation.entity.item.SlowerPlayerPowerup;
 import se.fredin.gravitation.entity.physical.LaunchPad;
@@ -80,11 +80,11 @@ public class Level implements LevelBase, Disposable {
 	
 		// Setup player
 		this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
-		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1);
+		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64);
 		
 		if(Gravitation.multiPlayerMode) {
 			this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
-			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64, 2);
+			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64);
 			// Init powerups ONLY IN 2 PLAYER MODE	!
 			this.powerupLocations = getWorldAdaptedPowerupLocations(map);
 			this.powerups = getPowerups();
@@ -118,44 +118,6 @@ public class Level implements LevelBase, Disposable {
 		return powerupLocations;
 	}
 
-	private Array<Powerup> getPowerups() {
-		Array<Powerup> powerups = new Array<Powerup>();
-		powerups.add(new SlowerPlayerPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
-		powerups.add(new FasterPlayerPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 10, 10, player1, player2));
-		powerups.add(new FasterBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
-		powerups.add(new SlowerBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
-		powerups.add(new BouncingBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
-		powerups.add(new ReversedStearing(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
-		return powerups;
-	}
-	
-	private void initLaunchPads() {
-		launchPadPositions = new Array<Vector2>();
-		playerSpawnPoints = new Array<Vector2>();
-		launchPads = new Array<LaunchPad>();
-		for(int i = 1; i <= 4; i++) {
-			MapProperties spawnProperties = map.getLayers().get("spawn-points").getObjects().get("start" + i).getProperties();
-			
-			Vector2 launchPadPosition = new Vector2((Float)spawnProperties.get("x") * UNIT_SCALE, (Float)spawnProperties.get("y") * UNIT_SCALE);
-			this.launchPadPositions.add(launchPadPosition);
-			
-			LaunchPad launchPad = new LaunchPad(launchPadPosition.x, launchPadPosition.y, Paths.LANDING_PAD_TEXTUREPATH, world, 180, 25f);
-			this.launchPads.add(launchPad);
-			this.playerSpawnPoints.add(new Vector2(launchPadPosition.x + launchPad.getSprite().getWidth() / 4, launchPadPosition.y + launchPad.getSprite().getHeight()));
-		}
-	}
-	
-	private Array<Rectangle> getWorldAdaptedBlocks(TiledMap map) {
-		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
-		this.hardBlocks = new Array<Rectangle>();
-		for(RectangleMapObject rect : rectangleMapObjects) {
-			rect.getRectangle().set(rect.getRectangle().x * UNIT_SCALE, rect.getRectangle().y * UNIT_SCALE, 
-				 rect.getRectangle().width * UNIT_SCALE, rect.getRectangle().height * UNIT_SCALE);
-			hardBlocks.add(rect.getRectangle());
-		}
-		return hardBlocks;
-	}
-	
 	@Override
 	public void start() {}
 
@@ -164,6 +126,54 @@ public class Level implements LevelBase, Disposable {
 
 	@Override
 	public void end(boolean cleared) {}
+	
+	@Override
+	public void render(SpriteBatch batch, OrthographicCamera camera, OrthographicCamera camera2) {	
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		if(Gravitation.multiPlayerMode) {
+			renderHalf(camera, batch, 0, true);
+			renderHalf(camera2, batch, Gdx.graphics.getWidth() / 2, false);
+			return;
+		}
+		
+		mapRenderer.setView(camera);
+		mapRenderer.render();
+		
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		for(LaunchPad launchPad : launchPads) {
+			launchPad.render(batch);
+		}
+		player1.render(batch);
+		batch.end();
+		
+		if(Gravitation.DEBUG_MODE) {
+			debugRender(camera);
+		}
+		
+		moveCamera(camera, player1, 0, MAP_WIDTH, MAP_HEIGHT);
+		camera.update();
+	}
+	
+	@Override
+	public void tick(float delta) {
+		player1.tick(delta);
+		
+		if(Gravitation.multiPlayerMode) {
+			player2.tick(delta);
+			player2.checkForCollision(hardBlocks, playerSpawnPoints, player1);
+			for(Powerup powerup : powerups) {
+				powerup.tick(delta);
+			}
+		}
+		for(LaunchPad launchPad : launchPads) {
+			launchPad.tick(delta);
+			launchPad.checkIfTaken(player1, delta);
+		}
+		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
+		player1.checkForCollision(hardBlocks, playerSpawnPoints, Gravitation.multiPlayerMode ? player2 : null);
+	}
 	
 	private void renderHalf(OrthographicCamera camera, SpriteBatch batch, int cameraXPos, boolean leftSide) {
 		mapRenderer.setView(camera);
@@ -194,32 +204,42 @@ public class Level implements LevelBase, Disposable {
 		camera.update();
 	}
 	
-	public void render(SpriteBatch batch, OrthographicCamera camera, OrthographicCamera camera2) {	
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		if(Gravitation.multiPlayerMode) {
-			renderHalf(camera, batch, 0, true);
-			renderHalf(camera2, batch, Gdx.graphics.getWidth() / 2, false);
-			return;
+	private Array<Powerup> getPowerups() {
+		Array<Powerup> powerups = new Array<Powerup>();
+		powerups.add(new SlowerPlayerPowerup(powerupLocations, 5, 5, player1, player2));
+		powerups.add(new FasterPlayerPowerup(powerupLocations, 5, 5, player1, player2));
+		powerups.add(new FasterBulletPowerup(powerupLocations, 5, 5, player1, player2));
+		powerups.add(new SlowerBulletPowerup(powerupLocations, 5, 5, player1, player2));
+		powerups.add(new BouncingBulletPowerup(powerupLocations, 5, 5, player1, player2));
+		powerups.add(new ReversedStearingPowerup(powerupLocations, 5, 5, player1, player2));
+		return powerups;
+	}
+	
+	private void initLaunchPads() {
+		launchPadPositions = new Array<Vector2>();
+		playerSpawnPoints = new Array<Vector2>();
+		launchPads = new Array<LaunchPad>();
+		for(int i = 1; i <= 4; i++) {
+			MapProperties spawnProperties = map.getLayers().get("spawn-points").getObjects().get("start" + i).getProperties();
+			
+			Vector2 launchPadPosition = new Vector2((Float)spawnProperties.get("x") * UNIT_SCALE, (Float)spawnProperties.get("y") * UNIT_SCALE);
+			this.launchPadPositions.add(launchPadPosition);
+			
+			LaunchPad launchPad = new LaunchPad(launchPadPosition.x, launchPadPosition.y, Paths.LANDING_PAD_TEXTUREPATH, world, 180, 25f);
+			this.launchPads.add(launchPad);
+			this.playerSpawnPoints.add(new Vector2(launchPadPosition.x + launchPad.getSprite().getWidth() / 4, launchPadPosition.y + launchPad.getSprite().getHeight()));
 		}
-		
-		mapRenderer.setView(camera);
-		mapRenderer.render();
-		
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		for(LaunchPad launchPad : launchPads) {
-			launchPad.render(batch);
+	}
+	
+	private Array<Rectangle> getWorldAdaptedBlocks(TiledMap map) {
+		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
+		this.hardBlocks = new Array<Rectangle>();
+		for(RectangleMapObject rect : rectangleMapObjects) {
+			rect.getRectangle().set(rect.getRectangle().x * UNIT_SCALE, rect.getRectangle().y * UNIT_SCALE, 
+				 rect.getRectangle().width * UNIT_SCALE, rect.getRectangle().height * UNIT_SCALE);
+			hardBlocks.add(rect.getRectangle());
 		}
-		player1.render(batch);
-		batch.end();
-		
-		if(Gravitation.DEBUG_MODE) {
-			debugRender(camera);
-		}
-		
-		moveCamera(camera, player1, 0, MAP_WIDTH, MAP_HEIGHT);
-		camera.update();
+		return hardBlocks;
 	}
 	
 	private void debugRender(OrthographicCamera camera) {
@@ -235,29 +255,9 @@ public class Level implements LevelBase, Disposable {
 			shapeRenderer.rect(collisionRect.x, collisionRect.y, collisionRect.width, collisionRect.height);
 		}
 		shapeRenderer.end();
-		
-	}
-
-	public void tick(float delta) {
-		player1.tick(delta);
-		
-		if(Gravitation.multiPlayerMode) {
-			player2.tick(delta);
-			player2.checkForCollision(hardBlocks, playerSpawnPoints, player1);
-			for(Powerup powerup : powerups) {
-				powerup.tick(delta);
-			}
-		}
-		for(LaunchPad launchPad : launchPads) {
-			launchPad.tick(delta);
-			launchPad.checkIfTaken(player1, delta);
-		}
-		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-		player1.checkForCollision(hardBlocks, playerSpawnPoints, Gravitation.multiPlayerMode ? player2 : null);
-		
 	}
 	
-	public void moveCamera(OrthographicCamera camera, Player player, int xPos, float mapWidth, float mapHeight) {
+	private void moveCamera(OrthographicCamera camera, Player player, int xPos, float mapWidth, float mapHeight) {
 		Gdx.gl.glViewport(xPos, 0, Gravitation.multiPlayerMode ? Gdx.graphics.getWidth() / 2 : Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		float centerX = camera.viewportWidth / 2;

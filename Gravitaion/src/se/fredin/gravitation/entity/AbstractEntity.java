@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Used for non box2d objects such as bullets and powerups.
@@ -18,10 +19,18 @@ public abstract class AbstractEntity implements Entity {
 	protected Rectangle bounds;
 	protected Sprite sprite;
 	protected boolean isAlive = true;
+	protected Array<Rectangle> spawnPoints;
 	
 	public AbstractEntity(float x, float y, float width, float height, String texturePath) {
 		this.position = new Vector2(x, y);
-		this.bounds = new Rectangle();
+		this.sprite = new Sprite(new Texture(Gdx.files.internal(texturePath)));
+		this.sprite.setSize(width, height);
+		this.bounds = new Rectangle(0, 0, sprite.getWidth(), sprite.getHeight());
+	}
+	
+	public AbstractEntity(Array<Rectangle> spawnPoints, float width, float height, String texturePath) {
+		this.spawnPoints = spawnPoints;
+		this.position = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)).x, spawnPoints.get((int)(Math.random() * spawnPoints.size)).y);
 		this.sprite = new Sprite(new Texture(Gdx.files.internal(texturePath)));
 		this.sprite.setSize(width, height);
 		this.bounds = new Rectangle(0, 0, sprite.getWidth(), sprite.getHeight());

@@ -5,11 +5,13 @@ import se.fredin.gravitation.utils.Paths;
 import se.fredin.gravitation.utils.PlayerDefaults;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class SlowerPlayerPowerup extends Powerup {
 
-	public SlowerPlayerPowerup(float x, float y, float width, float height, Player player1, Player player2) {
-		super(x, y, width, height, Gdx.files.internal(Paths.SLOW_POWERUP_TEXTURE).path(), player1, player2);
+	public SlowerPlayerPowerup(Array<Rectangle> spawnPoints, float width, float height, Player player1, Player player2) {
+		super(spawnPoints, width, height, Gdx.files.internal(Paths.SLOW_POWERUP_TEXTURE).path(), player1, player2);
 	}
 
 	@Override

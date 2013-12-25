@@ -35,7 +35,6 @@ import com.badlogic.gdx.utils.Array;
 
 public class Player extends PhysicalEntity {
 	
-	public int PLAYER_NR;
 	private boolean isReversedSteering;
 	private Vector2 movement;
 	private float bulletSpeed = PlayerDefaults.DEFAULT_BULLET_SPEED;
@@ -59,9 +58,8 @@ public class Player extends PhysicalEntity {
 	private float timePassed;
 	private boolean isBulletMovementReversed;
 	
-	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight, int playerNum) {
+	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
-		this.PLAYER_NR = playerNum;
 		this.movement = new Vector2(0, 0);
 		this.gamePad = new GamePad();
 		this.exhaust = ParticleLoader.getEmitter(Paths.EXHAUST_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 2.66f, 3);
@@ -82,28 +80,88 @@ public class Player extends PhysicalEntity {
 			break;
 		}
 	}
-	
-	private Touchpad getTouchPad(String backgroundTexturePath, String knobTexturePath, float xPos, float yPos) {
-		Skin skin = new Skin();
-		Texture padbgTex = new Texture(Gdx.files.internal(backgroundTexturePath));
-		Texture knobTex = new Texture(Gdx.files.internal(knobTexturePath));
-		padbgTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		knobTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		skin.add("padbg", padbgTex);
-		skin.add("knob", knobTex);
-		TouchpadStyle touchpadStyle = new TouchpadStyle(skin.getDrawable("padbg"), skin.getDrawable("knob"));
-		Touchpad touchpad = new Touchpad(3, touchpadStyle);
-		touchPadStage = new Stage(BaseScreen.VIEWPORT_WIDTH, BaseScreen.VIEWPORT_HEIGHT, true);
-		touchPadStage.addActor(touchpad);
-		touchpad.setPosition(xPos, yPos);
-		return touchpad;
+
+	// PROPERTIES -----------------------------------------------------------------------------------------
+	public ParticleEmitter getExhaust() {
+		return exhaust;
 	}
 	
-	private void setExhaustRotation() {
-		float angle = sprite.getRotation();
-		exhaust.getAngle().setLow(angle + 270);
-		exhaust.getAngle().setHighMin(angle + 270 - 90);
-		exhaust.getAngle().setHighMax(angle + 270 + 90);
+	public void setReversedSteering(boolean isReversedSteering) {
+		this.isReversedSteering = isReversedSteering;
+	}
+	
+	public void setBulletSpeed(float bulletSpeed) {
+		this.bulletSpeed = bulletSpeed;
+	}
+	
+	public void setBulletMovementReversed(boolean isBulletMovementReversed) {
+		this.isBulletMovementReversed = isBulletMovementReversed;
+	}
+	
+	public Array<Bullet> getBullets() {
+		return bullets;
+	}
+	
+	public void setSpeed(float speed) {
+		this.speed = speed;
+	}
+	
+	public void setMovement(float x, float y) {
+		this.movement.set(x, y);
+	}
+	
+	public boolean isCrashed() {
+		return crashed;
+	}
+	
+	public ParticleEmitter getExplosion() {
+		return explosion;
+	}
+	
+	public GamePad getGamePad() {
+		return gamePad;
+	}
+	
+	// ---------------------------------------------------------------------------------------------------
+	
+	public void die(Array<Vector2> spawnPoints) {
+		crashed = true;
+		explosion.setPosition(getPosition().x, getPosition().y);
+		explosion.start();
+		Vector2 spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
+		setPosition(spawnPoint.x, spawnPoint.y);
+		if(bullets.size > 0) {
+			for(int i = 0; i < bullets.size; i++) {
+				bullets.get(i).dispose();
+			}
+			bullets.clear();
+		}
+	}
+	
+	public void checkForCollision(Array<Rectangle> hardBlocks, Array<Vector2> spawnPoints, Player opponent) {
+		for(Rectangle rect : hardBlocks) {
+			if(bounds.overlaps(rect)) {
+				die(spawnPoints);
+			}
+			// check if bullets collided with walls
+			for(int i = 0; i < bullets.size; i++) {
+				if(bullets.get(i).getBounds().overlaps(rect)) {
+					if(PlayerDefaults.bouncingBullets) {
+						bullets.get(i).setMovementReversed(true);
+					} else {
+						bullets.get(i).dispose();
+						bullets.removeIndex(i);
+					}
+				} 
+			}
+		}
+		if(Gravitation.multiPlayerMode) {
+			for(Bullet bullet : bullets) {
+				if(bullet.getBounds().overlaps(opponent.getBounds())) {
+					opponent.die(spawnPoints);
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -148,6 +206,7 @@ public class Player extends PhysicalEntity {
 		return body;
 	}
 	
+	@Override
 	public void render(SpriteBatch batch) {
 		// draw bullets
 		bulletIterator = bullets.iterator();
@@ -166,10 +225,7 @@ public class Player extends PhysicalEntity {
 		}
 	}
 	
-	public void setReversedSteering(boolean isReversedSteering) {
-		this.isReversedSteering = isReversedSteering;
-	}
-	
+	@Override
 	public void tick(float delta) {
 		super.tick(delta);
 		
@@ -195,9 +251,7 @@ public class Player extends PhysicalEntity {
 		exhaust.update(delta);
 		explosion.update(delta);
 		
-		bulletIterator = bullets.iterator();
-		while(bulletIterator.hasNext()) {
-			bullet = bulletIterator.next();
+		for(Bullet bullet : bullets) {
 			bullet.tick(delta);
 		}
 		
@@ -206,11 +260,6 @@ public class Player extends PhysicalEntity {
 			ableToShoot = false;
 			playExplosion();
 		}
-		
-	}
-	
-	public void setBulletSpeed(float bulletSpeed) {
-		this.bulletSpeed = bulletSpeed;
 	}
 	
 	public void shoot() {
@@ -219,10 +268,29 @@ public class Player extends PhysicalEntity {
 		}
 	}
 	
-	public void setBulletMovementReversed(boolean isBulletMovementReversed) {
-		this.isBulletMovementReversed = isBulletMovementReversed;
+	private Touchpad getTouchPad(String backgroundTexturePath, String knobTexturePath, float xPos, float yPos) {
+		Skin skin = new Skin();
+		Texture padbgTex = new Texture(Gdx.files.internal(backgroundTexturePath));
+		Texture knobTex = new Texture(Gdx.files.internal(knobTexturePath));
+		padbgTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		knobTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		skin.add("padbg", padbgTex);
+		skin.add("knob", knobTex);
+		TouchpadStyle touchpadStyle = new TouchpadStyle(skin.getDrawable("padbg"), skin.getDrawable("knob"));
+		Touchpad touchpad = new Touchpad(3, touchpadStyle);
+		touchPadStage = new Stage(BaseScreen.VIEWPORT_WIDTH, BaseScreen.VIEWPORT_HEIGHT, true);
+		touchPadStage.addActor(touchpad);
+		touchpad.setPosition(xPos, yPos);
+		return touchpad;
 	}
 	
+	private void setExhaustRotation() {
+		float angle = sprite.getRotation();
+		exhaust.getAngle().setLow(angle + 270);
+		exhaust.getAngle().setHighMin(angle + 270 - 90);
+		exhaust.getAngle().setHighMax(angle + 270 + 90);
+	}
+
 	private void accelerate() {
 		shipRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
 		xSpeed = MathUtils.cos(shipRot);
@@ -246,54 +314,6 @@ public class Player extends PhysicalEntity {
 		}
 	}
 	
-	public void die(Array<Vector2> spawnPoints) {
-		crashed = true;
-		explosion.setPosition(getPosition().x, getPosition().y);
-		explosion.start();
-		Vector2 spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
-		setPosition(spawnPoint.x, spawnPoint.y);
-		if(bullets.size > 0) {
-			for(int i = 0; i < bullets.size; i++) {
-				bullets.get(i).dispose();
-			}
-			bullets.clear();
-		}
-	}
-	
-	public void checkForCollision(Array<Rectangle> hardBlocks, Array<Vector2> spawnPoints, Player opponent) {
-		for(Rectangle rect : hardBlocks) {
-			if(bounds.overlaps(rect)) {
-				die(spawnPoints);
-			}
-			// check if bullets collided with walls
-			for(int i = 0; i < bullets.size; i++) {
-				if(bullets.get(i).getBounds().overlaps(rect)) {
-					if(PlayerDefaults.bouncingBullets) {
-						bullets.get(i).setMovementReversed(true);
-					} else {
-						bullets.get(i).dispose();
-						bullets.removeIndex(i);
-					}
-				} 
-			}
-		}
-		if(Gravitation.multiPlayerMode) {
-			for(Bullet bullet : bullets) {
-				if(bullet.getBounds().overlaps(opponent.getBounds())) {
-					opponent.die(spawnPoints);
-				}
-			}
-		}
-	}
-	
-	public Array<Bullet> getBullets() {
-		return bullets;
-	}
-	
-	public void setSpeed(float speed) {
-		this.speed = speed;
-	}
-	
 	private void playExplosion() {
 		if(timePassed < RESPAWN_TIME) {
 			setMovement(0, 0);
@@ -303,22 +323,6 @@ public class Player extends PhysicalEntity {
 			timePassed = 0.0f;
 			ableToShoot = true;
 		}
-	}
-	
-	public void setMovement(float x, float y) {
-		this.movement.set(x, y);
-	}
-	
-	public boolean isCrashed() {
-		return crashed;
-	}
-	
-	public ParticleEmitter getExplosion() {
-		return explosion;
-	}
-	
-	public GamePad getGamePad() {
-		return gamePad;
 	}
 	
 	public void dispose() {
@@ -376,14 +380,5 @@ public class Player extends PhysicalEntity {
 		}
 	}
 
-	public ParticleEmitter getExhaust() {
-		return exhaust;
-	}
-
-	public int getPlayerNum() {
-		return PLAYER_NR;
-	}
-	
-	
 	
 }

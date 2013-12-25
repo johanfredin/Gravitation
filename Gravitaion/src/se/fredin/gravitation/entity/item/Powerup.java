@@ -29,6 +29,14 @@ public abstract class Powerup extends AbstractEntity {
 				affectEntity(player2);
 				isAlive = false;
 			}
+		} else {
+			if(player1.isCrashed()) {
+				removePower(player1);
+				isAlive = true;
+			} if(player2.isCrashed()) {
+				removePower(player2);
+				isAlive = true;
+			}
 		}
 	}
 

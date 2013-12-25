@@ -6,6 +6,7 @@ import se.fredin.gravitation.entity.item.Bullet;
 import se.fredin.gravitation.entity.item.FasterBulletPowerup;
 import se.fredin.gravitation.entity.item.FasterPlayerPowerup;
 import se.fredin.gravitation.entity.item.Powerup;
+import se.fredin.gravitation.entity.item.ReversedStearing;
 import se.fredin.gravitation.entity.item.SlowerBulletPowerup;
 import se.fredin.gravitation.entity.item.SlowerPlayerPowerup;
 import se.fredin.gravitation.entity.physical.LaunchPad;
@@ -124,6 +125,7 @@ public class Level implements LevelBase, Disposable {
 		powerups.add(new FasterBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
 		powerups.add(new SlowerBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
 		powerups.add(new BouncingBulletPowerup(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
+		powerups.add(new ReversedStearing(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y, 5, 5, player1, player2));
 		return powerups;
 	}
 	
@@ -154,17 +156,6 @@ public class Level implements LevelBase, Disposable {
 		return hardBlocks;
 	}
 	
-	public void resetPowerup(Powerup powerup, Player player) {
-		powerup.setPosition(powerupLocations.get((int)(Math.random() * powerupLocations.size)).x, powerupLocations.get((int)(Math.random() * powerupLocations.size - 1)).y);
-		powerup.setAlive(true);
-		if(player == player1) {
-			powerup.removePower(player1);
-		} else if(player == player2) {
-			powerup.removePower(player2);
-		}
-		powerup.setRepositioned(true);
-	}
-
 	@Override
 	public void start() {}
 
@@ -255,15 +246,6 @@ public class Level implements LevelBase, Disposable {
 			player2.checkForCollision(hardBlocks, playerSpawnPoints, player1);
 			for(Powerup powerup : powerups) {
 				powerup.tick(delta);
-				if(player1.isCrashed()) {
-					if(!powerup.isAlive() && !powerup.isRepositioned()) {
-						resetPowerup(powerup, player1);
-					}
-				} if(player2.isCrashed()) {
-					if(!powerup.isAlive() && !powerup.isRepositioned()) {
-						resetPowerup(powerup, player2);
-					}
-				}
 			}
 		}
 		for(LaunchPad launchPad : launchPads) {

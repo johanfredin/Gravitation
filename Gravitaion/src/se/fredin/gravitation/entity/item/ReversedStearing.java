@@ -12,15 +12,13 @@ public class ReversedStearing extends Powerup {
 	}
 
 	@Override
-	public void affectEntity(Player entity) {
-		// TODO Auto-generated method stub
-
+	public void affectEntity(Player player) {
+		player.setReversedSteering(true);
 	}
 
 	@Override
-	public void removePower(Player entity) {
-		// TODO Auto-generated method stub
-
+	public void removePower(Player player) {
+		player.setReversedSteering(false);
 	}
 
 }

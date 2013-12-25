@@ -2,7 +2,6 @@ package se.fredin.gravitation.entity.item;
 
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.utils.Paths;
-import se.fredin.gravitation.utils.PlayerDefaults;
 
 import com.badlogic.gdx.Gdx;
 
@@ -13,13 +12,13 @@ public class BouncingBulletPowerup extends Powerup {
 	}
 
 	@Override
-	public void affectEntity(Player entity) {
-		PlayerDefaults.bouncingBullets = true;
+	public void affectEntity(Player player) {
+		player.setBulletMovementReversed(true);
 	}
 
 	@Override
-	public void removePower(Player entity) {
-		PlayerDefaults.bouncingBullets = false;
+	public void removePower(Player player) {
+		player.setBulletMovementReversed(false);
 	}
 
 }

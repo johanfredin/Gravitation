@@ -36,6 +36,7 @@ import com.badlogic.gdx.utils.Array;
 public class Player extends PhysicalEntity {
 	
 	public int PLAYER_NR;
+	private boolean isReversedSteering;
 	private Vector2 movement;
 	private float bulletSpeed = PlayerDefaults.DEFAULT_BULLET_SPEED;
 	private Touchpad movementTouchPad, gasTouchPad;
@@ -56,6 +57,7 @@ public class Player extends PhysicalEntity {
 	private boolean crashed;
 	private boolean ableToShoot = true;
 	private float timePassed;
+	private boolean isBulletMovementReversed;
 	
 	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight, int playerNum) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
@@ -164,6 +166,10 @@ public class Player extends PhysicalEntity {
 		}
 	}
 	
+	public void setReversedSteering(boolean isReversedSteering) {
+		this.isReversedSteering = isReversedSteering;
+	}
+	
 	public void tick(float delta) {
 		super.tick(delta);
 		
@@ -171,9 +177,9 @@ public class Player extends PhysicalEntity {
 		if(gasPressed) {
 			accelerate();
 		} if(leftPressed) {
-			body.applyAngularImpulse(MathUtils.radDeg * MAX_TURN_DEG, true);
+			body.applyAngularImpulse(isReversedSteering ? MathUtils.radDeg * -MAX_TURN_DEG : MathUtils.radDeg * MAX_TURN_DEG, true);
 		} if(rightPressed) {
-			body.applyAngularImpulse(MathUtils.radDeg * -MAX_TURN_DEG, true);
+			body.applyAngularImpulse(isReversedSteering ? MathUtils.radDeg * MAX_TURN_DEG : MathUtils.radDeg * -MAX_TURN_DEG, true);
 		}
 		
 		if(Gdx.app.getType() == ApplicationType.Android) {
@@ -209,8 +215,12 @@ public class Player extends PhysicalEntity {
 	
 	public void shoot() {
 		if(ableToShoot) {
-			bullets.add(new Bullet(getPosition().x, getPosition().y, 2, 2, bulletSpeed, body));
+			bullets.add(new Bullet(getPosition().x, getPosition().y, 2, 2, bulletSpeed, body, isBulletMovementReversed));
 		}
+	}
+	
+	public void setBulletMovementReversed(boolean isBulletMovementReversed) {
+		this.isBulletMovementReversed = isBulletMovementReversed;
 	}
 	
 	private void accelerate() {
@@ -368,6 +378,10 @@ public class Player extends PhysicalEntity {
 
 	public ParticleEmitter getExhaust() {
 		return exhaust;
+	}
+
+	public int getPlayerNum() {
+		return PLAYER_NR;
 	}
 	
 	

@@ -88,7 +88,7 @@
   <object x="80" y="828"/>
   <object x="80" y="780"/>
  </objectgroup>
- <layer name="stations" width="32" height="32">
+ <layer name="passages" width="32" height="32">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3RMQ6AIBAFUW6siCLHpyKh4keQAGFeN1tsNlljAKCfS3TO9jwE0+P/e7lFr+gQXeJE13hEA6O8ohMv9oQfbsG8Wv5/fpzvJALY5ey0ABAAAA==
   </data>

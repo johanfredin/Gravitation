@@ -131,6 +131,7 @@ public class Level implements LevelBase, Disposable {
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.render(batch);
 		}
+		stationHandler.render(batch);
 		player1.render(batch);
 		batch.end();
 		
@@ -150,7 +151,10 @@ public class Level implements LevelBase, Disposable {
 			player2.tick(delta);
 			player2.checkForCollision(hardBlocks, playerSpawnPoints, player1);
 			itemHandler.tick(delta);
+		} else {
+			stationHandler.tick(delta);
 		}
+		
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.tick(delta);
 			launchPad.checkIfTaken(player1, delta);
@@ -264,6 +268,7 @@ public class Level implements LevelBase, Disposable {
 			launchPad.dispose();
 		}
 		itemHandler.dispose();
+		stationHandler.dispose();
 	}
 
 	

@@ -1,15 +1,9 @@
 package se.fredin.gravitation.entity.item.handler;
 
-import se.fredin.gravitation.entity.item.BouncingBulletPowerup;
-import se.fredin.gravitation.entity.item.FasterBulletPowerup;
-import se.fredin.gravitation.entity.item.FasterPlayerPowerup;
-import se.fredin.gravitation.entity.item.Powerup;
-import se.fredin.gravitation.entity.item.ReversedStearingPowerup;
-import se.fredin.gravitation.entity.item.SlowerBulletPowerup;
-import se.fredin.gravitation.entity.item.SlowerPlayerPowerup;
 import se.fredin.gravitation.entity.item.Station;
 import se.fredin.gravitation.entity.physical.Player;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
@@ -29,7 +23,7 @@ public class StationHandler {
 		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("stations").getObjects().getByType(RectangleMapObject.class);
 		this.locations = new Array<Rectangle>();
 		System.out.println(rectangleMapObjects.size);
-		for(int i = 1; i <= rectangleMapObjects.size; i++) {
+		for(int i = 0; i < rectangleMapObjects.size; i++) {
 			System.out.println(rectangleMapObjects.get(i).getName());
 		}
 //		for(RectangleMapObject rect : rectangleMapObjects) {
@@ -45,4 +39,17 @@ public class StationHandler {
 		return stations;
 	}
 
+	public void tick(float delta) {
+		
+	}
+
+	public void render(SpriteBatch batch) {
+		
+	}
+	
+	public void dispose() {
+		for(Station station : stations) {
+			station.dispose();
+		}
+	}
 }

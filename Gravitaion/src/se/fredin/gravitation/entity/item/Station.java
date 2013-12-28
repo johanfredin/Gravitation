@@ -12,13 +12,19 @@ public class Station extends AbstractEntity {
 
 	private ShapeRenderer shapeRenderer;
 	private Player player;
+	private boolean isVertical;
 	
-	public Station(float x, float y, float width, float height, Player player) {
+	public Station(float x, float y, float width, float height, Player player, boolean isVertical) {
 		super(x, y, width, height);
 		this.player = player;
+		this.isVertical = isVertical;
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setColor(Color.CYAN);
 		this.isAlive = false;
+	}
+	
+	public boolean isVertical() {
+		return isVertical;
 	}
 	
 	@Override
@@ -35,6 +41,12 @@ public class Station extends AbstractEntity {
 		if(player.getBounds().overlaps(bounds)) {
 			isAlive = false;
 		}
+	}
+	
+	@Override
+	public void dispose() {
+		shapeRenderer.dispose();
+		player.dispose();
 	}
 	
 	

@@ -1,14 +1,8 @@
 package se.fredin.gravitation.level;
 
 import se.fredin.gravitation.Gravitation;
-import se.fredin.gravitation.entity.item.BouncingBulletPowerup;
 import se.fredin.gravitation.entity.item.Bullet;
-import se.fredin.gravitation.entity.item.FasterBulletPowerup;
-import se.fredin.gravitation.entity.item.FasterPlayerPowerup;
-import se.fredin.gravitation.entity.item.Powerup;
-import se.fredin.gravitation.entity.item.ReversedStearingPowerup;
-import se.fredin.gravitation.entity.item.SlowerBulletPowerup;
-import se.fredin.gravitation.entity.item.SlowerPlayerPowerup;
+import se.fredin.gravitation.entity.item.handler.ItemHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
@@ -42,10 +36,10 @@ public class Level implements LevelBase, Disposable {
 	private World world;
 	private TiledMap map;
 	private Player player1, player2;
+	private ItemHandler itemHandler;
 	private Array<LaunchPad> launchPads;
 	private Array<Vector2> playerSpawnPoints;
-	private Array<Rectangle> hardBlocks, powerupLocations;
-	private Array<Powerup> powerups;
+	private Array<Rectangle> hardBlocks;
 	private Array<Vector2> launchPadPositions;
 	private Vector2 spawnPoint;
 	
@@ -86,8 +80,7 @@ public class Level implements LevelBase, Disposable {
 			this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
 			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64);
 			// Init powerups ONLY IN 2 PLAYER MODE	!
-			this.powerupLocations = getWorldAdaptedPowerupLocations(map);
-			this.powerups = getPowerups();
+			this.itemHandler = new ItemHandler(map, player1, player2, UNIT_SCALE);
 		}
 		
 		this.hardBlocks = getWorldAdaptedBlocks(map);
@@ -107,16 +100,6 @@ public class Level implements LevelBase, Disposable {
 		} 
 	}
 	
-	private Array<Rectangle> getWorldAdaptedPowerupLocations(TiledMap map2) {
-		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("powerups").getObjects().getByType(RectangleMapObject.class);
-		this.powerupLocations = new Array<Rectangle>();
-		for(RectangleMapObject rect : rectangleMapObjects) {
-			rect.getRectangle().set(rect.getRectangle().x * UNIT_SCALE, rect.getRectangle().y * UNIT_SCALE, 
-				 rect.getRectangle().width * UNIT_SCALE, rect.getRectangle().height * UNIT_SCALE);
-			powerupLocations.add(rect.getRectangle());
-		}
-		return powerupLocations;
-	}
 
 	@Override
 	public void start() {}
@@ -163,9 +146,7 @@ public class Level implements LevelBase, Disposable {
 		if(Gravitation.multiPlayerMode) {
 			player2.tick(delta);
 			player2.checkForCollision(hardBlocks, playerSpawnPoints, player1);
-			for(Powerup powerup : powerups) {
-				powerup.tick(delta);
-			}
+			itemHandler.tick(delta);
 		}
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.tick(delta);
@@ -186,9 +167,7 @@ public class Level implements LevelBase, Disposable {
 		}
 		player1.render(batch);
 		player2.render(batch);
-		for(Powerup powerup : powerups) {
-			powerup.render(batch);
-		}
+		itemHandler.render(batch);
 		batch.end();
 		
 		shapeRenderer.setProjectionMatrix(camera.combined);
@@ -204,16 +183,6 @@ public class Level implements LevelBase, Disposable {
 		camera.update();
 	}
 	
-	private Array<Powerup> getPowerups() {
-		Array<Powerup> powerups = new Array<Powerup>();
-		powerups.add(new SlowerPlayerPowerup(powerupLocations, 5, 5, player1, player2));
-		powerups.add(new FasterPlayerPowerup(powerupLocations, 5, 5, player1, player2));
-		powerups.add(new FasterBulletPowerup(powerupLocations, 5, 5, player1, player2));
-		powerups.add(new SlowerBulletPowerup(powerupLocations, 5, 5, player1, player2));
-		powerups.add(new BouncingBulletPowerup(powerupLocations, 5, 5, player1, player2));
-		powerups.add(new ReversedStearingPowerup(powerupLocations, 5, 5, player1, player2));
-		return powerups;
-	}
 	
 	private void initLaunchPads() {
 		launchPadPositions = new Array<Vector2>();
@@ -291,6 +260,7 @@ public class Level implements LevelBase, Disposable {
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.dispose();
 		}
+		itemHandler.dispose();
 	}
 
 	

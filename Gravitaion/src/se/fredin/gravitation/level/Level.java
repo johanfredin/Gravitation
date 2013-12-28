@@ -2,7 +2,8 @@ package se.fredin.gravitation.level;
 
 import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.item.Bullet;
-import se.fredin.gravitation.entity.item.handler.ItemHandler;
+import se.fredin.gravitation.entity.item.handler.PowerupHandler;
+import se.fredin.gravitation.entity.item.handler.StationHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
@@ -36,7 +37,8 @@ public class Level implements LevelBase, Disposable {
 	private World world;
 	private TiledMap map;
 	private Player player1, player2;
-	private ItemHandler itemHandler;
+	private PowerupHandler itemHandler;
+	private StationHandler stationHandler;
 	private Array<LaunchPad> launchPads;
 	private Array<Vector2> playerSpawnPoints;
 	private Array<Rectangle> hardBlocks;
@@ -60,7 +62,7 @@ public class Level implements LevelBase, Disposable {
 		this.world = new World(new Vector2(0, -12.82f), true);
 		this.box2DRenderer = new Box2DDebugRenderer();
 		this.shapeRenderer = new ShapeRenderer();
-		shapeRenderer.setColor(Color.RED);
+		this.shapeRenderer.setColor(Color.RED);
 		
 		// Setup tileMap
 		TmxMapLoader mapLoader = new TmxMapLoader();
@@ -70,7 +72,7 @@ public class Level implements LevelBase, Disposable {
 		int tmpMapHeight = (Integer) map.getProperties().get("height") * (Integer) map.getProperties().get("tileheight");
 		this.MAP_WIDTH = tmpMapWidth * UNIT_SCALE;
 		this.MAP_HEIGHT = tmpMapHeight * UNIT_SCALE;
-		initLaunchPads();
+		this.initLaunchPads();
 	
 		// Setup player
 		this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
@@ -80,10 +82,11 @@ public class Level implements LevelBase, Disposable {
 			this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
 			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64);
 			// Init powerups ONLY IN 2 PLAYER MODE	!
-			this.itemHandler = new ItemHandler(map, player1, player2, UNIT_SCALE);
+			this.itemHandler = new PowerupHandler(map, player1, player2, UNIT_SCALE);
 		}
 		
 		this.hardBlocks = getWorldAdaptedBlocks(map);
+		this.stationHandler = new StationHandler(map, player1, UNIT_SCALE);
 		
 		// Add key support
 		Gdx.input.setInputProcessor(new KeyInput(player1, player2));

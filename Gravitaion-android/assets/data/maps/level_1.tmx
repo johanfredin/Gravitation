@@ -3,6 +3,9 @@
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
   <image source="../tileset/tileset.png" width="352" height="320"/>
  </tileset>
+ <tileset firstgid="111" name="stations" tilewidth="32" tileheight="32">
+  <image source="../tileset/stations.png" width="320" height="32"/>
+ </tileset>
  <layer name="Background" width="32" height="32">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA1NkYGBQHEBszsDQwEAGEAPqE8Mjb06EGeaj9oPtdwLSyJie9hOTRnwZGA6g6wWKOWATR5YHuu8BCKO5+wEyJjf8qQEoif9R+0ftH7V/1P5R+0ftH7V/1P5R+0ftp4b9Ynja1PSwn54AZn8EkEbH6H0ibP0jYsTRzUW3fyD73iAMAHZgS5UAEAAA
@@ -37,13 +40,11 @@
   <object x="897" y="164" width="100" height="28"/>
   <object x="481" y="290" width="31" height="127"/>
   <object x="31" y="979" width="924" height="14"/>
+  <object x="128" y="608" width="32" height="32"/>
  </objectgroup>
  <objectgroup color="#ffff00" name="powerups" width="32" height="32">
   <object x="69" y="227" width="52" height="44"/>
-  <object x="149" y="304" width="56" height="55"/>
   <object x="245" y="232" width="71" height="48"/>
-  <object x="224" y="440" width="60" height="35"/>
-  <object x="511" y="505" width="105" height="40"/>
   <object x="604" y="316" width="41" height="28"/>
   <object x="579" y="132" width="39" height="43"/>
   <object x="799" y="296" width="83" height="49"/>
@@ -72,7 +73,6 @@
   <object x="381" y="84"/>
   <object x="297" y="84"/>
   <object x="157" y="87"/>
-  <object x="436" y="396"/>
   <object x="401" y="515"/>
   <object x="612" y="461"/>
   <object x="752" y="503"/>
@@ -87,5 +87,32 @@
   <object x="224" y="873"/>
   <object x="80" y="828"/>
   <object x="80" y="780"/>
+ </objectgroup>
+ <layer name="stations" width="32" height="32">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3RMQ6AIBAFUW6siCLHpyKh4keQAGFeN1tsNlljAKCfS3TO9jwE0+P/e7lFr+gQXeJE13hEA6O8ohMv9oQfbsG8Wv5/fpzvJALY5ey0ABAAAA==
+  </data>
+ </layer>
+ <objectgroup color="#8515a4" name="stations" width="32" height="32">
+  <object name="8" x="800" y="256" width="32" height="32"/>
+  <object name="8" x="928" y="256" width="32" height="32"/>
+  <object name="9" x="928" y="608" width="32" height="32"/>
+  <object name="9" x="800" y="608" width="32" height="32"/>
+  <object name="7" x="800" y="576" width="32" height="32"/>
+  <object name="10" x="800" y="928" width="32" height="32"/>
+  <object name="10" x="992" y="928" width="32" height="32"/>
+  <object name="6" x="576" y="800" width="32" height="32"/>
+  <object name="6" x="576" y="928" width="32" height="32"/>
+  <object name="5" x="320" y="800" width="32" height="32"/>
+  <object name="5" x="320" y="928" width="32" height="32"/>
+  <object name="1" x="0" y="800" width="32" height="32"/>
+  <object name="1" x="128" y="800" width="32" height="32"/>
+  <object name="4" x="256" y="608" width="32" height="32"/>
+  <object name="2" x="0" y="544" width="32" height="32"/>
+  <object name="2" x="128" y="544" width="32" height="32"/>
+  <object name="3" x="128" y="288" width="32" height="32"/>
+  <object name="3" x="128" y="416" width="32" height="32"/>
+  <object name="7" x="672" y="576" width="32" height="32"/>
+  <object name="4" x="128" y="608" width="32" height="32"/>
  </objectgroup>
 </map>

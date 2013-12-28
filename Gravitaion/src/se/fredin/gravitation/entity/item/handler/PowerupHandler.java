@@ -15,14 +15,17 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-public class ItemHandler {
+public class PowerupHandler {
 
 	private Array<Rectangle> spawnPoints;
-	private Array<Powerup> powerups;
+	private Array<Powerup> powerups, tmpPowerups;
+	private final float TIME_FOR_POWERUP = 1f;
+	private float timer = 0f;
 	
-	public ItemHandler(TiledMap map, Player player1, Player player2, float unitScale) {
+	public PowerupHandler(TiledMap map, Player player1, Player player2, float unitScale) {
 		this.spawnPoints = getWorldAdaptedPowerupLocations(map, unitScale);
 		this.powerups = getPowerups(player1, player2);
+		this.tmpPowerups = new Array<Powerup>();
 	}
 	
 	private Array<Rectangle> getWorldAdaptedPowerupLocations(TiledMap map, float unitScale) {
@@ -47,20 +50,32 @@ public class ItemHandler {
 		return powerups;
 	}
 	
+	private Powerup getRandomPowerup() {
+		return powerups.get((int)(Math.random() * powerups.size));
+	}
+	
 	public void render(SpriteBatch batch) {
-		for(Powerup powerup : powerups) {
+		for(Powerup powerup : tmpPowerups) {
 			powerup.render(batch);
 		}
 	}
 	
 	public void tick(float delta) {
-		for(Powerup powerup : powerups) {
+		timer += delta;
+		if(timer >= TIME_FOR_POWERUP && powerups.size < 10) {
+			tmpPowerups.add(getRandomPowerup());
+			timer = 0f;
+		}
+		for(Powerup powerup : tmpPowerups) {
 			powerup.tick(delta);
 		}
 	}
 	
 	public void dispose() {
 		for(Powerup powerup : powerups) {
+			powerup.dispose();
+		}
+		for(Powerup powerup : tmpPowerups) {
 			powerup.dispose();
 		}
 	}

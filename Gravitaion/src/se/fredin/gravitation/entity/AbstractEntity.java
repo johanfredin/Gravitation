@@ -28,6 +28,12 @@ public abstract class AbstractEntity implements Entity {
 		this.bounds = new Rectangle(0, 0, sprite.getWidth(), sprite.getHeight());
 	}
 	
+	public AbstractEntity(float x, float y, float width, float height) {
+		this.position = new Vector2(x, y);
+		this.sprite.setSize(width, height);
+		this.bounds = new Rectangle(x, y, width, height);
+	}
+	
 	public AbstractEntity(Array<Rectangle> spawnPoints, float width, float height, String texturePath) {
 		this.spawnPoints = spawnPoints;
 		this.position = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)).x, spawnPoints.get((int)(Math.random() * spawnPoints.size)).y);

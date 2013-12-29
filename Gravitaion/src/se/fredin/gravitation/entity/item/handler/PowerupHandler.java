@@ -1,6 +1,7 @@
 package se.fredin.gravitation.entity.item.handler;
 
-import se.fredin.gravitation.entity.item.BouncingBulletPowerup;
+import se.fredin.gravitation.entity.item.BigBulletPowerup;
+import se.fredin.gravitation.entity.item.ReverseBulletPowerup;
 import se.fredin.gravitation.entity.item.FasterBulletPowerup;
 import se.fredin.gravitation.entity.item.FasterPlayerPowerup;
 import se.fredin.gravitation.entity.item.Powerup;
@@ -45,8 +46,9 @@ public class PowerupHandler {
 		powerups.add(new FasterPlayerPowerup(spawnPoints, 5, 5, player1, player2));
 		powerups.add(new FasterBulletPowerup(spawnPoints, 5, 5, player1, player2));
 		powerups.add(new SlowerBulletPowerup(spawnPoints, 5, 5, player1, player2));
-		powerups.add(new BouncingBulletPowerup(spawnPoints, 5, 5, player1, player2));
+		powerups.add(new ReverseBulletPowerup(spawnPoints, 5, 5, player1, player2));
 		powerups.add(new ReversedStearingPowerup(spawnPoints, 5, 5, player1, player2));
+		powerups.add(new BigBulletPowerup(spawnPoints, 5, 5, player1, player2));
 		return powerups;
 	}
 	

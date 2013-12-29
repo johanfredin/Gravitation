@@ -38,7 +38,7 @@ public class Bullet extends AbstractEntity {
 		super.tick(delta);
 		if(isAlive) {
 			if(isMovementReversed) {
-				position.sub(speed * bulletXSpeed, -speed * bulletYSpeed);
+				position.sub(movement);
 			} else {
 				position.add(movement);
 			}

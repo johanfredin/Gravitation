@@ -7,10 +7,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-public class BouncingBulletPowerup extends Powerup {
+public class ReverseBulletPowerup extends Powerup {
 
-	public BouncingBulletPowerup(Array<Rectangle> spawnPoints, float width, float height, Player player1, Player player2) {
-		super(spawnPoints, width, height, Gdx.files.internal(Paths.BOUNCING_BULLET_TEXTURE).path(), player1, player2);
+	public ReverseBulletPowerup(Array<Rectangle> spawnPoints, float width, float height, Player player1, Player player2) {
+		super(spawnPoints, width, height, Gdx.files.internal(Paths.REVERSE_BULLET_TEXTURE).path(), player1, player2);
 	}
 
 	@Override

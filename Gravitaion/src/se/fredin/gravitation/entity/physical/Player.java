@@ -57,6 +57,7 @@ public class Player extends PhysicalEntity {
 	private boolean ableToShoot = true;
 	private float timePassed;
 	private boolean isBulletMovementReversed;
+	private boolean isBigBullets;
 	
 	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
@@ -108,6 +109,10 @@ public class Player extends PhysicalEntity {
 	
 	public void setMovement(float x, float y) {
 		this.movement.set(x, y);
+	}
+	
+	public void setBigBullets(boolean isBigBullets) {
+		this.isBigBullets = isBigBullets;
 	}
 	
 	public boolean isCrashed() {
@@ -264,7 +269,7 @@ public class Player extends PhysicalEntity {
 	
 	public void shoot() {
 		if(ableToShoot) {
-			bullets.add(new Bullet(getPosition().x, getPosition().y, 2, 2, bulletSpeed, body, isBulletMovementReversed));
+			bullets.add(new Bullet(getPosition().x, getPosition().y, isBigBullets ? 8 : 2, isBigBullets ? 8 : 2, bulletSpeed, body, isBulletMovementReversed));
 		}
 	}
 	

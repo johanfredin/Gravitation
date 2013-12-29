@@ -14,7 +14,8 @@ public class Paths {
 	public static final String FAST_POWERUP_TEXTURE = "data/objects/fasterplayer_powerup.png";
 	public static final String FASTER_BULLET_TEXTURE = "data/objects/fasterbullet_powerup.png";
 	public static final String SLOWER_BULLET_TEXTURE = "data/objects/slowerbullet_powerup.png";
-	public static final String BOUNCING_BULLET_TEXTURE = "data/objects/bouncingbullet_powerup.png";
+	public static final String REVERSE_BULLET_TEXTURE = "data/objects/reversebullet_powerup.png";
+	public static final String BIG_BULLET_TEXTURE = "data/objects/bigbullet_powerup.png";
 	public static final String REVERSED_STEARING_TEXTURE = "data/objects/reversedsteering_powerup.png";
 	
 }

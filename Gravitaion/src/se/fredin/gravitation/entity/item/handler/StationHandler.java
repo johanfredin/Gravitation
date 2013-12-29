@@ -11,40 +11,44 @@ import com.badlogic.gdx.utils.Array;
 
 public class StationHandler {
 	
-	private Array<Rectangle> locations;
 	private Array<Station> stations;
 	
 	public StationHandler(TiledMap map, Player player, float unitScale) {
-		this.locations = getWorldAdaptedStationLocations(map, unitScale);
-		this.stations = getStations(player);
+		this.stations = getWorldAdaptedStationStations(map, unitScale, player);
 	}
 	
-	private Array<Rectangle> getWorldAdaptedStationLocations(TiledMap map, float unitScale) {
-		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("stations").getObjects().getByType(RectangleMapObject.class);
-		this.locations = new Array<Rectangle>();
-		System.out.println(rectangleMapObjects.size);
-		for(int i = 0; i < rectangleMapObjects.size; i++) {
-			System.out.println(rectangleMapObjects.get(i).getName());
-		}
-//		for(RectangleMapObject rect : rectangleMapObjects) {
-//			rect.getRectangle().set(rect.getRectangle().x * unitScale, rect.getRectangle().y * unitScale, 
-//				 rect.getRectangle().width * unitScale, rect.getRectangle().height * unitScale);
-//			locations.add(rect.getRectangle());
-//		}
-		return locations;
-	}
-	
-	private Array<Station> getStations(Player player) {
+	private Array<Station> getWorldAdaptedStationStations(TiledMap map, float unitScale, Player player) {
+		Array<RectangleMapObject> objects = map.getLayers().get("stations").getObjects().getByType(RectangleMapObject.class);
 		Array<Station> stations = new Array<Station>();
+		System.out.println(objects.size);
+		for(int i = 0; i < objects.size; i++) {
+			Rectangle rect = objects.get(i).getRectangle();
+			switch(i) {
+			case 2: case 4: case 5:
+				stations.add(new Station(rect.x * unitScale + rect.width * unitScale, 
+										 rect.y * unitScale + (rect.height / 2 * unitScale), 
+										 rect.width, rect.height, player));
+				break;
+			default:
+				stations.add(new Station(rect.x * unitScale + rect.width * (unitScale * rect.width / 2), 
+						 rect.y, rect.width, rect.height, player));
+				break;
+			}
+			
+		}
 		return stations;
 	}
-
+	
 	public void tick(float delta) {
-		
+		for(Station station : stations) {
+			station.tick(delta);
+		}
 	}
 
 	public void render(SpriteBatch batch) {
-		
+		for(Station station : stations) {
+			station.render(batch);
+		}
 	}
 	
 	public void dispose() {

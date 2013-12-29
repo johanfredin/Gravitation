@@ -29,8 +29,6 @@ public abstract class AbstractEntity implements Entity {
 	}
 	
 	public AbstractEntity(float x, float y, float width, float height) {
-		this.position = new Vector2(x, y);
-		this.sprite.setSize(width, height);
 		this.bounds = new Rectangle(x, y, width, height);
 	}
 	

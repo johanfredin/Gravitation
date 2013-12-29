@@ -131,8 +131,8 @@ public class Level implements LevelBase, Disposable {
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.render(batch);
 		}
-		stationHandler.render(batch);
 		player1.render(batch);
+		stationHandler.render(batch);
 		batch.end();
 		
 		if(Gravitation.DEBUG_MODE) {

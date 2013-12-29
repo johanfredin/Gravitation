@@ -14,13 +14,16 @@ public class Station extends AbstractEntity {
 	private Player player;
 	private boolean isVertical;
 	
-	public Station(float x, float y, float width, float height, Player player, boolean isVertical) {
+	public Station(float x, float y, float width, float height, Player player) {
 		super(x, y, width, height);
 		this.player = player;
-		this.isVertical = isVertical;
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setColor(Color.CYAN);
-		this.isAlive = false;
+		this.isAlive = true;
+	}
+	
+	public void setVertical(boolean isVertical) {
+		this.isVertical = isVertical;
 	}
 	
 	public boolean isVertical() {

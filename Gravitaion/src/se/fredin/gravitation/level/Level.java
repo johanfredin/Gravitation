@@ -2,6 +2,7 @@ package se.fredin.gravitation.level;
 
 import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.item.Bullet;
+import se.fredin.gravitation.entity.item.Station;
 import se.fredin.gravitation.entity.item.handler.PowerupHandler;
 import se.fredin.gravitation.entity.item.handler.StationHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
@@ -59,7 +60,7 @@ public class Level implements LevelBase, Disposable {
 	
 	public Level(String levelPath, GameScreen gameScreen) {
 		// Setup box2d world
-		this.world = new World(new Vector2(0, -12.82f), true);
+		this.world = new World(new Vector2(0, -9.82f), true);
 		this.box2DRenderer = new Box2DDebugRenderer();
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setColor(Color.RED);
@@ -75,7 +76,7 @@ public class Level implements LevelBase, Disposable {
 		this.initLaunchPads();
 	
 		// Setup player
-		this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
+		this.spawnPoint = new Vector2(Gravitation.multiPlayerMode ? playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)) : playerSpawnPoints.get(0));
 		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64);
 		
 		if(Gravitation.multiPlayerMode) {
@@ -229,6 +230,8 @@ public class Level implements LevelBase, Disposable {
 			shapeRenderer.rect(bullet.getBounds().x, bullet.getBounds().y, bullet.getBounds().width, bullet.getBounds().height);
 		} for(Rectangle collisionRect : hardBlocks) {
 			shapeRenderer.rect(collisionRect.x, collisionRect.y, collisionRect.width, collisionRect.height);
+		} for(Station station : stationHandler.getStations()) {
+			shapeRenderer.rect(station.getBounds().x, station.getBounds().y, station.getBounds().width, station.getBounds().height);
 		}
 		shapeRenderer.end();
 	}

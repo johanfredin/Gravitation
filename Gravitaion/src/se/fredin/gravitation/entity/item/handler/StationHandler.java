@@ -6,7 +6,6 @@ import se.fredin.gravitation.entity.physical.Player;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 public class StationHandler {
@@ -22,26 +21,26 @@ public class StationHandler {
 		Array<Station> stations = new Array<Station>();
 		System.out.println(objects.size);
 		for(int i = 0; i < objects.size; i++) {
-			Rectangle rect = objects.get(i).getRectangle();
-			switch(i) {
-			case 2: case 4: case 5:
-				stations.add(new Station(rect.x * unitScale + rect.width * unitScale, 
-										 rect.y * unitScale + (rect.height / 2 * unitScale), 
-										 rect.width, rect.height, player));
-				break;
-			default:
-				stations.add(new Station(rect.x * unitScale + rect.width * (unitScale * rect.width / 2), 
-						 rect.y, rect.width, rect.height, player));
-				break;
+			Station station = new Station(objects.get(i).getRectangle().x * unitScale, objects.get(i).getRectangle().y * unitScale, 
+					objects.get(i).getRectangle().width * unitScale, objects.get(i).getRectangle().height * unitScale, player, i);
+			if(i == 0) {
+				station.setAlive(true);
 			}
-			
+			stations.add(station);
 		}
 		return stations;
 	}
 	
 	public void tick(float delta) {
-		for(Station station : stations) {
-			station.tick(delta);
+		for(int i = 0; i < stations.size; i++) {
+			stations.get(i).tick(delta);
+			if(stations.get(i).isTaken()) {
+				if(i == stations.size - 1 && stations.get(i - 1).isTaken()) {
+					stations.get(i).setAlive(true);
+				} else {
+					stations.get(i + 1).setAlive(true);
+				}
+			}
 		}
 	}
 
@@ -50,6 +49,11 @@ public class StationHandler {
 			station.render(batch);
 		}
 	}
+	
+	public Array<Station> getStations() {
+		return stations;
+	}
+	
 	
 	public void dispose() {
 		for(Station station : stations) {

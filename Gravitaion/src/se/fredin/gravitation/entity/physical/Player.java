@@ -128,7 +128,7 @@ public class Player extends PhysicalEntity {
 		crashed = true;
 		explosion.setPosition(getPosition().x, getPosition().y);
 		explosion.start();
-		Vector2 spawnPoint = new Vector2(spawnPoints.get((int)(Math.random() * spawnPoints.size)));
+		Vector2 spawnPoint = new Vector2(Gravitation.multiPlayerMode ? spawnPoints.get((int)(Math.random() * spawnPoints.size)) : spawnPoints.get(0));
 		setPosition(spawnPoint.x, spawnPoint.y);
 		if(bullets.size > 0) {
 			for(int i = 0; i < bullets.size; i++) {

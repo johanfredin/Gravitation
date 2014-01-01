@@ -22,16 +22,18 @@ public abstract class MenuBase extends BaseScreen {
 	public MenuBase(Game game) {
 		super(game);
 		stage = new Stage();
-		textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/ui/menuitems.pack"));
-		skin = new Skin();
-		skin.addRegions(textureAtlas);
-		whiteCanvasImage = new Image(skin.getDrawable("whiterect"));
+		//textureAtlas = new TextureAtlas(Gdx.files.internal("sprites/ui/menuitems.pack"));
+		//skin = new Skin();
+		//skin.addRegions(textureAtlas);
+		//whiteCanvasImage = new Image(skin.getDrawable("whiterect"));
 		Gdx.input.setInputProcessor(stage);
 	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		stage.act(delta);
+		stage.draw();
 	}
 
 	@Override
@@ -69,8 +71,8 @@ public abstract class MenuBase extends BaseScreen {
 	public void dispose() {
 		super.dispose();
 		stage.dispose();
-		skin.dispose();
-		textureAtlas.dispose();
+		//skin.dispose();
+		//textureAtlas.dispose();
 	}
 
 }

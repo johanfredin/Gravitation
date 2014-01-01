@@ -1,29 +1,21 @@
 package se.fredin.gravitation.screen.ui;
 
-import se.fredin.gravitation.screen.BaseScreen;
+import com.badlogic.gdx.Game;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Disposable;
-
-public abstract class MenuScreen extends BaseScreen implements Disposable {
+public class MenuScreen extends MenuBase {
 	
-	protected Stage stage;
-	protected OrthographicCamera camera;
-	
-	
-	
-	public void render() {
-		
-	}
-	
-	public void tick(float deltaTime) {
-		
+	public MenuScreen(Game game) {
+		super(game);
 	}
 	
 	@Override
+	public void render(float delta) {
+		super.render(delta);
+	}	
+	
+	@Override
 	public void dispose() {
-		stage.dispose();
+		super.dispose();
 	}
 
 }

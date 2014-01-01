@@ -10,7 +10,7 @@ public class Gravitation extends Game {
 	public static FPSLogger logger;
 	public static final String LOG = "Gravitation";
 	public static final boolean DEBUG_MODE = false;
-	public static boolean multiPlayerMode = true;
+	public static boolean multiPlayerMode = false;
 	
 	@Override
 	public void create() {

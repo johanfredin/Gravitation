@@ -21,7 +21,7 @@ public class PowerupHandler {
 	private Array<Rectangle> spawnPoints;
 	private Array<Powerup> powerups, tmpPowerups;
 	private final float TIME_FOR_POWERUP = 1f;
-	private float timer = 0f;
+	private float timer = 10f;
 	
 	public PowerupHandler(TiledMap map, Player player1, Player player2, float unitScale) {
 		this.spawnPoints = getWorldAdaptedPowerupLocations(map, unitScale);

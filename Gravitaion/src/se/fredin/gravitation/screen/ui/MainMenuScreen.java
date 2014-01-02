@@ -1,29 +1,31 @@
 package se.fredin.gravitation.screen.ui;
 
+import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.screen.GameScreen;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 public class MainMenuScreen extends MenuBase {
 	
-	private Label playButton, optionsButton, quitButton;
-	private boolean labelPressed = false;
+	private Label singlePlayerButton, multiPlayerButton, quitButton;
 	private boolean playButtonClicked;
-	private boolean myCowButtonClicked;
+	private boolean multiPlayerButtonClicked;
 	private boolean quitButtonClicked;
 	private final byte NEW_GAME = 1, OPTIONS = 2, QUIT = 3;		// button actions
 	
 	public MainMenuScreen(Game game) {
 		super(game);
 		initButtonsAndImages();
-		setListener(playButton, NEW_GAME);
-		setListener(optionsButton, OPTIONS);
+		setListener(singlePlayerButton, NEW_GAME);
+		setListener(multiPlayerButton, OPTIONS);
 		setListener(quitButton, QUIT);
 		setPositionsAndSizes(camera.viewportWidth, camera.viewportHeight);	
 	}
@@ -31,30 +33,32 @@ public class MainMenuScreen extends MenuBase {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		checkIfPressed(playButtonClicked);
+		checkIfPressed();
 	}	
 	
-	public void checkIfPressed(boolean isPressed) {
-		if(isPressed) {
-			System.out.println("pressed");
+	public void checkIfPressed() {
+		if(playButtonClicked || multiPlayerButtonClicked) {
 			game.setScreen(new GameScreen(game));
+		} else if(quitButtonClicked) {
+			Gdx.app.exit();
 		}
 	}
 	
 	private void initButtonsAndImages() {
-		playButton = new Label("New Game", new LabelStyle(new BitmapFont(), Color.RED));
-		optionsButton = new Label("Options", new LabelStyle(new BitmapFont(), Color.RED));
-		quitButton = new Label("Quit", new LabelStyle(new BitmapFont(), Color.RED));
+		LabelStyle ls = new LabelStyle(new BitmapFont(), Color.RED);
+		singlePlayerButton = new Label("Singleplayer", ls);
+		multiPlayerButton = new Label("MultiPlayer", ls);
+		quitButton = new Label("Quit", ls);
 	}
 	
 	private void setPositionsAndSizes(float width, float height) {
 		float buttonCenterX = width / 3.33f;
 		float buttonWidth = 100;
-		float buttonHeight = 50;
+		float buttonHeight = 30;
 		float spacingY = 20;
-		playButton.setBounds(buttonCenterX, height - spacingY * 3, buttonWidth, buttonHeight);
-		optionsButton.setBounds(buttonCenterX, playButton.getY() - spacingY, buttonWidth, buttonHeight);
-		quitButton.setBounds(buttonCenterX, optionsButton.getY() - spacingY, buttonWidth, buttonHeight);
+		singlePlayerButton.setBounds(buttonCenterX, height - spacingY * 3, buttonWidth, buttonHeight);
+		multiPlayerButton.setBounds(buttonCenterX, singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
+		quitButton.setBounds(buttonCenterX, multiPlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
 	}
 	
 	private void setListener(Label label, final int ACTION) {
@@ -68,7 +72,8 @@ public class MainMenuScreen extends MenuBase {
 					disableButtons();
 					return true;
 				case OPTIONS:
-					myCowButtonClicked = true;
+					Gravitation.multiPlayerMode = true;
+					multiPlayerButtonClicked = true;
 					disableButtons();
 					return true;
 				case QUIT:	// Quit the game
@@ -79,13 +84,13 @@ public class MainMenuScreen extends MenuBase {
 					return false;
 				}
 			}
-
-			
 		});
 	}
 	
 	private void disableButtons() {
-		
+		singlePlayerButton.setTouchable(Touchable.disabled);
+		multiPlayerButton.setTouchable(Touchable.disabled);
+		quitButton.setTouchable(Touchable.disabled);
 	}
 	
 	@Override

@@ -41,6 +41,15 @@
   <object x="481" y="290" width="31" height="127"/>
   <object x="31" y="979" width="924" height="14"/>
   <object x="128" y="608" width="32" height="32"/>
+  <object x="128" y="288" width="32" height="32"/>
+  <object x="128" y="416" width="32" height="32"/>
+  <object x="320" y="800" width="32" height="32"/>
+  <object x="320" y="928" width="32" height="32"/>
+  <object x="576" y="800" width="32" height="32"/>
+  <object x="576" y="928" width="32" height="32"/>
+  <object x="800" y="256" width="32" height="32"/>
+  <object x="928" y="256" width="32" height="32"/>
+  <object x="928" y="608" width="32" height="32"/>
  </objectgroup>
  <objectgroup color="#ffff00" name="powerups" width="32" height="32">
   <object x="69" y="227" width="52" height="44"/>
@@ -81,7 +90,7 @@
   <object x="924" y="475"/>
   <object x="905" y="688"/>
   <object x="937" y="789"/>
-  <object x="587" y="921"/>
+  <object x="608" y="928"/>
   <object x="468" y="849"/>
   <object x="279" y="932"/>
   <object x="224" y="873"/>

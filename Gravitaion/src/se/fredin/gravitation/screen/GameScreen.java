@@ -1,5 +1,6 @@
 package se.fredin.gravitation.screen;
 
+import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.level.Level;
 
 import com.badlogic.gdx.Game;
@@ -18,9 +19,9 @@ public class GameScreen extends BaseScreen {
 		SWITCHING_LEVEL
 	}
 	
-	public GameScreen(Game game) {
+	public GameScreen(Game game, GameMode gameMode) {
 		super(game);
-		level = new Level("data/maps/level_1.tmx", this);
+		level = new Level("data/maps/level_1.tmx", this, gameMode);
 	}
 
 	@Override
@@ -29,6 +30,11 @@ public class GameScreen extends BaseScreen {
 		level.tick(delta);
 	}
 
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+	}
+	
 	@Override
 	public void show() {}
 

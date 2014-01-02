@@ -10,21 +10,23 @@ import com.badlogic.gdx.utils.Disposable;
 
 public abstract class BaseScreen implements Disposable, Screen {
 	
-	public static final int VIEWPORT_WIDTH = Gravitation.multiPlayerMode ? 160 : 320;
+	public static int VIEWPORT_WIDTH = Gravitation.multiPlayerMode ? 160 : 320;
 	public static final int VIEWPORT_HEIGHT = 120;
 	protected OrthographicCamera camera, camera2;
 	protected SpriteBatch batch;
 	protected Game game;					// used to switch screens
 	
-	public BaseScreen() {}
+	protected BaseScreen() {
+		camera = new OrthographicCamera();
+		batch = new SpriteBatch();
+		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+	}
 	
 	public BaseScreen(Game game) {
+		this();
 		this.game = game;
-		camera = new OrthographicCamera();
 		camera2 = new OrthographicCamera();
-		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 		camera2.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-		batch = new SpriteBatch();
 	}
 	
 	public OrthographicCamera getCamera() {
@@ -33,7 +35,9 @@ public abstract class BaseScreen implements Disposable, Screen {
 	
 	@Override
 	public void resize(int width, int height) {
-		
+		VIEWPORT_WIDTH = Gravitation.multiPlayerMode ? 160 : 320;
+		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+		camera2.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 	}
 
 	@Override

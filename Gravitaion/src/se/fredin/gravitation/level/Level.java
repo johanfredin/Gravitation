@@ -1,5 +1,6 @@
 package se.fredin.gravitation.level;
 
+import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.item.Bullet;
 import se.fredin.gravitation.entity.item.Station;
@@ -8,6 +9,7 @@ import se.fredin.gravitation.entity.item.handler.StationHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
+import se.fredin.gravitation.screen.ui.StatisticsBar;
 import se.fredin.gravitation.utils.KeyInput;
 import se.fredin.gravitation.utils.Paths;
 
@@ -45,6 +47,9 @@ public class Level implements LevelBase, Disposable {
 	private Array<Rectangle> hardBlocks;
 	private Array<Vector2> launchPadPositions;
 	private Vector2 spawnPoint;
+	private StatisticsBar player1StatisticsBar;
+	private StatisticsBar player2StatisticsBar;
+	private GameMode gameMode;
 	
 	private final float MAP_WIDTH;
 	private final float MAP_HEIGHT;
@@ -58,7 +63,9 @@ public class Level implements LevelBase, Disposable {
 	private ShapeRenderer shapeRenderer;
 	
 	
-	public Level(String levelPath, GameScreen gameScreen) {
+	public Level(String levelPath, GameScreen gameScreen, GameMode gameMode) {
+		this.gameMode = gameMode;
+		
 		// Setup box2d world
 		this.world = new World(new Vector2(0, -9.82f), true);
 		this.box2DRenderer = new Box2DDebugRenderer();
@@ -77,13 +84,16 @@ public class Level implements LevelBase, Disposable {
 	
 		// Setup player
 		this.spawnPoint = new Vector2(Gravitation.multiPlayerMode ? playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)) : playerSpawnPoints.get(0));
-		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64);
+		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1);
+		// statistics bar
+		this.player1StatisticsBar = new StatisticsBar(0, 0, Gdx.graphics.getWidth(), 10, player1);
 		
 		if(Gravitation.multiPlayerMode) {
 			this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
-			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64);
+			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64, 2);
 			// Init powerups ONLY IN 2 PLAYER MODE	!
 			this.itemHandler = new PowerupHandler(map, player1, player2, UNIT_SCALE);
+			this.player2StatisticsBar = new StatisticsBar(0, 0, Gdx.graphics.getWidth(), 10, player2);
 		}
 		
 		this.hardBlocks = getWorldAdaptedBlocks(map);
@@ -106,9 +116,6 @@ public class Level implements LevelBase, Disposable {
 	
 
 	@Override
-	public void start() {}
-
-	@Override
 	public void restart() {}
 
 	@Override
@@ -119,8 +126,8 @@ public class Level implements LevelBase, Disposable {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		if(Gravitation.multiPlayerMode) {
-			renderHalf(camera, batch, 0, true);
-			renderHalf(camera2, batch, Gdx.graphics.getWidth() / 2, false);
+			renderHalf(camera, batch, player1StatisticsBar, 0, true);
+			renderHalf(camera2, batch, player2StatisticsBar, Gdx.graphics.getWidth() / 2, false);
 			return;
 		}
 		
@@ -140,6 +147,8 @@ public class Level implements LevelBase, Disposable {
 			debugRender(camera);
 		}
 		
+		player1StatisticsBar.render(batch, camera);
+		
 		moveCamera(camera, player1, 0, MAP_WIDTH, MAP_HEIGHT);
 		camera.update();
 	}
@@ -147,10 +156,12 @@ public class Level implements LevelBase, Disposable {
 	@Override
 	public void tick(float delta) {
 		player1.tick(delta);
+		player1StatisticsBar.tick(delta, player1);
 		
 		if(Gravitation.multiPlayerMode) {
 			player2.tick(delta);
 			player2.checkForCollision(hardBlocks, playerSpawnPoints, player1);
+			player2StatisticsBar.tick(delta, player2);
 			itemHandler.tick(delta);
 		} else {
 			stationHandler.tick(delta);
@@ -164,7 +175,7 @@ public class Level implements LevelBase, Disposable {
 		player1.checkForCollision(hardBlocks, playerSpawnPoints, Gravitation.multiPlayerMode ? player2 : null);
 	}
 	
-	private void renderHalf(OrthographicCamera camera, SpriteBatch batch, int cameraXPos, boolean leftSide) {
+	private void renderHalf(OrthographicCamera camera, SpriteBatch batch, StatisticsBar statsBar, int cameraXPos, boolean leftSide) {
 		mapRenderer.setView(camera);
 		mapRenderer.render();
 		
@@ -177,7 +188,7 @@ public class Level implements LevelBase, Disposable {
 		player2.render(batch);
 		itemHandler.render(batch);
 		batch.end();
-		
+
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.rect(leftSide ? camera.position.x - camera.viewportWidth / 2 : camera.position.x + camera.viewportWidth / 2, 0, 2, Gdx.graphics.getHeight());
@@ -186,6 +197,8 @@ public class Level implements LevelBase, Disposable {
 		if(Gravitation.DEBUG_MODE) {
 			debugRender(camera);
 		}
+		
+		statsBar.render(batch, camera);
 		
 		moveCamera(camera, (leftSide ? player1 : player2), cameraXPos, MAP_WIDTH, MAP_HEIGHT);
 		camera.update();
@@ -272,6 +285,8 @@ public class Level implements LevelBase, Disposable {
 		}
 		itemHandler.dispose();
 		stationHandler.dispose();
+		player1StatisticsBar.dispose();
+		player2StatisticsBar.dispose();
 	}
 
 	

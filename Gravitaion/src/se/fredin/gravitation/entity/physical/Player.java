@@ -58,10 +58,13 @@ public class Player extends PhysicalEntity {
 	private float timePassed;
 	private boolean isBulletMovementReversed;
 	private boolean isBigBullets;
+	private final int PLAYER_NUM;
+	private int score;
 	
-	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
+	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight, final int PLAYER_NUM) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
 		this.movement = new Vector2(0, 0);
+		this.PLAYER_NUM = PLAYER_NUM;
 		this.gamePad = new GamePad();
 		this.exhaust = ParticleLoader.getEmitter(Paths.EXHAUST_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 2.66f, 3);
 		this.explosion = ParticleLoader.getEmitter(Paths.EXPLOSION_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 4, 4f);
@@ -83,6 +86,14 @@ public class Player extends PhysicalEntity {
 	}
 
 	// PROPERTIES -----------------------------------------------------------------------------------------
+	public int getPlayerNum() {
+		return this.PLAYER_NUM;
+	}
+	
+	public int getScore() {
+		return this.score;
+	}
+	
 	public ParticleEmitter getExhaust() {
 		return exhaust;
 	}
@@ -164,6 +175,7 @@ public class Player extends PhysicalEntity {
 			for(Bullet bullet : bullets) {
 				if(bullet.getBounds().overlaps(opponent.getBounds())) {
 					opponent.die(spawnPoints);
+					score++;
 				}
 			}
 		}
@@ -385,5 +397,6 @@ public class Player extends PhysicalEntity {
 		}
 	}
 
+	
 	
 }

@@ -19,6 +19,12 @@ public abstract class MenuBase extends BaseScreen {
 	protected TextureAtlas textureAtlas;
 	protected Stage stage;
 	
+	public MenuBase() {
+		super();
+		stage = new Stage();
+		stage.setViewport(camera.viewportWidth, camera.viewportHeight, false);
+	}
+	
 	public MenuBase(Game game) {
 		super(game);
 		stage = new Stage();
@@ -37,14 +43,10 @@ public abstract class MenuBase extends BaseScreen {
 	}
 
 	@Override
-	public void show() {
-		
-	}
+	public void show() {}
 
 	@Override
-	public void hide() {
-		
-	}
+	public void hide() {}
 	
 	@Override
 	public void resize(int width, int height) {
@@ -62,7 +64,7 @@ public abstract class MenuBase extends BaseScreen {
 		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(buttonFlashDuration * 6), Actions.fadeIn(fadeInDuration)));
 	}
 
-	public void pause() {}
+	public void pause(){}
 
 	@Override
 	public void resume() {}

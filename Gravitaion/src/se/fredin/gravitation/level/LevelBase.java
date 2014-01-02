@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface LevelBase {
 
-	void start();
-	
 	void restart();
 	
 	void end(boolean cleared);

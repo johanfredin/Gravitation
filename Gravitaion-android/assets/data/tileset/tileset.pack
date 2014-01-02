@@ -1,0 +1,117 @@
+
+tileset.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+circle
+  rotate: false
+  xy: 0, 128
+  size: 320, 320
+  orig: 320, 320
+  offset: 0, 0
+  index: -1
+stone_edge
+  rotate: false
+  xy: 0, 96
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+vines_full
+  rotate: false
+  xy: 320, 416
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+stone2
+  rotate: false
+  xy: 0, 64
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+top_right
+  rotate: false
+  xy: 32, 96
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+stripped
+  rotate: false
+  xy: 320, 384
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+vines
+  rotate: false
+  xy: 352, 416
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+stripped
+  rotate: false
+  xy: 0, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+stone
+  rotate: false
+  xy: 32, 64
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+full
+  rotate: false
+  xy: 64, 96
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+rounded
+  rotate: false
+  xy: 320, 352
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+stoneleaning
+  rotate: false
+  xy: 352, 384
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+left
+  rotate: false
+  xy: 384, 416
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+right
+  rotate: false
+  xy: 0, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+top_left
+  rotate: false
+  xy: 32, 32
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+stone_full
+  rotate: false
+  xy: 64, 64
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1

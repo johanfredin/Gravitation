@@ -10,6 +10,7 @@ public class Main {
 		cfg.useGL20 = true;
 		cfg.width = 800;
 		cfg.height = 560;
+		cfg.vSyncEnabled = true;
 		cfg.fullscreen = false;
 		
 		new LwjglApplication(new Gravitation(), cfg);

@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="32" tileheight="32" backgroundcolor="#a6a6a6">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
-  <image source="../tileset/tileset.png" width="352" height="320"/>
+  <image source="../tileset/tileset.png" width="512" height="512"/>
  </tileset>
- <tileset firstgid="111" name="stations" tilewidth="32" tileheight="32">
+ <tileset firstgid="257" name="stations" tilewidth="32" tileheight="32">
   <image source="../tileset/stations.png" width="320" height="32"/>
  </tileset>
  <layer name="Background" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA1NkYGBQHEBszsDQwEAGEAPqE8Mjb06EGeaj9oPtdwLSyJie9hOTRnwZGA6g6wWKOWATR5YHuu8BkF6AJq4AEgdhStIfNQAl8T9qPzgNHhi1f+TaTykYtX/w2e87wPajp2lofZFACsZS51BiP8jMBaRgoJ4H+MwkxX5qgFH7R+0n1n5Qu20g7acFwOWn0fKXPumPUPkbAaRhGGQ/iEbvE2HrHxEjjmxmBBb7B7LvDcIAHhK8jAAQAAA=
+   H4sIAAAAAAAAA2NkYGA4zcCwYKAwIwN5QJqBoUEaj7w3EWbcBeJR+xkYlNDwHQaGA+iYlvbvZmBwwIeFGBgeoOvNBopnY3EXsjzQfQ+A9AI0cQWQOAhTEv7UAKP2U2a/NJ74H7V/+NtPKRi1f/DZLwisVwbS/tNofCMGhgRpErERWn0lSIH9t8nE+MwkxX5qgFH7R+0n1n5gXnEYSPtpAQRx1JOj5S990h+h8hfU56mG0qeh7Ggo/wyUhvGRcTQaZsAiX41kZjWSGpj9xsD+yUBiACOwanMAEAAA
   </data>
  </layer>
  <layer name="Foreground" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NgGHigQwKmptmjYHAAYFw0EMID7cZRMPiA+aj9I9r+UTAKRgFxAFiHJozaP3LtHwWjYBRgB8C8eQCGYfwIIJ0H6XuA2cg0CDtB5ZCxE55+ihOaWXTwFlEAAAptI74AEAAA
+   H4sIAAAAAAAAAzvNwLCAYYDAXShtTQImFVDTrOEK7jAwHEDG9LRbiIHBARgXDYQwPd00CoYG8B61f0TbPwpGAa3BbjIxFe0/QA5GNwdYhyZQ0Vkkg1H7B9b+UTAKRgF2gN73Qe8PUYpxmTmAXgYDYP97AQD/Va+sABAAAA==
   </data>
  </layer>
- <objectgroup color="#0000ff" name="spawn-points" width="32" height="32">
+ <objectgroup color="#0000ff" name="spawn-points" width="32" height="32" visible="0">
   <object name="start1" x="48" y="928" width="64" height="11"/>
   <object name="start2" x="865" y="948" width="64" height="11"/>
   <object name="start3" x="64" y="118" width="64" height="11"/>
@@ -29,7 +29,7 @@
   <object x="134" y="545" width="25" height="288"/>
   <object x="135" y="899" width="24" height="98"/>
   <object x="260" y="583" width="442" height="50"/>
-  <object x="806" y="609" width="25" height="255"/>
+  <object x="805" y="579" width="23" height="277"/>
   <object x="805" y="928" width="26" height="69"/>
   <object x="998" y="32" width="24" height="962"/>
   <object x="24" y="159" width="294" height="31"/>
@@ -51,7 +51,7 @@
   <object x="928" y="256" width="32" height="32"/>
   <object x="928" y="608" width="32" height="32"/>
  </objectgroup>
- <objectgroup color="#ffff00" name="powerups" width="32" height="32">
+ <objectgroup color="#ffff00" name="powerups" width="32" height="32" visible="0">
   <object x="69" y="227" width="52" height="44"/>
   <object x="245" y="232" width="71" height="48"/>
   <object x="604" y="316" width="41" height="28"/>
@@ -97,12 +97,12 @@
   <object x="80" y="828"/>
   <object x="80" y="780"/>
  </objectgroup>
- <layer name="passages" width="32" height="32">
+ <layer name="passages" width="32" height="32" visible="0">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3RMQ6AIBAFUW6siCLHpyKh4keQAGFeN1tsNlljAKCfS3TO9jwE0+P/e7lFr+gQXeJE13hEA6O8ohMv9oQfbsG8Wv5/fpzvJALY5ey0ABAAAA==
+   H4sIAAAAAAAAA+3SMQ6AIBBEUUZQkfsfmIrEhjHRGCP81/3dcjcEAHhPku+zaHYYH/efyybffyT5dlb5vmOXb+Arh3w3+eJnCz89tCf3Xzq73nwmFWt8FOEAEAAA
   </data>
  </layer>
- <objectgroup color="#67a405" name="stations" width="32" height="32">
+ <objectgroup color="#67a405" name="stations" width="32" height="32" visible="0">
   <object name="0" x="32" y="810" width="96" height="8"/>
   <object name="1" x="32" y="554" width="96" height="8"/>
   <object name="2" x="138" y="320" width="8" height="96"/>

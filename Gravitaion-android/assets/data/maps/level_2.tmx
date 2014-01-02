@@ -32,6 +32,8 @@
   <object x="192" y="418" width="640" height="38"/>
   <object x="194" y="226" width="640" height="38"/>
   <object x="25" y="977" width="969" height="14"/>
+  <object x="192" y="928" width="32" height="32"/>
+  <object x="799" y="928" width="32" height="32"/>
  </objectgroup>
  <objectgroup color="#ffff00" name="powerups" width="32" height="32">
   <object x="69" y="227" width="52" height="44"/>
@@ -66,7 +68,7 @@
  </objectgroup>
  <layer name="passages" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3TywrAIAxEUf/Yvmz7+V0VXGQWiVgL3rMcjAQcU+qjdLoXmMHmOJuNrP5/i5hTOTCa6v9pZFb/a7czB76yO3Or/6+1cRfgL67AjOr/0bIIhoi8v8L7aw9ITS2WABAAAA==
+   H4sIAAAAAAAAA+3TywrAIAxEUf+4T9t+flcFFzOLKNZS7lkORAIZU+ojd3oX+JM1mCuTyMr/N5s5lwOjuf4fIlP9L13BHHjLFsxV/x9L4y7AV5wVM67/e8siGKLm/g73926dbX+/ABAAAA==
   </data>
  </layer>
  <objectgroup color="#67a405" name="stations" width="32" height="32">

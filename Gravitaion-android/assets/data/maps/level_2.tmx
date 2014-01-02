@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="32" tileheight="32" backgroundcolor="#a6a6a6">
+ <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
+  <image source="../tileset/tileset.png" width="352" height="320"/>
+ </tileset>
+ <tileset firstgid="111" name="stations" tilewidth="32" tileheight="32">
+  <image source="../tileset/stations.png" width="320" height="32"/>
+ </tileset>
+ <layer name="Background" width="32" height="32">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3XsQ3AIBBDUa/CFPSZIuMwGqMlKLQUSFx8xbdkUb7GV1AkFWOr1G6pO1qnL1Pw8Vf+6Tvb9U/f2q7/R/Dz+uw/Pvh5ffYfH/y8PvuPD/7nX+/r6PCdf+/RBwnpPEQAEAAA
+  </data>
+ </layer>
+ <layer name="Foreground" width="32" height="32">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA2NgGHigQwKmptmjYBTgAsD04UBNTKLdD2jgnwRqmzkKhi8YTf+jYCSDAU7/C2jgnwRqmzkKhi8YTf+jYKQAYNo4AMLIfGLUwtjo+vHpJWQ+vQEApkCzMwAQAAA=
+  </data>
+ </layer>
+ <objectgroup color="#0000ff" name="spawn-points" width="32" height="32">
+  <object name="start1" x="48" y="928" width="64" height="11"/>
+  <object name="start2" x="865" y="948" width="64" height="11"/>
+  <object name="start3" x="64" y="118" width="64" height="11"/>
+  <object name="start4" x="896" y="130" width="64" height="11"/>
+ </objectgroup>
+ <objectgroup color="#550000" name="collision" width="32" height="32">
+  <object x="1" y="1" width="1022" height="31"/>
+  <object x="0" y="35" width="23" height="988"/>
+  <object x="26" y="994" width="995" height="28"/>
+  <object x="998" y="32" width="24" height="962"/>
+  <object x="192" y="800" width="640" height="38"/>
+  <object x="193" y="610" width="640" height="38"/>
+  <object x="192" y="418" width="640" height="38"/>
+  <object x="194" y="226" width="640" height="38"/>
+  <object x="25" y="977" width="969" height="14"/>
+ </objectgroup>
+ <objectgroup color="#ffff00" name="powerups" width="32" height="32">
+  <object x="69" y="227" width="52" height="44"/>
+  <object x="604" y="316" width="41" height="28"/>
+  <object x="579" y="132" width="39" height="43"/>
+  <object x="799" y="296" width="83" height="49"/>
+  <object x="813" y="77" width="19" height="37"/>
+  <object x="477" y="759" width="31" height="20"/>
+  <object x="241" y="736"/>
+  <object x="689" y="684"/>
+  <object x="564" y="691"/>
+  <object x="368" y="716"/>
+  <object x="293" y="671"/>
+  <object x="76" y="471"/>
+  <object x="76" y="611"/>
+  <object x="81" y="689"/>
+  <object x="75" y="568"/>
+  <object x="88" y="392"/>
+  <object x="381" y="84"/>
+  <object x="297" y="84"/>
+  <object x="157" y="87"/>
+  <object x="401" y="515"/>
+  <object x="752" y="503"/>
+  <object x="924" y="556"/>
+  <object x="924" y="475"/>
+  <object x="905" y="688"/>
+  <object x="937" y="789"/>
+  <object x="279" y="932"/>
+  <object x="224" y="873"/>
+  <object x="80" y="828"/>
+  <object x="80" y="780"/>
+ </objectgroup>
+ <layer name="passages" width="32" height="32">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3TywrAIAxEUf/Yvmz7+V0VXGQWiVgL3rMcjAQcU+qjdLoXmMHmOJuNrP5/i5hTOTCa6v9pZFb/a7czB76yO3Or/6+1cRfgL67AjOr/0bIIhoi8v8L7aw9ITS2WABAAAA==
+  </data>
+ </layer>
+ <objectgroup color="#67a405" name="stations" width="32" height="32">
+  <object name="0" x="203" y="832" width="8" height="96"/>
+  <object name="1" x="811" y="832" width="8" height="96"/>
+  <object name="2" x="618" y="640" width="8" height="160"/>
+  <object name="3" x="32" y="619" width="160" height="8"/>
+  <object name="4" x="394" y="448" width="8" height="160"/>
+  <object name="5" x="832" y="427" width="160" height="8"/>
+  <object name="6" x="552" y="256" width="8" height="160"/>
+  <object name="7" x="32" y="235" width="160" height="8"/>
+  <object name="8" x="714" y="32" width="8" height="192"/>
+  <object name="9" x="832" y="234" width="160" height="8"/>
+ </objectgroup>
+</map>

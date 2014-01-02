@@ -1,6 +1,5 @@
 package se.fredin.gravitation.utils;
 
-import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.physical.Player;
 
 import com.badlogic.gdx.Gdx;
@@ -36,21 +35,21 @@ public class KeyInput extends InputAdapter {
 			player1.shoot();
 			break;
 		case Keys.A:
-			if(Gravitation.multiPlayerMode)
+			if(player2 != null)
 				player2.leftPressed = true;
 			break;
 		case Keys.D:
-			if(Gravitation.multiPlayerMode)
+			if(player2 != null)
 				player2.rightPressed = true;
 			break;
 		case Keys.W:
-			if(Gravitation.multiPlayerMode) {
+			if(player2 != null) {
 				player2.getExhaust().start();
 				player2.gasPressed = true;
 			}
 			break;
 		case Keys.SPACE:
-			if(Gravitation.multiPlayerMode)
+			if(player2 != null)
 				player2.shoot();
 			break;
 		default:
@@ -76,18 +75,18 @@ public class KeyInput extends InputAdapter {
 			case Keys.CONTROL_RIGHT:
 				break;
 			case Keys.W:
-				if(Gravitation.multiPlayerMode) {
+				if(player2 != null) {
 					player2.getExhaust().allowCompletion();
 					player2.gasPressed = false;
 					player2.setMovement(0, 0);
 				}
 				break;
 			case Keys.D:
-				if(Gravitation.multiPlayerMode)
+				if(player2 != null)
 					player2.rightPressed = false;
 				break;
 			case Keys.A:
-				if(Gravitation.multiPlayerMode)
+				if(player2 != null)
 					player2.leftPressed = false;
 				break;
 			case Keys.SPACE:

@@ -1,8 +1,6 @@
 package se.fredin.gravitation.entity.physical;
 
-import java.util.Iterator;
-
-import se.fredin.gravitation.Gravitation;
+import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.entity.item.Bullet;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.utils.ParticleLoader;
@@ -44,8 +42,7 @@ public class Player extends PhysicalEntity {
 	private ParticleEmitter exhaust;
 	private ParticleEmitter explosion;
 	private Array<Bullet> bullets;
-	private Iterator<Bullet> bulletIterator;
-	private Bullet bullet;
+	private GameMode gameMode;
 	private float speed = PlayerDefaults.DEFAULT_SPEED;
 	private float xSpeed;
 	private float ySpeed;
@@ -61,8 +58,9 @@ public class Player extends PhysicalEntity {
 	private final int PLAYER_NUM;
 	private int score;
 	
-	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight, final int PLAYER_NUM) {
+	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight, final int PLAYER_NUM, GameMode gameMode) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
+		this.gameMode = gameMode;
 		this.movement = new Vector2(0, 0);
 		this.PLAYER_NUM = PLAYER_NUM;
 		this.gamePad = new GamePad();
@@ -144,7 +142,7 @@ public class Player extends PhysicalEntity {
 		crashed = true;
 		explosion.setPosition(getPosition().x, getPosition().y);
 		explosion.start();
-		Vector2 spawnPoint = new Vector2(Gravitation.multiPlayerMode ? spawnPoints.get((int)(Math.random() * spawnPoints.size)) : spawnPoints.get(0));
+		Vector2 spawnPoint = new Vector2(gameMode == GameMode.MULTI_PLAYER ? spawnPoints.get((int)(Math.random() * spawnPoints.size)) : spawnPoints.get(0));
 		setPosition(spawnPoint.x, spawnPoint.y);
 		if(bullets.size > 0) {
 			for(int i = 0; i < bullets.size; i++) {
@@ -171,7 +169,7 @@ public class Player extends PhysicalEntity {
 				} 
 			}
 		}
-		if(Gravitation.multiPlayerMode) {
+		if(gameMode == GameMode.MULTI_PLAYER) {
 			for(Bullet bullet : bullets) {
 				if(bullet.getBounds().overlaps(opponent.getBounds())) {
 					opponent.die(spawnPoints);
@@ -226,9 +224,7 @@ public class Player extends PhysicalEntity {
 	@Override
 	public void render(SpriteBatch batch) {
 		// draw bullets
-		bulletIterator = bullets.iterator();
-		while(bulletIterator.hasNext()) {
-			bullet = bulletIterator.next();
+		for(Bullet bullet : bullets) {
 			bullet.render(batch);
 		}
 		if(!crashed) {

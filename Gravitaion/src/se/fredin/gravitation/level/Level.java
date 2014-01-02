@@ -3,14 +3,11 @@ package se.fredin.gravitation.level;
 import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.item.Bullet;
-import se.fredin.gravitation.entity.item.Station;
 import se.fredin.gravitation.entity.item.handler.PowerupHandler;
-import se.fredin.gravitation.entity.item.handler.StationHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.screen.ui.StatisticsBar;
-import se.fredin.gravitation.utils.KeyInput;
 import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -34,33 +31,33 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
-public class Level implements LevelBase, Disposable {
+public abstract class Level implements LevelBase, Disposable {
 
-	private OrthogonalTiledMapRenderer mapRenderer;
-	private World world;
-	private TiledMap map;
-	private Player player1, player2;
-	private PowerupHandler itemHandler;
-	private StationHandler stationHandler;
-	private Array<LaunchPad> launchPads;
-	private Array<Vector2> playerSpawnPoints;
-	private Array<Rectangle> hardBlocks;
-	private Array<Vector2> launchPadPositions;
-	private Vector2 spawnPoint;
-	private StatisticsBar player1StatisticsBar;
-	private StatisticsBar player2StatisticsBar;
-	private GameMode gameMode;
+	protected OrthogonalTiledMapRenderer mapRenderer;
+	protected World world;
+	protected TiledMap map;
+	protected Player player1, player2;
+	protected PowerupHandler itemHandler;
 	
-	private final float MAP_WIDTH;
-	private final float MAP_HEIGHT;
-	private final float UNIT_SCALE = 1 / 3.20f;
-	private final float TIMESTEP = 1 / 60f;
-	private final int VELOCITYITERATIONS = 8;
-	private final int POSITIONITERATIONS = 3;
+	protected Array<LaunchPad> launchPads;
+	protected Array<Vector2> playerSpawnPoints;
+	protected Array<Rectangle> hardBlocks;
+	protected Array<Vector2> launchPadPositions;
+	protected Vector2 spawnPoint;
+	protected StatisticsBar player1StatisticsBar;
+	protected StatisticsBar player2StatisticsBar;
+	protected GameMode gameMode;
+	
+	protected final float MAP_WIDTH;
+	protected final float MAP_HEIGHT;
+	protected final float UNIT_SCALE = 1 / 3.20f;
+	protected final float TIMESTEP = 1 / 60f;
+	protected final int VELOCITYITERATIONS = 8;
+	protected final int POSITIONITERATIONS = 3;
 	
 	// For debugging
-	private Box2DDebugRenderer box2DRenderer;
-	private ShapeRenderer shapeRenderer;
+	protected Box2DDebugRenderer box2DRenderer;
+	protected ShapeRenderer shapeRenderer;
 	
 	
 	public Level(String levelPath, GameScreen gameScreen, GameMode gameMode) {
@@ -82,31 +79,18 @@ public class Level implements LevelBase, Disposable {
 		this.MAP_HEIGHT = tmpMapHeight * UNIT_SCALE;
 		this.initLaunchPads();
 	
-		// Setup player
-		this.spawnPoint = new Vector2(Gravitation.multiPlayerMode ? playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)) : playerSpawnPoints.get(0));
-		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1);
-		// statistics bar
-		this.player1StatisticsBar = new StatisticsBar(0, 0, Gdx.graphics.getWidth(), 10, player1);
-		
-		if(Gravitation.multiPlayerMode) {
-			this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
-			this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64, 2);
-			// Init powerups ONLY IN 2 PLAYER MODE	!
-			this.itemHandler = new PowerupHandler(map, player1, player2, UNIT_SCALE);
-			this.player2StatisticsBar = new StatisticsBar(0, 0, Gdx.graphics.getWidth(), 10, player2);
-		}
-		
 		this.hardBlocks = getWorldAdaptedBlocks(map);
-		this.stationHandler = new StationHandler(map, player1, UNIT_SCALE);
-		
-		// Add key support
-		Gdx.input.setInputProcessor(new KeyInput(player1, player2));
-		
+	}
+	
+	protected void addGamepadSupport() {
 		// Add gamePad support
 		if(Gdx.app.getType() == ApplicationType.Desktop) {
 			for(int i = 0; i < Controllers.getControllers().size; i++) {
 				if(i == 0) {
 					Controllers.getControllers().get(i).addListener(player1.getGamePad());
+					if(gameMode == GameMode.SINGLE_PLAYER) {
+						return;
+					}
 				} else if(i == 1) {
 					Controllers.getControllers().get(i).addListener(player2.getGamePad());
 				}
@@ -122,57 +106,18 @@ public class Level implements LevelBase, Disposable {
 	public void end(boolean cleared) {}
 	
 	@Override
-	public void render(SpriteBatch batch, OrthographicCamera camera, OrthographicCamera camera2) {	
+	public void render(SpriteBatch batch, OrthographicCamera camera) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		if(Gravitation.multiPlayerMode) {
-			renderHalf(camera, batch, player1StatisticsBar, 0, true);
-			renderHalf(camera2, batch, player2StatisticsBar, Gdx.graphics.getWidth() / 2, false);
-			return;
-		}
-		
 		mapRenderer.setView(camera);
 		mapRenderer.render();
-		
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		for(LaunchPad launchPad : launchPads) {
-			launchPad.render(batch);
-		}
-		player1.render(batch);
-		stationHandler.render(batch);
-		batch.end();
-		
-		if(Gravitation.DEBUG_MODE) {
-			debugRender(camera);
-		}
-		
-		player1StatisticsBar.render(batch, camera);
-		
-		moveCamera(camera, player1, 0, MAP_WIDTH, MAP_HEIGHT);
-		camera.update();
 	}
 	
 	@Override
-	public void tick(float delta) {
-		player1.tick(delta);
-		player1StatisticsBar.tick(delta, player1);
-		
-		if(Gravitation.multiPlayerMode) {
-			player2.tick(delta);
-			player2.checkForCollision(hardBlocks, playerSpawnPoints, player1);
-			player2StatisticsBar.tick(delta, player2);
-			itemHandler.tick(delta);
-		} else {
-			stationHandler.tick(delta);
-		}
-		
-		for(LaunchPad launchPad : launchPads) {
-			launchPad.tick(delta);
-			launchPad.checkIfTaken(player1, delta);
-		}
-		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-		player1.checkForCollision(hardBlocks, playerSpawnPoints, Gravitation.multiPlayerMode ? player2 : null);
+	public void render(SpriteBatch batch, OrthographicCamera camera, OrthographicCamera camera2) {	
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		renderHalf(camera, batch, player1StatisticsBar, 0, true);
+		renderHalf(camera2, batch, player2StatisticsBar, Gdx.graphics.getWidth() / 2, false);
+		return;
 	}
 	
 	private void renderHalf(OrthographicCamera camera, SpriteBatch batch, StatisticsBar statsBar, int cameraXPos, boolean leftSide) {
@@ -232,7 +177,7 @@ public class Level implements LevelBase, Disposable {
 		return hardBlocks;
 	}
 	
-	private void debugRender(OrthographicCamera camera) {
+	protected void debugRender(OrthographicCamera camera) {
 		box2DRenderer.render(world, camera.combined);
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeType.Line);
@@ -243,14 +188,12 @@ public class Level implements LevelBase, Disposable {
 			shapeRenderer.rect(bullet.getBounds().x, bullet.getBounds().y, bullet.getBounds().width, bullet.getBounds().height);
 		} for(Rectangle collisionRect : hardBlocks) {
 			shapeRenderer.rect(collisionRect.x, collisionRect.y, collisionRect.width, collisionRect.height);
-		} for(Station station : stationHandler.getStations()) {
-			shapeRenderer.rect(station.getBounds().x, station.getBounds().y, station.getBounds().width, station.getBounds().height);
 		}
 		shapeRenderer.end();
 	}
 	
-	private void moveCamera(OrthographicCamera camera, Player player, int xPos, float mapWidth, float mapHeight) {
-		Gdx.gl.glViewport(xPos, 0, Gravitation.multiPlayerMode ? Gdx.graphics.getWidth() / 2 : Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	protected void moveCamera(OrthographicCamera camera, Player player, int xPos, float mapWidth, float mapHeight) {
+		Gdx.gl.glViewport(xPos, 0, gameMode == GameMode.MULTI_PLAYER ? Gdx.graphics.getWidth() / 2 : Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		float centerX = camera.viewportWidth / 2;
 		float centerY = camera.viewportHeight / 2;
@@ -284,7 +227,6 @@ public class Level implements LevelBase, Disposable {
 			launchPad.dispose();
 		}
 		itemHandler.dispose();
-		stationHandler.dispose();
 		player1StatisticsBar.dispose();
 		player2StatisticsBar.dispose();
 	}

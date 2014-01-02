@@ -1,6 +1,6 @@
 package se.fredin.gravitation.screen.ui;
 
-import se.fredin.gravitation.Gravitation;
+import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.screen.GameScreen;
 
 import com.badlogic.gdx.Game;
@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 public class MainMenuScreen extends MenuBase {
 	
 	private Label singlePlayerButton, multiPlayerButton, quitButton;
-	private boolean playButtonClicked;
+	private boolean singlePlayerButtonClicked;
 	private boolean multiPlayerButtonClicked;
 	private boolean quitButtonClicked;
 	private final byte NEW_GAME = 1, OPTIONS = 2, QUIT = 3;		// button actions
@@ -37,9 +37,12 @@ public class MainMenuScreen extends MenuBase {
 	}	
 	
 	public void checkIfPressed() {
-		if(playButtonClicked || multiPlayerButtonClicked) {
-			game.setScreen(new GameScreen(game));
-		} else if(quitButtonClicked) {
+		if(singlePlayerButtonClicked) {
+			game.setScreen(new GameScreen(game, GameMode.SINGLE_PLAYER));
+		} else if(multiPlayerButtonClicked) {
+			game.setScreen(new GameScreen(game, GameMode.MULTI_PLAYER));
+		}
+		else if(quitButtonClicked) {
 			Gdx.app.exit();
 		}
 	}
@@ -68,11 +71,10 @@ public class MainMenuScreen extends MenuBase {
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				switch(ACTION) {
 				case NEW_GAME:	// Start the game!!
-					playButtonClicked = true;
+					singlePlayerButtonClicked = true;
 					disableButtons();
 					return true;
 				case OPTIONS:
-					Gravitation.multiPlayerMode = true;
 					multiPlayerButtonClicked = true;
 					disableButtons();
 					return true;

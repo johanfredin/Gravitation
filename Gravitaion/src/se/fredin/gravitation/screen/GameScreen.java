@@ -2,6 +2,8 @@ package se.fredin.gravitation.screen;
 
 import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.level.Level;
+import se.fredin.gravitation.level.MultiPlayerLevel;
+import se.fredin.gravitation.level.SinglePlayerLevel;
 
 import com.badlogic.gdx.Game;
 
@@ -9,6 +11,7 @@ public class GameScreen extends BaseScreen {
 	
 	private State state = State.PLAYING;
 	private Level level;
+	private GameMode gameMode;
 	
 	enum State {
 		PLAYING,
@@ -21,12 +24,27 @@ public class GameScreen extends BaseScreen {
 	
 	public GameScreen(Game game, GameMode gameMode) {
 		super(game);
-		level = new Level("data/maps/level_1.tmx", this, gameMode);
+		this.gameMode = gameMode;
+		switch(gameMode) {
+		case SINGLE_PLAYER:
+			level = new SinglePlayerLevel("data/maps/level_1.tmx", this, gameMode);
+			break;
+		case MULTI_PLAYER:
+			BaseScreen.VIEWPORT_WIDTH = 160;
+			level = new MultiPlayerLevel("data/maps/level_1.tmx", this, gameMode);
+		}
 	}
 
 	@Override
 	public void render(float delta) {
-		level.render(batch, camera, camera2);
+		switch(gameMode) {
+		case SINGLE_PLAYER:
+			level.render(batch, camera);
+			break;
+		case MULTI_PLAYER:
+			level.render(batch, camera, camera2);
+			break;
+		}
 		level.tick(delta);
 	}
 

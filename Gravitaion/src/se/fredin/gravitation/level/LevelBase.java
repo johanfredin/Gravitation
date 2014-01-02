@@ -11,6 +11,7 @@ public interface LevelBase {
 	
 	void tick(float deltatime);
 	
-	void render(SpriteBatch renderer, OrthographicCamera camera, OrthographicCamera camera2);
+	void render(SpriteBatch renderer, OrthographicCamera camera1, OrthographicCamera camera2);
 	
+	void render(SpriteBatch renderer, OrthographicCamera camera);
 }

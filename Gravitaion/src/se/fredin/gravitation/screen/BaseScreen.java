@@ -1,7 +1,5 @@
 package se.fredin.gravitation.screen;
 
-import se.fredin.gravitation.Gravitation;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,7 +8,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 public abstract class BaseScreen implements Disposable, Screen {
 	
-	public static int VIEWPORT_WIDTH = Gravitation.multiPlayerMode ? 160 : 320;
+	public static int VIEWPORT_WIDTH = 320;
 	public static final int VIEWPORT_HEIGHT = 120;
 	protected OrthographicCamera camera, camera2;
 	protected SpriteBatch batch;
@@ -35,7 +33,6 @@ public abstract class BaseScreen implements Disposable, Screen {
 	
 	@Override
 	public void resize(int width, int height) {
-		VIEWPORT_WIDTH = Gravitation.multiPlayerMode ? 160 : 320;
 		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 		camera2.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 	}

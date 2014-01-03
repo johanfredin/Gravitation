@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="32" tileheight="32" backgroundcolor="#a6a6a6">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
-  <image source="../tileset/tileset.png" width="352" height="320"/>
+  <image source="../tileset/tileset.png" width="512" height="512"/>
  </tileset>
- <tileset firstgid="111" name="stations" tilewidth="32" tileheight="32">
+ <tileset firstgid="257" name="stations" tilewidth="32" tileheight="32">
   <image source="../tileset/stations.png" width="320" height="32"/>
  </tileset>
  <layer name="Background" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3XsQ3AIBBDUa/CFPSZIuMwGqMlKLQUSFx8xbdkUb7GV1AkFWOr1G6pO1qnL1Pw8Vf+6Tvb9U/f2q7/R/Dz+uw/Pvh5ffYfH/y8PvuPD/7nX+/r6PCdf+/RBwnpPEQAEAAA
+   H4sIAAAAAAAAA+2TwQnAIBRD4ybtCu0C7tFRXKajOEBXEBylXzx7aKuNhwQeCMp/KDEBORFxgA9AZOAqHqTIL3/LvwHL3gmbdT71l1y2t9qZL9iM+Ob+f0T+ef3s/ofa3S79D40/MPP7y8/1q//jI/+8fvV/fOSv/sPWDIrf+pmZ3I4zwk4AEAAA
   </data>
  </layer>
  <layer name="Foreground" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NgGHigQwKmptmjYBTgAsD04UBNTKLdD2jgnwRqmzkKhi8YTf+jYCSDAU7/C2jgnwRqmzkKhi8YTf+jYKQAYNo4AMLIfGLUwtjo+vHpJWQ+vQEApkCzMwAQAAA=
+   H4sIAAAAAAAAA7vLwHCAYYAAIwNDA4i2JgGTCqhp1igYOeAOMF9QE5NiNzBtPrhNRb/chpiZQEUjR8EwB6PpfxSMZDCa/kfBSAaj6X8UjBQATBsHrJHSqDWe9IqsFsZG149PLyHz6Q0AkLcW8gAQAAA=
   </data>
  </layer>
  <objectgroup color="#0000ff" name="spawn-points" width="32" height="32">
@@ -68,7 +68,7 @@
  </objectgroup>
  <layer name="passages" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3TywrAIAxEUf+4T9t+flcFFzOLKNZS7lkORAIZU+ojd3oX+JM1mCuTyMr/N5s5lwOjuf4fIlP9L13BHHjLFsxV/x9L4y7AV5wVM67/e8siGKLm/g73926dbX+/ABAAAA==
+   H4sIAAAAAAAAA+3TOw7AIAwEUQj53//AqSJReBokgoLmlQty43VKfRy502BpIivcCeWRHPyt72+BWZRLo1H/zyCP+l+74Z1y6SsbdJDyqP+vYp81iauhy9T/3bv4nZb9E/fPHrpibqAAEAAA
   </data>
  </layer>
  <objectgroup color="#67a405" name="stations" width="32" height="32">

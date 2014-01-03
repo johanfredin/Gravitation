@@ -11,7 +11,7 @@
    H4sIAAAAAAAAA+2TwQnAIBRD4ybtCu0C7tFRXKajOEBXEBylXzx7aKuNhwQeCMp/KDEBORFxgA9AZOAqHqTIL3/LvwHL3gmbdT71l1y2t9qZL9iM+Ob+f0T+ef3s/ofa3S79D40/MPP7y8/1q//jI/+8fvV/fOSv/sPWDIrf+pmZ3I4zwk4AEAAA
   </data>
  </layer>
- <layer name="Foreground" width="32" height="32">
+ <layer name="Foreground" width="32" height="32" opacity="0.97">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA7vLwHCAYYAAIwNDA4i2JgGTCqhp1igYOeAOMF9QE5NiNzBtPrhNRb/chpiZQEUjR8EwB6PpfxSMZDCa/kfBSAaj6X8UjBQATBsHrJHSqDWe9IqsFsZG149PLyHz6Q0AkLcW8gAQAAA=
   </data>

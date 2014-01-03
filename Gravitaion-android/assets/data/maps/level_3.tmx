@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="32" tileheight="32" backgroundcolor="#a6a6a6">
  <tileset firstgid="1" name="tileset" tilewidth="32" tileheight="32">
-  <image source="../tileset/tileset.png" width="352" height="320"/>
+  <image source="../tileset/tileset.png" width="512" height="512"/>
  </tileset>
- <tileset firstgid="111" name="stations" tilewidth="32" tileheight="32">
+ <tileset firstgid="257" name="stations" tilewidth="32" tileheight="32">
   <image source="../tileset/stations.png" width="320" height="32"/>
  </tileset>
  <layer name="Background" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3VwQ2AIAwFUEZhFOMkjtJRHOWP4ihy0MRYwJY2ogkk/yLVVxJS5xCmuV+WlC10Wl/30x5J4+0f34Ui2R7S85iyavzTVp4l20Ojr7JrPbT4lnXvvYNPVr/1Ph/vwsEHrxb75OATrxb7cPDBq8U+OfjEq2W21/m1PZRm1oMfK/MXtfme+Qcw2+JfekDhXKjte/gea/jDH/5//MxcU8fowxqL/+Ya/id88303JO7j7IkYABAAAA==
+   H4sIAAAAAAAAA+2USQ6AMAhFOQvX6sajeBSPwtEcwqKxODBEatKf/FULD9CCAIS5XiBJG3vqmY9KR/I5p/ZbahniWQGY93yaXgrzzzVY+JZZclwzAyOfjCU0sRa+R5nz51gK4FN7+zX/FeOBb1Zm/528Pwrgi7vshnu4CHOzvj+s9tnFXq3d9O3lVzWIueszqe8IfoQGf/AH/z98DLCTT157+F9q8Lvgh/zzVq82K0W1ABAAAA==
   </data>
  </layer>
  <layer name="Foreground" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2SwQkAIAwDM5uTOZqjSR+CX0NAKHfvNrlCJejAkObn/tXFwc2ovXII9FsZv+8/DoF+O4P7e/z/q0Oq23FId98OyTkAAACAYgMdHS3TABAAAA==
+   H4sIAAAAAAAAA+2XwQnAMAwDNYvXyqejdJSO4tFCIYXSV6MIDEEH/kWS9TEkgAtFBHBUZe9GA87K/Bij8iI0OUaRn6SO1r5pfL6q/4o2Bfm0h/uvw3rcN0jVf3YH5f2Z3eHprej+3eHnu1LUvY0xxpjdieL/dwe2wl+UABAAAA==
   </data>
  </layer>
  <objectgroup color="#0000ff" name="spawn-points" width="32" height="32">
@@ -86,7 +86,7 @@
  </objectgroup>
  <layer name="passages" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3SWQ4AEAwEUDe2L8d3gVJClJj3N5MKSSm1lyc6vfkOeMvJ/VP/r8cyGc4zQmcBbhQHOylO+gELApOB9/L+QVZm8qxE5NKYbfUAv6jfBFjaABAAAA==
+   H4sIAAAAAAAAA+3SSwoAIQwDUDM63/sfeA5grYjSKubtEqgIbQhjncg7CB3tw3L/0v1pIvRM9o6OHfTMEs3oFm5a6rykif7S6oKeqW7l/ZOvF3pu9SDPX+HNUk+0ix8xfSBEABAAAA==
   </data>
  </layer>
  <objectgroup color="#67a405" name="stations" width="32" height="32">

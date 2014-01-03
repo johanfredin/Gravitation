@@ -8,12 +8,12 @@
  </tileset>
  <layer name="Background" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NkYFBgHFhMFgDqOwDEDnjkccrBwF2IuhFvvxIavgM0Gx3T0H6H3QSwEAPDA3S9RkD7jfDYAdSTADR7AbpemDgIUxL+1ACj9lNmv+AA2396hNsviKVcoKf9lIJR+wef/cA01TCQ9qPnKWAdkyBNIjZCq3NwlVPE2H+bTIzPTFLspwYYtX/UfmLtFySi3UhL+2kBcNWTo+UvfdIfofIX1OephtKnoexoKP8MlIbxkXE0GmbAIl+NZGY1khqY/cbAfshAYgBGj/FqABAAAA==
+   H4sIAAAAAAAAA2NkYGA4zcCwYKAwIwN5AKjvAD693kSYcRdizoi3XwkN3wGajY5paf9uBgYHfFiIgeEBul4hiDiGu2BAEChnDExfQP0L0MQTgOlOAYQpCX9qgFH7KbNfGk/8j9o//O2nFIzaP/jsB5bPDQNp/2k0vhGwvpAmERuh1VeCFNh/m0yMz0xS7KcGGLV/1H5i7QfmFYeBtJ8WQBBHPTla/tIn/REqf0F9nmoofRrKjobyz0BpGB8ZR6NhBizy1UhmViOpgdkP6qMMJAYAnPpFdAAQAAA=
   </data>
  </layer>
  <layer name="Foreground" width="32" height="32">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NkIA8wMjAcYMQjf5oIM+4CsTUDQ4M1hCYKkwqoadZwBXeAcYmM6Wn3bgYGB2gawItpYTcw/S6ghbmjgD7Ae9T+EW3/KBgFtAa7ycRUtP8AORjdHGAdmkBFZ5EMRu0fWPtHwSgYBdgBet8HvT9EKcZl5gB6GQyA/e8FABEOiCcAEAAA
+   H4sIAAAAAAAAAzvNwLCAgQzAyMDQwIhH/jRQnpAZd6G0NQmYWAC0/wAhs2kJYPYPFCDF/jtAtciYWvYTY5YQA4MDMC4aCGFS7QeZS4QbFUg1dxQMHuA9av+Itn8UjAJag91kYiraf4AcjG4OsA5NoKKzSAaj9g+s/aNgFIwC7AC974PeH6IU4zJzAL0MBsD+9wIA+bwLCgAQAAA=
   </data>
  </layer>
  <objectgroup color="#0000ff" name="spawn-points" width="32" height="32">
@@ -22,7 +22,7 @@
   <object name="start3" x="64" y="118" width="64" height="11"/>
   <object name="start4" x="896" y="130" width="64" height="11"/>
  </objectgroup>
- <objectgroup color="#550000" name="collision" width="32" height="32" visible="0">
+ <objectgroup color="#550000" name="collision" width="32" height="32">
   <object x="1" y="1" width="1022" height="31"/>
   <object x="0" y="35" width="23" height="988"/>
   <object x="26" y="994" width="995" height="28"/>

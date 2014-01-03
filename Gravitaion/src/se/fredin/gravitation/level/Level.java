@@ -38,14 +38,14 @@ public abstract class Level implements LevelBase, Disposable {
 	protected TiledMap map;
 	protected Player player1, player2;
 	protected PowerupHandler itemHandler;
+	protected StatisticsBar player1StatisticsBar;
+	protected StatisticsBar player2StatisticsBar;
 	
 	protected Array<LaunchPad> launchPads;
 	protected Array<Vector2> playerSpawnPoints;
 	protected Array<Rectangle> hardBlocks;
 	protected Array<Vector2> launchPadPositions;
 	protected Vector2 spawnPoint;
-	protected StatisticsBar player1StatisticsBar;
-	protected StatisticsBar player2StatisticsBar;
 	protected GameMode gameMode;
 	
 	protected final float MAP_WIDTH;

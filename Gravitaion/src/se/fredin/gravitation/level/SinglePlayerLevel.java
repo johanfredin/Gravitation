@@ -24,8 +24,7 @@ public class SinglePlayerLevel extends Level {
 		// Setup player
 		this.spawnPoint = new Vector2(playerSpawnPoints.get(0));
 		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1, gameMode);
-		this.player1StatisticsBar = new StatisticsBar(0, 0, Gdx.graphics.getWidth(), 10, player1);
-		
+		this.player1StatisticsBar = new StatisticsBar(0, 0, Gdx.graphics.getWidth(), 10);
 		this.stationHandler = new StationHandler(map, player1, UNIT_SCALE);
 		
 		// Add key support
@@ -60,7 +59,7 @@ public class SinglePlayerLevel extends Level {
 	@Override
 	public void tick(float delta) {
 		player1.tick(delta);
-		player1StatisticsBar.tick(delta, player1);
+		player1StatisticsBar.tick(delta);
 		stationHandler.tick(delta);
 				
 		for(LaunchPad launchPad : launchPads) {

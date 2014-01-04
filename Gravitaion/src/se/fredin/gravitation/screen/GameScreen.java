@@ -22,16 +22,16 @@ public class GameScreen extends BaseScreen {
 		SWITCHING_LEVEL
 	}
 	
-	public GameScreen(Game game, GameMode gameMode) {
+	public GameScreen(Game game, GameMode gameMode, int level_index) {
 		super(game);
 		this.gameMode = gameMode;
 		switch(gameMode) {
 		case SINGLE_PLAYER:
-			level = new SinglePlayerLevel("data/maps/level_3.tmx", this, gameMode);
+			level = new SinglePlayerLevel("data/maps/level_" + level_index + ".tmx", this, gameMode);
 			break;
 		case MULTI_PLAYER:
 			BaseScreen.VIEWPORT_WIDTH = 160;
-			level = new MultiPlayerLevel("data/maps/level_3.tmx", this, gameMode);
+			level = new MultiPlayerLevel("data/maps/level_" + level_index + ".tmx", this, gameMode);
 		}
 	}
 

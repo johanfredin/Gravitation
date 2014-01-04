@@ -10,6 +10,13 @@ TITLE
   orig: 852, 86
   offset: 0, 0
   index: -1
+whiterect
+  rotate: false
+  xy: 852, 828
+  size: 2, 2
+  orig: 2, 2
+  offset: 0, 0
+  index: -1
 level complete
   rotate: false
   xy: 0, 704

@@ -1,31 +1,31 @@
 package se.fredin.gravitation.screen.ui;
 
 import se.fredin.gravitation.GameMode;
-import se.fredin.gravitation.screen.GameScreen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class MainMenuScreen extends MenuBase {
 	
-	private Label singlePlayerButton, multiPlayerButton, quitButton;
+	private Button singlePlayerButton, multiPlayerButton, quitButton;
 	private boolean singlePlayerButtonClicked;
 	private boolean multiPlayerButtonClicked;
 	private boolean quitButtonClicked;
-	private final byte NEW_GAME = 1, OPTIONS = 2, QUIT = 3;		// button actions
+	private Image titleImage;
+	private final byte NEW_GAME = 1, MULTIPLAYER = 2, QUIT = 3;		// button actions
 	
 	public MainMenuScreen(Game game) {
 		super(game);
 		initButtonsAndImages();
 		setListener(singlePlayerButton, NEW_GAME);
-		setListener(multiPlayerButton, OPTIONS);
+		setListener(multiPlayerButton, MULTIPLAYER);
 		setListener(quitButton, QUIT);
 		setPositionsAndSizes(camera.viewportWidth, camera.viewportHeight);	
 	}
@@ -33,52 +33,86 @@ public class MainMenuScreen extends MenuBase {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		checkIfPressed();
-	}	
+		
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
+		whiteCanvasImage.draw(batch, 1);
+		batch.end();
+		
+		tick(delta);
+		
+	}
 	
-	public void checkIfPressed() {
-		if(singlePlayerButtonClicked) {
-			game.setScreen(new GameScreen(game, GameMode.SINGLE_PLAYER));
-		} else if(multiPlayerButtonClicked) {
-			game.setScreen(new GameScreen(game, GameMode.MULTI_PLAYER));
-		}
-		else if(quitButtonClicked) {
+	@Override
+	public void tick(float delta) {
+		super.tick(delta);
+		
+		whiteCanvasImage.act(delta);
+		
+		if(singlePlayerButtonClicked && whiteCanvasImage.getActions().size <= 0) {
+			stage.clear();
+			game.setScreen(new LevelSelect(game, GameMode.SINGLE_PLAYER));
+		} else if(multiPlayerButtonClicked && whiteCanvasImage.getActions().size <= 0) {
+			stage.clear();
+			game.setScreen(new LevelSelect(game, GameMode.MULTI_PLAYER));
+		} else if(quitButtonClicked) {
 			Gdx.app.exit();
 		}
+
 	}
 	
 	private void initButtonsAndImages() {
-		LabelStyle ls = new LabelStyle(new BitmapFont(), Color.RED);
-		singlePlayerButton = new Label("Singleplayer", ls);
-		multiPlayerButton = new Label("MultiPlayer", ls);
-		quitButton = new Label("Quit", ls);
+		singlePlayerButton = new Button(skin.getDrawable("single player"));
+		multiPlayerButton = new Button(skin.getDrawable("multiplayer"));
+		quitButton = new Button(skin.getDrawable("quit"));
+		
+		titleImage = new Image(skin.getDrawable("TITLE-SMALL"));
+		titleImage.setSize(300, 30);
+		titleImage.setPosition(camera.position.x - (titleImage.getWidth() / 2), camera.viewportHeight - titleImage.getHeight() - 2);
+		stage.addActor(titleImage);
+		
+		// add fade in effect
+		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(0.5f), Actions.fadeOut(4f)));	
 	}
 	
 	private void setPositionsAndSizes(float width, float height) {
-		float buttonCenterX = width / 3.33f;
-		float buttonWidth = 100;
-		float buttonHeight = 30;
+		float buttonWidth = 133.33f;
+		float buttonHeight = 13.33f;
 		float spacingY = 20;
-		singlePlayerButton.setBounds(buttonCenterX, height - spacingY * 3, buttonWidth, buttonHeight);
+		
+		whiteCanvasImage.setBounds(0, 0, width, height);
+		
+		singlePlayerButton.setSize(buttonWidth, buttonHeight);
+		float buttonCenterX = camera.position.x - (singlePlayerButton.getWidth() / 2);
+		singlePlayerButton.setBounds(buttonCenterX, height - titleImage.getHeight() - spacingY * 1.5f, buttonWidth, buttonHeight);
 		multiPlayerButton.setBounds(buttonCenterX, singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
 		quitButton.setBounds(buttonCenterX, multiPlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
 	}
 	
-	private void setListener(Label label, final int ACTION) {
-		stage.addActor(label);		// add button to the scene as an actor
-		label.addListener(new InputListener() {
+	@Override
+	public void setListener(Actor actor, final int ACTION) {
+		stage.addActor(actor);		// add button to the scene as an actor
+		actor.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				// Stop fading in if it hasn't stopped already
+				if(whiteCanvasImage.getActions().size > 0) {
+					whiteCanvasImage.getActions().clear();
+				}
+				
 				switch(ACTION) {
 				case NEW_GAME:	// Start the game!!
+					animateActorAndFadeOutScreen(singlePlayerButton, 0.1f, 1.2f);
 					singlePlayerButtonClicked = true;
 					disableButtons();
 					return true;
-				case OPTIONS:
+				case MULTIPLAYER:
+					animateActorAndFadeOutScreen(multiPlayerButton, 0.1f, 1.2f);
 					multiPlayerButtonClicked = true;
 					disableButtons();
 					return true;
 				case QUIT:	// Quit the game
+					animateActorAndFadeOutScreen(quitButton, 0.1f, 1.2f);
 					quitButtonClicked = true;
 					disableButtons();
 					return true;

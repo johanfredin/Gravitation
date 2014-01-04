@@ -17,5 +17,6 @@ public class Paths {
 	public static final String REVERSE_BULLET_TEXTURE = "data/objects/reversebullet_powerup.png";
 	public static final String BIG_BULLET_TEXTURE = "data/objects/bigbullet_powerup.png";
 	public static final String REVERSED_STEARING_TEXTURE = "data/objects/reversedsteering_powerup.png";
+	public static final String MENU_ITEMS = "data/skins/menuitems.pack";
 	
 }

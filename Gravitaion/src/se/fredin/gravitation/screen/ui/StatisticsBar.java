@@ -1,7 +1,5 @@
 package se.fredin.gravitation.screen.ui;
 
-import org.joda.time.DateTime;
-
 import se.fredin.gravitation.entity.physical.Player;
 
 import com.badlogic.gdx.graphics.Color;
@@ -19,8 +17,7 @@ public class StatisticsBar {
 	private ShapeRenderer shapeRenderer;
 	private Label scoreLabel;
 	private Rectangle bounds;
-	private DateTime dateTime;
-	private int minute, seconds, millis;
+	private float time = 0;
 	
 	public StatisticsBar(float x, float y, float width, float height, Player player) {
 		this.scoreLabel = new Label("Player " + player.getPlayerNum() + " score: " + player.getScore(), new LabelStyle(new BitmapFont(), Color.RED));
@@ -36,10 +33,6 @@ public class StatisticsBar {
 		shapeRenderer.setColor(Color.DARK_GRAY);
 		this.bounds = new Rectangle(x, y, width, height);
 		scoreLabel.setSize(5, 5);
-		dateTime = new DateTime(0, 1, 1, 0, 0);
-		minute = dateTime.getMinuteOfDay();
-		seconds = dateTime.getSecondOfMinute();
-		millis = dateTime.getMillisOfSecond();
 	}
 	
 	public void render(SpriteBatch batch, OrthographicCamera camera) {
@@ -63,7 +56,8 @@ public class StatisticsBar {
 	
 	public void tick(float delta) {
 		scoreLabel.act(delta);
-		scoreLabel.setText("Time : " + DateTime.now());
+		time += delta;
+		scoreLabel.setText("Time : " + ("" + time).substring(0, time >= 10 ? 5 : 4));
 	}
 	
 	public void dispose() {

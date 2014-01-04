@@ -1,0 +1,124 @@
+
+menuitems.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+TITLE
+  rotate: false
+  xy: 0, 744
+  size: 852, 86
+  orig: 852, 86
+  offset: 0, 0
+  index: -1
+level complete
+  rotate: false
+  xy: 0, 704
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+level2_img
+  rotate: false
+  xy: 525, 480
+  size: 264, 264
+  orig: 264, 264
+  offset: 0, 0
+  index: -1
+resume
+  rotate: false
+  xy: 0, 664
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+return to menu
+  rotate: false
+  xy: 0, 624
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+time limit
+  rotate: false
+  xy: 0, 584
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+multiplayer
+  rotate: false
+  xy: 0, 544
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+single player
+  rotate: false
+  xy: 0, 504
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+score
+  rotate: false
+  xy: 0, 464
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+level3_img
+  rotate: false
+  xy: 525, 216
+  size: 264, 264
+  orig: 264, 264
+  offset: 0, 0
+  index: -1
+new game
+  rotate: false
+  xy: 0, 424
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+level select
+  rotate: false
+  xy: 0, 384
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+controls
+  rotate: false
+  xy: 0, 344
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+replay
+  rotate: false
+  xy: 0, 304
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+quit
+  rotate: false
+  xy: 0, 264
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+level1_img
+  rotate: false
+  xy: 0, 0
+  size: 264, 264
+  orig: 264, 264
+  offset: 0, 0
+  index: -1
+TITLE-SMALL
+  rotate: false
+  xy: 264, 176
+  size: 400, 40
+  orig: 400, 40
+  offset: 0, 0
+  index: -1

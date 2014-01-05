@@ -5,6 +5,7 @@ import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -38,6 +39,10 @@ public abstract class MenuBase extends BaseScreen {
 	
 	public abstract void setListener(Actor actor, final int ACTION);
 
+	protected boolean notAndroid() {
+		return Gdx.app.getType() != ApplicationType.Android;
+	}
+	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

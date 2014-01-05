@@ -25,7 +25,9 @@ public class MainMenuScreen extends MenuBase {
 		super(game);
 		initButtonsAndImages();
 		setListener(singlePlayerButton, NEW_GAME);
-		setListener(multiPlayerButton, MULTIPLAYER);
+		if(notAndroid()) {
+			setListener(multiPlayerButton, MULTIPLAYER);
+		}
 		setListener(quitButton, QUIT);
 		setPositionsAndSizes(camera.viewportWidth, camera.viewportHeight);	
 	}
@@ -52,7 +54,7 @@ public class MainMenuScreen extends MenuBase {
 		if(singlePlayerButtonClicked && whiteCanvasImage.getActions().size <= 0) {
 			stage.clear();
 			game.setScreen(new LevelSelect(game, GameMode.SINGLE_PLAYER));
-		} else if(multiPlayerButtonClicked && whiteCanvasImage.getActions().size <= 0) {
+		} else if(multiPlayerButtonClicked && whiteCanvasImage.getActions().size <= 0 && notAndroid()) {
 			stage.clear();
 			game.setScreen(new LevelSelect(game, GameMode.MULTI_PLAYER));
 		} else if(quitButtonClicked) {
@@ -63,7 +65,9 @@ public class MainMenuScreen extends MenuBase {
 	
 	private void initButtonsAndImages() {
 		singlePlayerButton = new Button(skin.getDrawable("single player"));
-		multiPlayerButton = new Button(skin.getDrawable("multiplayer"));
+		if(notAndroid()) {
+			multiPlayerButton = new Button(skin.getDrawable("multiplayer"));
+		}
 		quitButton = new Button(skin.getDrawable("quit"));
 		
 		titleImage = new Image(skin.getDrawable("TITLE-SMALL"));
@@ -85,8 +89,10 @@ public class MainMenuScreen extends MenuBase {
 		singlePlayerButton.setSize(buttonWidth, buttonHeight);
 		float buttonCenterX = camera.position.x - (singlePlayerButton.getWidth() / 2);
 		singlePlayerButton.setBounds(buttonCenterX, height - titleImage.getHeight() - spacingY * 1.5f, buttonWidth, buttonHeight);
-		multiPlayerButton.setBounds(buttonCenterX, singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
-		quitButton.setBounds(buttonCenterX, multiPlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
+		if(notAndroid()){
+			multiPlayerButton.setBounds(buttonCenterX, singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
+		}
+		quitButton.setBounds(buttonCenterX, notAndroid() ? multiPlayerButton.getY() - spacingY : singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
 	}
 	
 	@Override
@@ -125,7 +131,9 @@ public class MainMenuScreen extends MenuBase {
 	
 	private void disableButtons() {
 		singlePlayerButton.setTouchable(Touchable.disabled);
-		multiPlayerButton.setTouchable(Touchable.disabled);
+		if(notAndroid()) {
+			multiPlayerButton.setTouchable(Touchable.disabled);
+		}
 		quitButton.setTouchable(Touchable.disabled);
 	}
 	

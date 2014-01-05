@@ -7,7 +7,6 @@ import se.fredin.gravitation.entity.item.handler.PowerupHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
-import se.fredin.gravitation.screen.ui.StatisticsBar;
 import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -38,8 +37,6 @@ public abstract class Level implements LevelBase, Disposable {
 	protected TiledMap map;
 	protected Player player1, player2;
 	protected PowerupHandler itemHandler;
-	protected StatisticsBar player1StatisticsBar;
-	protected StatisticsBar player2StatisticsBar;
 	
 	protected Array<LaunchPad> launchPads;
 	protected Array<Vector2> playerSpawnPoints;
@@ -115,12 +112,12 @@ public abstract class Level implements LevelBase, Disposable {
 	@Override
 	public void render(SpriteBatch batch, OrthographicCamera camera, OrthographicCamera camera2) {	
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		renderHalf(camera, batch, player1StatisticsBar, 0, true);
-		renderHalf(camera2, batch, player2StatisticsBar, Gdx.graphics.getWidth() / 2, false);
+		renderHalf(camera, batch, 0, true);
+		renderHalf(camera2, batch, Gdx.graphics.getWidth() / 2, false);
 		return;
 	}
 	
-	private void renderHalf(OrthographicCamera camera, SpriteBatch batch, StatisticsBar statsBar, int cameraXPos, boolean leftSide) {
+	private void renderHalf(OrthographicCamera camera, SpriteBatch batch, int cameraXPos, boolean leftSide) {
 		mapRenderer.setView(camera);
 		mapRenderer.render();
 		
@@ -142,8 +139,6 @@ public abstract class Level implements LevelBase, Disposable {
 		if(Gravitation.DEBUG_MODE) {
 			debugRender(camera);
 		}
-		
-		statsBar.render(batch, camera);
 		
 		moveCamera(camera, (leftSide ? player1 : player2), cameraXPos, MAP_WIDTH, MAP_HEIGHT);
 		camera.update();
@@ -227,8 +222,6 @@ public abstract class Level implements LevelBase, Disposable {
 			launchPad.dispose();
 		}
 		itemHandler.dispose();
-		player1StatisticsBar.dispose();
-		player2StatisticsBar.dispose();
 	}
 
 	

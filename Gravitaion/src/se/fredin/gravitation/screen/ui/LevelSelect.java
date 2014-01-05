@@ -13,7 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 public class LevelSelect extends MenuBase {
 
 	private GameMode gameMode;
-	private Image levelSelectImage, level1Image, level2Image, level3Image, returnToMenuImage;
+	private Image levelSelectImage, 
+				  level1Image, 
+				  level2Image, 
+				  level3Image, 
+				  returnToMenuImage,
+				  timeLimitImage,
+				  scoreImage,
+				  fiveImage,
+				  tenImage,
+				  twentyImage,
+				  unlimitedImage;
 	private final int LEVEL_1 = 1, LEVEL_2 = 2, LEVEL_3 = 3, RETURN_TO_MENU = 4;
 	private boolean level1ImagePressed;
 	private boolean level2ImagePressed;
@@ -38,23 +48,35 @@ public class LevelSelect extends MenuBase {
 		float spacingX = 28;
 		this.level1Image = new Image(skin.getDrawable("level1_img"));
 		level1Image.setSize(64, 44);
-		level1Image.setPosition(28, levelSelectImage.getY() - level1Image.getHeight() - 10);
+		level1Image.setPosition(spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
 		stage.addActor(level1Image);
 		
 		this.level2Image = new Image(skin.getDrawable("level2_img"));
 		level2Image.setSize(64, 44);
-		level2Image.setPosition(level1Image.getX() + level1Image.getWidth() + spacingX, levelSelectImage.getY() - level1Image.getHeight() - 10);
+		level2Image.setPosition(level1Image.getX() + level1Image.getWidth() + spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
 		stage.addActor(level2Image);
 		
 		this.level3Image = new Image(skin.getDrawable("level3_img"));
 		level3Image.setSize(64, 44);
-		level3Image.setPosition(level2Image.getX() + level2Image.getWidth() + spacingX, levelSelectImage.getY() - level1Image.getHeight() - 10);
+		level3Image.setPosition(level2Image.getX() + level2Image.getWidth() + spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
 		stage.addActor(level3Image);
 		
 		this.returnToMenuImage = new Image(skin.getDrawable("return to menu"));
 		returnToMenuImage.setSize(133.33f, 13.33f);
-		returnToMenuImage.setPosition(camera.position.x - returnToMenuImage.getWidth() / 2, 10);
+		returnToMenuImage.setPosition(camera.position.x - returnToMenuImage.getWidth() / 2, 5);
 		stage.addActor(returnToMenuImage);
+		
+		if(notAndroid() && gameMode == GameMode.MULTI_PLAYER) {
+			scoreImage = new Image(skin.getDrawable("score"));
+			scoreImage.setSize(75, 7.5f);
+			scoreImage.setPosition(5, level3Image.getY() - scoreImage.getHeight() - 5);
+			stage.addActor(scoreImage);
+			
+			timeLimitImage = new Image(skin.getDrawable("time limit"));
+			timeLimitImage.setSize(75, 7.5f);
+			timeLimitImage.setPosition(17, scoreImage.getY() - scoreImage.getHeight() - 2);
+			stage.addActor(timeLimitImage);
+		}
 		
 		whiteCanvasImage.setBounds(0, 0, camera.viewportWidth, camera.viewportHeight);
 		

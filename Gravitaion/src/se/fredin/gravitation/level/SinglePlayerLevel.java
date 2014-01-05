@@ -6,7 +6,6 @@ import se.fredin.gravitation.entity.item.handler.StationHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
-import se.fredin.gravitation.screen.ui.StatisticsBar;
 import se.fredin.gravitation.utils.KeyInput;
 import se.fredin.gravitation.utils.Paths;
 
@@ -24,7 +23,6 @@ public class SinglePlayerLevel extends Level {
 		// Setup player
 		this.spawnPoint = new Vector2(playerSpawnPoints.get(0));
 		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1, gameMode);
-		this.player1StatisticsBar = new StatisticsBar(0, 0, Gdx.graphics.getWidth(), 10);
 		this.stationHandler = new StationHandler(map, player1, UNIT_SCALE);
 		
 		// Add key support
@@ -50,8 +48,6 @@ public class SinglePlayerLevel extends Level {
 			debugRender(camera);
 		}
 		
-		player1StatisticsBar.render(batch, camera);
-		
 		moveCamera(camera, player1, 0, MAP_WIDTH, MAP_HEIGHT);
 		camera.update();
 	}
@@ -59,7 +55,6 @@ public class SinglePlayerLevel extends Level {
 	@Override
 	public void tick(float delta) {
 		player1.tick(delta);
-		player1StatisticsBar.tick(delta);
 		stationHandler.tick(delta);
 				
 		for(LaunchPad launchPad : launchPads) {

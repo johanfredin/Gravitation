@@ -5,127 +5,211 @@ filter: Nearest,Nearest
 repeat: none
 TITLE
   rotate: false
-  xy: 0, 744
+  xy: 0, 792
   size: 852, 86
   orig: 852, 86
   offset: 0, 0
   index: -1
-whiterect
-  rotate: false
-  xy: 852, 828
-  size: 2, 2
-  orig: 2, 2
-  offset: 0, 0
-  index: -1
 level complete
   rotate: false
-  xy: 0, 704
+  xy: 0, 752
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-level2_img
-  rotate: false
-  xy: 525, 480
-  size: 264, 264
-  orig: 264, 264
-  offset: 0, 0
-  index: -1
 resume
   rotate: false
-  xy: 0, 664
+  xy: 0, 712
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+player 1 wins
+  rotate: false
+  xy: 0, 672
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 return to menu
   rotate: false
-  xy: 0, 624
+  xy: 0, 632
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 time limit
   rotate: false
-  xy: 0, 584
+  xy: 0, 592
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 multiplayer
   rotate: false
-  xy: 0, 544
+  xy: 0, 552
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 single player
   rotate: false
-  xy: 0, 504
+  xy: 0, 512
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 score
   rotate: false
-  xy: 0, 464
+  xy: 0, 472
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-level3_img
-  rotate: false
-  xy: 525, 216
-  size: 264, 264
-  orig: 264, 264
-  offset: 0, 0
-  index: -1
 new game
   rotate: false
-  xy: 0, 424
+  xy: 0, 432
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 level select
   rotate: false
-  xy: 0, 384
+  xy: 0, 392
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 controls
   rotate: false
-  xy: 0, 344
+  xy: 0, 352
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 replay
   rotate: false
-  xy: 0, 304
+  xy: 0, 312
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+player 2 wins
+  rotate: false
+  xy: 0, 272
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 quit
   rotate: false
-  xy: 0, 264
+  xy: 0, 232
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-level1_img
+level2_img
   rotate: false
-  xy: 0, 0
+  xy: 525, 528
+  size: 264, 264
+  orig: 264, 264
+  offset: 0, 0
+  index: -1
+level3_img
+  rotate: false
+  xy: 525, 264
   size: 264, 264
   orig: 264, 264
   offset: 0, 0
   index: -1
 TITLE-SMALL
   rotate: false
-  xy: 264, 176
+  xy: 0, 192
   size: 400, 40
   orig: 400, 40
+  offset: 0, 0
+  index: -1
+unlimited
+  rotate: false
+  xy: 0, 152
+  size: 332, 40
+  orig: 332, 40
+  offset: 0, 0
+  index: -1
+reversed bullets
+  rotate: false
+  xy: 0, 132
+  size: 332, 20
+  orig: 332, 20
+  offset: 0, 0
+  index: -1
+reversed steering
+  rotate: false
+  xy: 0, 112
+  size: 332, 20
+  orig: 332, 20
+  offset: 0, 0
+  index: -1
+level1_img
+  rotate: false
+  xy: 525, 0
+  size: 264, 264
+  orig: 264, 264
+  offset: 0, 0
+  index: -1
+fast bullets
+  rotate: false
+  xy: 0, 92
+  size: 244, 20
+  orig: 244, 20
+  offset: 0, 0
+  index: -1
+big bullets
+  rotate: false
+  xy: 0, 73
+  size: 212, 19
+  orig: 212, 19
+  offset: 0, 0
+  index: -1
+slow down
+  rotate: false
+  xy: 0, 53
+  size: 187, 20
+  orig: 187, 20
+  offset: 0, 0
+  index: -1
+speed up
+  rotate: false
+  xy: 0, 34
+  size: 166, 19
+  orig: 166, 19
+  offset: 0, 0
+  index: -1
+20
+  rotate: false
+  xy: 400, 192
+  size: 76, 40
+  orig: 76, 40
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 332, 152
+  size: 65, 40
+  orig: 65, 40
+  offset: 0, 0
+  index: -1
+5
+  rotate: false
+  xy: 789, 752
+  size: 46, 40
+  orig: 46, 40
+  offset: 0, 0
+  index: -1
+whiterect
+  rotate: false
+  xy: 852, 877
+  size: 1, 1
+  orig: 1, 1
   offset: 0, 0
   index: -1

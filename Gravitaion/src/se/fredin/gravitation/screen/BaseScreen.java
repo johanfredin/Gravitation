@@ -27,6 +27,10 @@ public abstract class BaseScreen implements Disposable, Screen {
 		camera2.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 	}
 	
+	public Game getGame() {
+		return this.game;
+	}
+	
 	public OrthographicCamera getCamera() {
 		return camera;
 	}

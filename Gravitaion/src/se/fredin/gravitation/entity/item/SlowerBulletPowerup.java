@@ -2,7 +2,7 @@ package se.fredin.gravitation.entity.item;
 
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.utils.Paths;
-import se.fredin.gravitation.utils.PlayerDefaults;
+import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,11 +16,11 @@ public class SlowerBulletPowerup extends Powerup {
 
 	@Override
 	public void affectEntity(Player player) {
-		player.setBulletSpeed(PlayerDefaults.SLOW_BULLET_SPEED);
+		player.setBulletSpeed(Settings.SLOW_BULLET_SPEED);
 	}
 	
 	@Override
 	public void removePower(Player player) {
-		player.setBulletSpeed(PlayerDefaults.DEFAULT_BULLET_SPEED);
+		player.setBulletSpeed(Settings.DEFAULT_BULLET_SPEED);
 	}
 }

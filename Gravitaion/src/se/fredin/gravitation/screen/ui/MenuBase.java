@@ -74,6 +74,14 @@ public abstract class MenuBase extends BaseScreen {
 		actor.addAction(Actions.repeat(3, Actions.sequence(Actions.fadeOut(buttonFlashDuration), Actions.after(Actions.fadeIn(buttonFlashDuration)))));
 		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(buttonFlashDuration * 6), Actions.fadeIn(fadeInDuration)));
 	}
+	
+	protected void animateActor(Actor actor, float buttonFlashDuration) {
+		actor.addAction(Actions.repeat(3, Actions.sequence(Actions.fadeOut(buttonFlashDuration), Actions.after(Actions.fadeIn(buttonFlashDuration)))));
+	}
+	
+	protected void setAlpha(Actor actor, float alpha,float duration) {
+		actor.addAction(Actions.alpha(alpha, duration));
+	}
 
 	public void pause(){}
 

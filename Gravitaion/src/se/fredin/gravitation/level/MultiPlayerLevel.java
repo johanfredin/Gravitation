@@ -7,6 +7,7 @@ import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.utils.KeyInput;
 import se.fredin.gravitation.utils.Paths;
+import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,6 +16,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class MultiPlayerLevel extends Level {
 
+	private float timer = 0f;
+	
 	public MultiPlayerLevel(String levelPath, GameScreen gameScreen, GameMode gameMode) {
 		super(levelPath, gameScreen, GameMode.MULTI_PLAYER);
 		
@@ -39,8 +42,27 @@ public class MultiPlayerLevel extends Level {
 	
 	@Override
 	public void tick(float delta) {
-		player1.tick(delta);
+		if(!Settings.isUnlimitedTime) {
+			timer += delta;
+		} 
 		
+		if(timer >= Settings.defaultTimeLimit) {
+			if(player1.getScore() > player2.getScore()) {
+				System.out.println("Player 1 wins");
+			} else if(player2.getScore() > player1.getScore()) {
+				System.out.println("Player 2 wins");
+			} else {
+				System.out.println("DRAW!");
+			}
+		}
+		
+		if(player1.getScore() >= Settings.defaultScoreLimit && !Settings.isUnlimitedcore) {
+			System.out.println("Player 1 wins!");
+		} else if(player2.getScore() >= Settings.defaultScoreLimit && !Settings.isUnlimitedcore) {
+			System.out.println("Player 2 wins!");
+		}
+		
+		player1.tick(delta);
 		player2.tick(delta);
 		player2.checkForCollision(hardBlocks, playerSpawnPoints, player1);
 		itemHandler.tick(delta);

@@ -6,6 +6,7 @@ import se.fredin.gravitation.entity.item.handler.StationHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
+import se.fredin.gravitation.screen.ui.ingame.InGameMenu;
 import se.fredin.gravitation.utils.KeyInput;
 import se.fredin.gravitation.utils.Paths;
 
@@ -27,6 +28,7 @@ public class SinglePlayerLevel extends Level {
 		
 		// Add key support
 		Gdx.input.setInputProcessor(new KeyInput(player1, null));
+		this.inGameMenu = new InGameMenu(gameScreen.getGame(), this, gameMode, player1);
 		
 		addGamepadSupport();
 	}

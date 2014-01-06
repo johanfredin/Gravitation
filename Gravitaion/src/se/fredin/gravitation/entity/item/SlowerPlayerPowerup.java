@@ -2,7 +2,7 @@ package se.fredin.gravitation.entity.item;
 
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.utils.Paths;
-import se.fredin.gravitation.utils.PlayerDefaults;
+import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,12 +16,12 @@ public class SlowerPlayerPowerup extends Powerup {
 
 	@Override
 	public void affectEntity(Player player) {
-		player.setSpeed(PlayerDefaults.DEFAULT_SPEED / 2);
+		player.setSpeed(Settings.DEFAULT_SPEED / 2);
 	}
 
 	@Override
 	public void removePower(Player player) {
-		player.setSpeed(PlayerDefaults.DEFAULT_SPEED);
+		player.setSpeed(Settings.DEFAULT_SPEED);
 	}
 
 }

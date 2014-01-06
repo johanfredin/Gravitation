@@ -7,6 +7,7 @@ import se.fredin.gravitation.entity.item.handler.PowerupHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
+import se.fredin.gravitation.screen.ui.ingame.InGameMenu;
 import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -37,6 +38,7 @@ public abstract class Level implements LevelBase, Disposable {
 	protected TiledMap map;
 	protected Player player1, player2;
 	protected PowerupHandler itemHandler;
+	protected InGameMenu inGameMenu;
 	
 	protected Array<LaunchPad> launchPads;
 	protected Array<Vector2> playerSpawnPoints;

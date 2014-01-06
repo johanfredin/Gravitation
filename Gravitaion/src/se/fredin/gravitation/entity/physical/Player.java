@@ -5,7 +5,7 @@ import se.fredin.gravitation.entity.item.Bullet;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.utils.ParticleLoader;
 import se.fredin.gravitation.utils.Paths;
-import se.fredin.gravitation.utils.PlayerDefaults;
+import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -35,7 +35,7 @@ public class Player extends PhysicalEntity {
 	
 	private boolean isReversedSteering;
 	private Vector2 movement;
-	private float bulletSpeed = PlayerDefaults.DEFAULT_BULLET_SPEED;
+	private float bulletSpeed = Settings.DEFAULT_BULLET_SPEED;
 	private Touchpad movementTouchPad, gasTouchPad;
 	private Stage touchPadStage;
 	private GamePad gamePad;
@@ -43,7 +43,7 @@ public class Player extends PhysicalEntity {
 	private ParticleEmitter explosion;
 	private Array<Bullet> bullets;
 	private GameMode gameMode;
-	private float speed = PlayerDefaults.DEFAULT_SPEED;
+	private float speed = Settings.DEFAULT_SPEED;
 	private float xSpeed;
 	private float ySpeed;
 	private float shipRot;
@@ -160,7 +160,7 @@ public class Player extends PhysicalEntity {
 			// check if bullets collided with walls
 			for(int i = 0; i < bullets.size; i++) {
 				if(bullets.get(i).getBounds().overlaps(rect)) {
-					if(PlayerDefaults.bouncingBullets) {
+					if(Settings.bouncingBullets) {
 						bullets.get(i).setMovementReversed(true);
 					} else {
 						bullets.get(i).dispose();

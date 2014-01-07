@@ -2,8 +2,10 @@ package se.fredin.gravitation.screen.ui.ingame;
 
 import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.level.Level;
+import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.screen.ui.MainMenuScreen;
 import se.fredin.gravitation.utils.Paths;
+import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -21,12 +23,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public abstract class Dialogue {
 
 	protected final int RESUME = 1, REPLAY = 2, BACK_TO_MENU = 3;
-	protected Image dialogImage, replayImage, backToMenuImage;
+	protected Image dialogImage, replayImage, backToMenuImage, whiteRectImage;
 	protected TextureAtlas atlas;
 	protected Skin skin;
 	protected Stage stage;
 	protected Game game;
 	protected GameMode gameMode;
+	private boolean isReplayPressed;
 	
 	public Dialogue(Game game, Level level, GameMode gameMode, OrthographicCamera camera) {
 		this.game = game;
@@ -36,6 +39,8 @@ public abstract class Dialogue {
 		this.stage = new Stage(camera.viewportWidth, camera.viewportHeight);
 		
 		this.dialogImage = getImage("SQUARE", stage.getWidth() / 2, stage.getHeight() / 2.33f);
+		this.whiteRectImage = getImage("whiterect", stage.getWidth(), stage.getHeight());
+		whiteRectImage.addAction(Actions.fadeOut(0f));
 		
 		dialogImage.setPosition(camera.position.x - dialogImage.getWidth() / 2, camera.position.y - dialogImage.getHeight() / 2);
 		stage.addActor(dialogImage);
@@ -60,6 +65,7 @@ public abstract class Dialogue {
 	
 	public void setListener(Actor actor, final int ACTION, final Level level) {
 		actor.addListener(new InputListener() {
+
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				switch(ACTION) {
@@ -69,7 +75,8 @@ public abstract class Dialogue {
 					return true;
 				case REPLAY:
 					System.out.println("replay pressed");
-					level.restart();
+					whiteRectImage.addAction(Actions.fadeIn(1.33f));
+					isReplayPressed = true;
 					return true;
 				case BACK_TO_MENU:
 					System.out.println("back to menu pressed");
@@ -89,23 +96,20 @@ public abstract class Dialogue {
 
 	public void tick(float delta) {
 		stage.act(delta);
+		whiteRectImage.act(delta);
+		if(isReplayPressed && whiteRectImage.getActions().size <= 0) {
+			game.setScreen(new GameScreen(game, gameMode, Settings.currentLevel));
+		}
 	}
 	
 	public void render() {
 		stage.draw();
+		stage.getSpriteBatch().begin();
+		whiteRectImage.draw(stage.getSpriteBatch(), 1);
+		stage.getSpriteBatch().end();
 	}
 	
-	public void render(float delta, String title) {
-		switch(title) {
-		case "Player1":
-			break;
-		case "Player2":
-			break;
-		case "Draw":
-			break;
-		}
-		stage.draw();
-		tick(delta);
+	public void render(String title) {
 	}
 	
 	public void dispose() {

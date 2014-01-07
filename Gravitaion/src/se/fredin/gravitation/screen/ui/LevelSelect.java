@@ -150,7 +150,6 @@ public class LevelSelect extends MenuBase {
 			unlimitedTimeImage.setSize(75f, 7.5f);
 			unlimitedTimeImage.setPosition(twentTimeyImage.getX() + twentTimeyImage.getWidth() + 5, timeLimitImage.getY());
 			stage.addActor(unlimitedTimeImage);
-			
 		}
 		
 		whiteCanvasImage.setBounds(0, 0, camera.viewportWidth, camera.viewportHeight);

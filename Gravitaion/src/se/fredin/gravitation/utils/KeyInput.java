@@ -21,6 +21,15 @@ public class KeyInput extends InputAdapter {
 		case Keys.ESCAPE:
 			Gdx.app.exit();
 			break;
+		case Keys.P:
+			if(Settings.isPaused) {
+				Settings.isPaused = false;
+				System.out.println("pause on");
+			} else {
+				Settings.isPaused = true;
+				System.out.println("pause off");
+			}
+			break;
 		case Keys.LEFT:
 			player1.leftPressed = true;
 			break;
@@ -96,5 +105,7 @@ public class KeyInput extends InputAdapter {
 			}
 			return true;
 		}
+		
+		
 	
 }

@@ -17,7 +17,7 @@ public class Gravitation extends Game {
 	@Override
 	public void create() {
 		logger = new FPSLogger();
-		setScreen(new GameScreen(this, GameMode.SINGLE_PLAYER, 1));
+		setScreen(new GameScreen(this, GameMode.MULTI_PLAYER, 1));
 	}
 	
 	@Override

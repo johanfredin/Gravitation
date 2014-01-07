@@ -4,6 +4,7 @@ import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.level.Level;
 import se.fredin.gravitation.level.MultiPlayerLevel;
 import se.fredin.gravitation.level.SinglePlayerLevel;
+import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Game;
 
@@ -12,9 +13,9 @@ public class GameScreen extends BaseScreen {
 	private Level level;
 	private GameMode gameMode;
 	
-	
 	public GameScreen(Game game, GameMode gameMode, int level_index) {
 		super(game);
+		Settings.currentLevel = level_index;
 		this.gameMode = gameMode;
 		switch(gameMode) {
 		case SINGLE_PLAYER:

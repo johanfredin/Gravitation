@@ -48,6 +48,7 @@ public abstract class Level implements LevelBase, Disposable {
 	protected Vector2 spawnPoint;
 	protected GameMode gameMode;
 	protected boolean controlsGivenToStage;
+	protected boolean multiPlayerMatchEnded;
 	
 	protected final float MAP_WIDTH;
 	protected final float MAP_HEIGHT;
@@ -111,31 +112,33 @@ public abstract class Level implements LevelBase, Disposable {
 	public void render(SpriteBatch batch, OrthographicCamera camera, OrthographicCamera camera2) {	
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		renderHalf(camera, batch, 0, true);
-		renderHalf(camera2, batch, Gdx.graphics.getWidth() / 2, false);
+		renderHalf(camera2, batch, multiPlayerMatchEnded ? 0 : Gdx.graphics.getWidth() / 2, false);
 		return;
 	}
 	
 	private void renderHalf(OrthographicCamera camera, SpriteBatch batch, int cameraXPos, boolean leftSide) {
-		mapRenderer.setView(camera);
-		mapRenderer.render();
-		
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		for(LaunchPad launchPad : launchPads) {
-			launchPad.render(batch);
-		}
-		player1.render(batch);
-		player2.render(batch);
-		itemHandler.render(batch);
-		batch.end();
-
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.rect(leftSide ? camera.position.x - camera.viewportWidth / 2 : camera.position.x + camera.viewportWidth / 2, 0, 2, Gdx.graphics.getHeight());
-		shapeRenderer.end();
-		
-		if(Gravitation.DEBUG_MODE) {
-			debugRender(camera);
+		if(!multiPlayerMatchEnded) {
+			mapRenderer.setView(camera);
+			mapRenderer.render();
+			
+			batch.setProjectionMatrix(camera.combined);
+			batch.begin();
+			for(LaunchPad launchPad : launchPads) {
+				launchPad.render(batch);
+			}
+			player1.render(batch);
+			player2.render(batch);
+			itemHandler.render(batch);
+			batch.end();
+	
+			shapeRenderer.setProjectionMatrix(camera.combined);
+			shapeRenderer.begin(ShapeType.Filled);
+			shapeRenderer.rect(leftSide ? camera.position.x - camera.viewportWidth / 2 : camera.position.x + camera.viewportWidth / 2, 0, 2, Gdx.graphics.getHeight());
+			shapeRenderer.end();
+			
+			if(Gravitation.DEBUG_MODE) {
+				debugRender(camera);
+			}
 		}
 		
 		moveCamera(camera, (leftSide ? player1 : player2), cameraXPos, MAP_WIDTH, MAP_HEIGHT);
@@ -186,7 +189,7 @@ public abstract class Level implements LevelBase, Disposable {
 	}
 	
 	protected void moveCamera(OrthographicCamera camera, Player player, int xPos, float mapWidth, float mapHeight) {
-		Gdx.gl.glViewport(xPos, 0, gameMode == GameMode.MULTI_PLAYER ? Gdx.graphics.getWidth() / 2 : Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		Gdx.gl.glViewport(xPos, 0, gameMode == GameMode.MULTI_PLAYER  && !multiPlayerMatchEnded ? Gdx.graphics.getWidth() / 2 : Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
 		float centerX = camera.viewportWidth / 2;
 		float centerY = camera.viewportHeight / 2;

@@ -9,6 +9,7 @@ import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.screen.ui.ingame.SinglePlayerDialogue;
 import se.fredin.gravitation.utils.KeyInput;
 import se.fredin.gravitation.utils.Paths;
+import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -65,18 +66,20 @@ public class SinglePlayerLevel extends Level {
 	
 	@Override
 	public void tick(float delta) {
-		if(!stationHandler.isLastStationPassed()) {
-			player1.tick(delta);
-			stationHandler.tick(delta);
-					
-			for(LaunchPad launchPad : launchPads) {
-				launchPad.tick(delta);
-				launchPad.checkIfTaken(player1, delta);
+		if(!Settings.isPaused) {
+			if(!stationHandler.isLastStationPassed()) {
+				player1.tick(delta);
+				stationHandler.tick(delta);
+						
+				for(LaunchPad launchPad : launchPads) {
+					launchPad.tick(delta);
+					launchPad.checkIfTaken(player1, delta);
+				}
+				world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
+				player1.checkForCollision(hardBlocks, playerSpawnPoints, null);
 			}
-			world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-			player1.checkForCollision(hardBlocks, playerSpawnPoints, null);
+			inGameMenu.tick(delta);
 		}
-		inGameMenu.tick(delta);
 	}
 	
 	

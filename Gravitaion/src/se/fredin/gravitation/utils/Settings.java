@@ -17,10 +17,13 @@ public class Settings {
 	// Adaptable
 	public static int defaultTimeLimit = MEDIUM_TIME_LIMIT;
 	public static int defaultScoreLimit = MEDIUM_SCORE_LIMIT;
+	public static int currentLevel = 0;
+	public static boolean isPaused = false;
 	public static boolean isUnlimitedTime = false;
 	public static boolean isUnlimitedcore = false;
 	public static boolean bouncingBullets = false;
 	public static boolean player1wins = false;
 	public static boolean player2wins = false;
+	
 	
 }

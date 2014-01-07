@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 public class StationHandler {
 	
 	private Array<Station> stations;
+	private boolean lastStationPassed;
 	
 	public StationHandler(TiledMap map, Player player, float unitScale) {
 		this.stations = getWorldAdaptedStationStations(map, unitScale, player);
@@ -37,6 +38,8 @@ public class StationHandler {
 			if(stations.get(i).isTaken()) {
 				if(i == stations.size - 1 && stations.get(i - 1).isTaken()) {
 					stations.get(i).setAlive(true);
+				} else if(stations.get(1).isTaken()) {
+					lastStationPassed = true;
 				} else {
 					stations.get(i + 1).setAlive(true);
 				}
@@ -54,6 +57,9 @@ public class StationHandler {
 		return stations;
 	}
 	
+	public boolean isLastStationPassed() {
+		return lastStationPassed;
+	}
 	
 	public void dispose() {
 		for(Station station : stations) {

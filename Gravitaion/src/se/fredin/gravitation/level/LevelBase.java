@@ -5,10 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface LevelBase {
 
-	void restart();
-	
-	void end(boolean cleared);
-	
 	void tick(float deltatime);
 	
 	void render(SpriteBatch renderer, OrthographicCamera camera1, OrthographicCamera camera2);

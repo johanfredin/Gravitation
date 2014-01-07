@@ -7,7 +7,7 @@ import se.fredin.gravitation.entity.item.handler.PowerupHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
-import se.fredin.gravitation.screen.ui.ingame.InGameMenu;
+import se.fredin.gravitation.screen.ui.ingame.Dialogue;
 import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Application.ApplicationType;
@@ -38,7 +38,8 @@ public abstract class Level implements LevelBase, Disposable {
 	protected TiledMap map;
 	protected Player player1, player2;
 	protected PowerupHandler itemHandler;
-	protected InGameMenu inGameMenu;
+	protected Dialogue inGameMenu;
+	protected GameScreen gameScreen;
 	
 	protected Array<LaunchPad> launchPads;
 	protected Array<Vector2> playerSpawnPoints;
@@ -46,6 +47,7 @@ public abstract class Level implements LevelBase, Disposable {
 	protected Array<Vector2> launchPadPositions;
 	protected Vector2 spawnPoint;
 	protected GameMode gameMode;
+	protected boolean controlsGivenToStage;
 	
 	protected final float MAP_WIDTH;
 	protected final float MAP_HEIGHT;
@@ -61,6 +63,7 @@ public abstract class Level implements LevelBase, Disposable {
 	
 	public Level(String levelPath, GameScreen gameScreen, GameMode gameMode) {
 		this.gameMode = gameMode;
+		this.gameScreen = gameScreen;
 		
 		// Setup box2d world
 		this.world = new World(new Vector2(0, -9.82f), true);
@@ -96,13 +99,6 @@ public abstract class Level implements LevelBase, Disposable {
 			}
 		} 
 	}
-	
-
-	@Override
-	public void restart() {}
-
-	@Override
-	public void end(boolean cleared) {}
 	
 	@Override
 	public void render(SpriteBatch batch, OrthographicCamera camera) {

@@ -9,18 +9,9 @@ import com.badlogic.gdx.Game;
 
 public class GameScreen extends BaseScreen {
 	
-	private State state = State.PLAYING;
 	private Level level;
 	private GameMode gameMode;
 	
-	enum State {
-		PLAYING,
-		NOT_PLAYING,
-		RETURN_TO_MENU,
-		REPLAY,
-		PAUSED,
-		SWITCHING_LEVEL
-	}
 	
 	public GameScreen(Game game, GameMode gameMode, int level_index) {
 		super(game);
@@ -39,13 +30,14 @@ public class GameScreen extends BaseScreen {
 	public void render(float delta) {
 		switch(gameMode) {
 		case SINGLE_PLAYER:
+			level.tick(delta);
 			level.render(batch, camera);
 			break;
 		case MULTI_PLAYER:
+			level.tick(delta);
 			level.render(batch, camera, camera2);
 			break;
 		}
-		level.tick(delta);
 	}
 
 	@Override

@@ -55,18 +55,20 @@ public class LevelSelect extends MenuBase {
 		super(game);
 		this.gameMode = gameMode;
 		setupImages();
+
 		setListener(level1Image, LEVEL_1);
 		setListener(level2Image, LEVEL_2);
 		setListener(level3Image, LEVEL_3);
-		
-		setListener(fiveImage, LOW_SCORE);
-		setListener(tenImage, MEDIUM_SCORE);
-		setListener(twentyImage, HIGH_SCORE);
-		setListener(unlimitedImage, UNLIMITED_SCORE);
-		setListener(fiveTimeImage, SHORT_TIME);
-		setListener(tenTimeImage, MEDIUM_TIME);
-		setListener(twentTimeyImage, LONG_TIME);
-		setListener(unlimitedTimeImage, UNLIMITED_TIME);
+		if(gameMode == GameMode.MULTI_PLAYER) {
+			setListener(fiveImage, LOW_SCORE);
+			setListener(tenImage, MEDIUM_SCORE);
+			setListener(twentyImage, HIGH_SCORE);
+			setListener(unlimitedImage, UNLIMITED_SCORE);
+			setListener(fiveTimeImage, SHORT_TIME);
+			setListener(tenTimeImage, MEDIUM_TIME);
+			setListener(twentTimeyImage, LONG_TIME);
+			setListener(unlimitedTimeImage, UNLIMITED_TIME);
+		}
 		setListener(returnToMenuImage, RETURN_TO_MENU);
 
 	}
@@ -98,7 +100,7 @@ public class LevelSelect extends MenuBase {
 		returnToMenuImage.setPosition(camera.position.x - returnToMenuImage.getWidth() / 2, 5);
 		stage.addActor(returnToMenuImage);
 		
-		if(notAndroid() && gameMode == GameMode.MULTI_PLAYER) {
+		if(gameMode == GameMode.MULTI_PLAYER) {
 			scoreImage = new Image(skin.getDrawable("score"));
 			scoreImage.setSize(75, 7.5f);
 			scoreImage.setPosition(5, level3Image.getY() - scoreImage.getHeight() - 5);
@@ -159,7 +161,6 @@ public class LevelSelect extends MenuBase {
 	
 	@Override
 	public void setListener(Actor actor, final int ACTION) {
-		stage.addActor(actor);		// add button to the scene as an actor
 		actor.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

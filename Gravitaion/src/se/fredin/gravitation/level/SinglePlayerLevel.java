@@ -6,7 +6,7 @@ import se.fredin.gravitation.entity.item.handler.StationHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
-import se.fredin.gravitation.screen.ui.ingame.InGameMenu;
+import se.fredin.gravitation.screen.ui.ingame.SinglePlayerDialogue;
 import se.fredin.gravitation.utils.KeyInput;
 import se.fredin.gravitation.utils.Paths;
 
@@ -28,7 +28,7 @@ public class SinglePlayerLevel extends Level {
 		
 		// Add key support
 		Gdx.input.setInputProcessor(new KeyInput(player1, null));
-		this.inGameMenu = new InGameMenu(gameScreen.getGame(), this, gameMode, player1);
+		this.inGameMenu = new SinglePlayerDialogue(gameScreen.getGame(), this, gameScreen.getCamera());
 		
 		addGamepadSupport();
 	}
@@ -50,27 +50,43 @@ public class SinglePlayerLevel extends Level {
 			debugRender(camera);
 		}
 		
+		if(stationHandler.isLastStationPassed()) {
+			if(!controlsGivenToStage) {
+				Gdx.input.setInputProcessor(inGameMenu.getStage());
+				controlsGivenToStage = true;
+			}
+			inGameMenu.render();
+		}
+		
 		moveCamera(camera, player1, 0, MAP_WIDTH, MAP_HEIGHT);
 		camera.update();
+	
 	}
 	
 	@Override
 	public void tick(float delta) {
-		player1.tick(delta);
-		stationHandler.tick(delta);
-				
-		for(LaunchPad launchPad : launchPads) {
-			launchPad.tick(delta);
-			launchPad.checkIfTaken(player1, delta);
+		if(!stationHandler.isLastStationPassed()) {
+			player1.tick(delta);
+			stationHandler.tick(delta);
+					
+			for(LaunchPad launchPad : launchPads) {
+				launchPad.tick(delta);
+				launchPad.checkIfTaken(player1, delta);
+			}
+			world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
+			player1.checkForCollision(hardBlocks, playerSpawnPoints, null);
 		}
-		world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-		player1.checkForCollision(hardBlocks, playerSpawnPoints, null);
+		inGameMenu.tick(delta);
 	}
+	
 	
 	@Override
 	public void dispose() {
 		super.dispose();
 		stationHandler.dispose();
+		inGameMenu.dispose();
 	}
+
+
 
 }

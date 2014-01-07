@@ -10,105 +10,119 @@ TITLE
   orig: 852, 86
   offset: 0, 0
   index: -1
-level complete
+score
   rotate: false
   xy: 0, 752
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-resume
+player 2 wins
   rotate: false
   xy: 0, 712
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-player 1 wins
+time limit
   rotate: false
   xy: 0, 672
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-return to menfu
+new game
   rotate: false
   xy: 0, 632
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-time limit
+controls
   rotate: false
   xy: 0, 592
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-multiplayer
+return to menu
   rotate: false
   xy: 0, 552
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-single player
+multiplayer
   rotate: false
   xy: 0, 512
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-score
+replay
   rotate: false
   xy: 0, 472
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-new game
+level select
   rotate: false
   xy: 0, 432
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-level select
+player 1 wins
   rotate: false
   xy: 0, 392
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-controls
+level complete
   rotate: false
   xy: 0, 352
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-replay
+DRAW
   rotate: false
   xy: 0, 312
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-player 2 wins
+PAUSE
   rotate: false
   xy: 0, 272
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-quit
+resume
   rotate: false
   xy: 0, 232
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-level2_img
+quit
+  rotate: false
+  xy: 0, 192
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+single player
+  rotate: false
+  xy: 0, 152
+  size: 525, 40
+  orig: 525, 40
+  offset: 0, 0
+  index: -1
+level1_img
   rotate: false
   xy: 525, 528
   size: 264, 264
@@ -124,92 +138,99 @@ level3_img
   index: -1
 TITLE-SMALL
   rotate: false
-  xy: 0, 192
+  xy: 0, 112
   size: 400, 40
   orig: 400, 40
   offset: 0, 0
   index: -1
-unlimited
-  rotate: false
-  xy: 0, 152
-  size: 332, 40
-  orig: 332, 40
-  offset: 0, 0
-  index: -1
-reversed bullets
-  rotate: false
-  xy: 0, 132
-  size: 332, 20
-  orig: 332, 20
-  offset: 0, 0
-  index: -1
-reversed steering
-  rotate: false
-  xy: 0, 112
-  size: 332, 20
-  orig: 332, 20
-  offset: 0, 0
-  index: -1
-level1_img
+level2_img
   rotate: false
   xy: 525, 0
   size: 264, 264
   orig: 264, 264
   offset: 0, 0
   index: -1
+unlimited
+  rotate: false
+  xy: 0, 72
+  size: 332, 40
+  orig: 332, 40
+  offset: 0, 0
+  index: -1
+reversed steering
+  rotate: false
+  xy: 0, 52
+  size: 332, 20
+  orig: 332, 20
+  offset: 0, 0
+  index: -1
+reversed bullets
+  rotate: false
+  xy: 0, 32
+  size: 332, 20
+  orig: 332, 20
+  offset: 0, 0
+  index: -1
 fast bullets
   rotate: false
-  xy: 0, 92
+  xy: 0, 12
   size: 244, 20
   orig: 244, 20
   offset: 0, 0
   index: -1
-big bullets
+SQUARE
   rotate: false
-  xy: 0, 73
-  size: 212, 19
-  orig: 212, 19
+  xy: 789, 592
+  size: 200, 200
+  orig: 200, 200
   offset: 0, 0
   index: -1
 slow down
   rotate: false
-  xy: 0, 53
+  xy: 789, 572
   size: 187, 20
   orig: 187, 20
   offset: 0, 0
   index: -1
 speed up
   rotate: false
-  xy: 0, 34
+  xy: 789, 553
   size: 166, 19
   orig: 166, 19
   offset: 0, 0
   index: -1
 20
   rotate: false
-  xy: 400, 192
+  xy: 400, 112
   size: 76, 40
   orig: 76, 40
   offset: 0, 0
   index: -1
+big bullets
+  rotate: false
+  xy: 244, 13
+  size: 212, 19
+  orig: 212, 19
+  offset: 0, 0
+  index: -1
 10
   rotate: false
-  xy: 332, 152
+  xy: 852, 838
   size: 65, 40
   orig: 65, 40
   offset: 0, 0
   index: -1
 5
   rotate: false
-  xy: 789, 752
+  xy: 789, 513
   size: 46, 40
   orig: 46, 40
   offset: 0, 0
   index: -1
 whiterect
   rotate: false
-  xy: 852, 877
-  size: 1, 1
-  orig: 1, 1
+  xy: 0, 2
+  size: 10, 10
+  orig: 10, 10
   offset: 0, 0
   index: -1

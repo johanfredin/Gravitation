@@ -1,6 +1,5 @@
 package se.fredin.gravitation;
 
-import se.fredin.gravitation.level.SinglePlayerLevel;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.screen.ui.MainMenuScreen;
 

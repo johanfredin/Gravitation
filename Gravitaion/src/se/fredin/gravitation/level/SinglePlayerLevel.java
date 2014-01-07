@@ -5,6 +5,7 @@ import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.item.handler.StationHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
+import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.screen.ui.ingame.SinglePlayerDialogue;
 import se.fredin.gravitation.utils.KeyInput;
@@ -28,7 +29,17 @@ public class SinglePlayerLevel extends Level {
 		this.stationHandler = new StationHandler(map, player1, UNIT_SCALE);
 		
 		// Add key support
-		Gdx.input.setInputProcessor(new KeyInput(player1, null));
+		switch(Gdx.app.getType()) {
+		case Android:
+			gameScreen.getCamera().setToOrtho(false, BaseScreen.VIEWPORT_WIDTH / 2, BaseScreen.VIEWPORT_HEIGHT / 2);
+			Gdx.input.setInputProcessor(player1.getTouchPadStage());
+			break;
+		case Desktop:
+			Gdx.input.setInputProcessor(new KeyInput(player1, null));
+		default:
+			break;
+		}
+		
 		this.inGameMenu = new SinglePlayerDialogue(gameScreen.getGame(), this, gameScreen.getCamera());
 		
 		addGamepadSupport();

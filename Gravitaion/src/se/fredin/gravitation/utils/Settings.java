@@ -7,12 +7,12 @@ public class Settings {
 	public static final float DEFAULT_BULLET_SPEED = 2f;
 	public static final float FAST_BULLET_SPEED = 7f;
 	public static final float SLOW_BULLET_SPEED = 0.3f;
-	public static final int MEDIUM_TIME_LIMIT = 2;
-	public static final int SHORT_TIME_LIMIT = 1;
-	public static final int LONG_TIME_LIMIT = 3;
-	public static final int MEDIUM_SCORE_LIMIT = 2;
-	public static final int LOW_SCORE_LIMIT = 1;
-	public static final int HIGH_SCORE_LIMIT = 3;
+	public static final int MEDIUM_TIME_LIMIT = 600;
+	public static final int SHORT_TIME_LIMIT = 300;
+	public static final int LONG_TIME_LIMIT = 1200;
+	public static final int MEDIUM_SCORE_LIMIT = 10;
+	public static final int LOW_SCORE_LIMIT = 5;
+	public static final int HIGH_SCORE_LIMIT = 20;
 	
 	// Adaptable
 	public static int defaultTimeLimit = MEDIUM_TIME_LIMIT;

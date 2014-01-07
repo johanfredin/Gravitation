@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Disposable;
 public abstract class BaseScreen implements Disposable, Screen {
 	
 	public static int VIEWPORT_WIDTH = 320;
-	public static final int VIEWPORT_HEIGHT = 120;
+	public static int VIEWPORT_HEIGHT = 120;
 	protected OrthographicCamera camera, camera2;
 	protected SpriteBatch batch;
 	protected Game game;					// used to switch screens

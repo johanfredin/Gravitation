@@ -101,11 +101,13 @@ public class MultiPlayerLevel extends Level {
 					isPlayer1Winner = true;
 					isPlayer2Winner = false;
 					isDraw = false;
+					BaseScreen.VIEWPORT_WIDTH = 320;
 				} else if(player2.getScore() >= Settings.defaultScoreLimit && !Settings.isUnlimitedcore) {
 					System.out.println("Player 2 wins");
 					isPlayer2Winner = true;
 					isPlayer1Winner = false;
 					isDraw = false;
+					BaseScreen.VIEWPORT_WIDTH = 320;
 				}
 				
 				player1.tick(delta);

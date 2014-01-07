@@ -38,7 +38,7 @@ public class StationHandler {
 			if(stations.get(i).isTaken()) {
 				if(i == stations.size - 1 && stations.get(i - 1).isTaken()) {
 					stations.get(i).setAlive(true);
-				} else if(stations.get(1).isTaken()) {
+				} else if(stations.get(0).isTaken()) {
 					lastStationPassed = true;
 				} else {
 					stations.get(i + 1).setAlive(true);

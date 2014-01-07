@@ -15,6 +15,7 @@ import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -67,20 +68,12 @@ public class Player extends PhysicalEntity {
 		this.exhaust = ParticleLoader.getEmitter(Paths.EXHAUST_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 2.66f, 3);
 		this.explosion = ParticleLoader.getEmitter(Paths.EXPLOSION_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 4, 4f);
 		this.bullets = new Array<Bullet>();
-		this.movementTouchPad = getTouchPad("data/skins/padbg_s.png", "data/skins/knob_s.png", 0, 0);
-		this.gasTouchPad = getTouchPad("data/skins/padbg_s.png", "data/skins/gasknob.png", 100, 0);
+		this.movementTouchPad = getTouchPad("data/skins/padbg_s.png", "data/skins/knob_s.png", 5, 5);
+		this.gasTouchPad = getTouchPad("data/skins/padbg_s.png", "data/skins/gasknob.png", 100, 5);
 		this.touchPadStage = new Stage(BaseScreen.VIEWPORT_WIDTH, BaseScreen.VIEWPORT_HEIGHT / 4, true);
-		gasTouchPad.setPosition(touchPadStage.getWidth() - gasTouchPad.getWidth(), 0);
+		gasTouchPad.setPosition(touchPadStage.getWidth() - gasTouchPad.getWidth() - 5, 5);
 		touchPadStage.addActor(movementTouchPad);
 		touchPadStage.addActor(gasTouchPad);
-		
-		switch(Gdx.app.getType()) {
-		case Android:
-			Gdx.input.setInputProcessor(touchPadStage);
-			break;
-		default:
-			break;
-		}
 	}
 
 	// PROPERTIES -----------------------------------------------------------------------------------------
@@ -134,6 +127,10 @@ public class Player extends PhysicalEntity {
 	
 	public GamePad getGamePad() {
 		return gamePad;
+	}
+	
+	public Stage getTouchPadStage() {
+		return touchPadStage;
 	}
 	
 	// ---------------------------------------------------------------------------------------------------
@@ -287,8 +284,12 @@ public class Player extends PhysicalEntity {
 		Texture knobTex = new Texture(Gdx.files.internal(knobTexturePath));
 		padbgTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		knobTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		skin.add("padbg", padbgTex);
-		skin.add("knob", knobTex);
+		Sprite padSprite = new Sprite(padbgTex);
+		padSprite.setSize(80, 80);
+		Sprite knobSprite = new Sprite(knobTex);
+		knobSprite.setSize(30, 30);
+		skin.add("padbg", padSprite);
+		skin.add("knob", knobSprite);
 		TouchpadStyle touchpadStyle = new TouchpadStyle(skin.getDrawable("padbg"), skin.getDrawable("knob"));
 		Touchpad touchpad = new Touchpad(3, touchpadStyle);
 		touchPadStage = new Stage(BaseScreen.VIEWPORT_WIDTH, BaseScreen.VIEWPORT_HEIGHT, true);

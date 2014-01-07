@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public abstract class Dialogue {
 
-	protected final int RESUME = 1, REPLAY = 2, BACK_TO_MENU = 3;
+	protected final int REPLAY = 1, BACK_TO_MENU = 2;
 	protected Image dialogImage, replayImage, backToMenuImage, whiteRectImage;
 	protected TextureAtlas atlas;
 	protected Skin skin;
@@ -45,8 +45,8 @@ public abstract class Dialogue {
 		dialogImage.setPosition(camera.position.x - dialogImage.getWidth() / 2, camera.position.y - dialogImage.getHeight() / 2);
 		stage.addActor(dialogImage);
 		
-		replayImage = getImage("replay", 75, 7.5f);
-		backToMenuImage = getImage("return to menu", 75, 7.5f);
+		replayImage = getImage("replay", dialogImage.getWidth() / 1.66f, dialogImage.getHeight() / 7);
+		backToMenuImage = getImage("return to menu", dialogImage.getWidth() / 1.66f, dialogImage.getHeight() / 7);
 		
 		setListener(backToMenuImage, BACK_TO_MENU, level);
 		setListener(replayImage, REPLAY, level);
@@ -63,23 +63,16 @@ public abstract class Dialogue {
 		return stage;
 	}
 	
-	public void setListener(Actor actor, final int ACTION, final Level level) {
+	private void setListener(Actor actor, final int ACTION, final Level level) {
 		actor.addListener(new InputListener() {
-
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				switch(ACTION) {
-				case RESUME:
-					System.out.println("resume pressed");
-					// Resume paused level
-					return true;
 				case REPLAY:
-					System.out.println("replay pressed");
 					whiteRectImage.addAction(Actions.fadeIn(1.33f));
 					isReplayPressed = true;
 					return true;
 				case BACK_TO_MENU:
-					System.out.println("back to menu pressed");
 					game.setScreen(new MainMenuScreen(game));
 					return true;
 				}

@@ -26,8 +26,8 @@ public class LaunchPad extends PhysicalEntity {
 		bounds.setPosition(getPosition().x - sprite.getWidth() / 2, getPosition().y - sprite.getHeight() / 3);
 	}
 	
-	public void checkIfTaken(Player player, float delta) {
-		if(this.bounds.overlaps(player.getBounds())) {
+	public void checkIfTaken(Player player1, Player player2, float delta) {
+		if(this.bounds.overlaps(player1.getBounds()) || this.bounds.overlaps(player2.getBounds())) {
 			isTaken = true;
 		} else {
 			isTaken = false;
@@ -63,9 +63,6 @@ public class LaunchPad extends PhysicalEntity {
 		return body;
 	}
 	
-	public void setTaken(boolean isTaken) {
-		this.isTaken = isTaken;
-	}
 	public boolean isTaken() {
 		return isTaken;
 	}

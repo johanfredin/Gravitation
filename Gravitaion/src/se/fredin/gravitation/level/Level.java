@@ -2,13 +2,13 @@ package se.fredin.gravitation.level;
 
 import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.Gravitation;
-import se.fredin.gravitation.entity.item.Bullet;
-import se.fredin.gravitation.entity.item.handler.PowerupHandler;
+import se.fredin.gravitation.entity.Bullet;
+import se.fredin.gravitation.entity.handler.LaunchPadHandler;
+import se.fredin.gravitation.entity.handler.PowerupHandler;
 import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.screen.ui.ingame.Dialogue;
-import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -19,7 +19,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -41,10 +40,8 @@ public abstract class Level implements LevelBase, Disposable {
 	protected Dialogue inGameMenu;
 	protected GameScreen gameScreen;
 	
-	protected Array<LaunchPad> launchPads;
-	protected Array<Vector2> playerSpawnPoints;
 	protected Array<Rectangle> hardBlocks;
-	protected Array<Vector2> launchPadPositions;
+	protected LaunchPadHandler launchPadHandler;
 	protected Vector2 spawnPoint;
 	protected GameMode gameMode;
 	protected boolean controlsGivenToStage;
@@ -80,8 +77,10 @@ public abstract class Level implements LevelBase, Disposable {
 		int tmpMapHeight = (Integer) map.getProperties().get("height") * (Integer) map.getProperties().get("tileheight");
 		this.MAP_WIDTH = tmpMapWidth * UNIT_SCALE;
 		this.MAP_HEIGHT = tmpMapHeight * UNIT_SCALE;
-		this.initLaunchPads();
-	
+		
+		// Setup launchpads
+		this.launchPadHandler = new LaunchPadHandler(map, UNIT_SCALE, world);
+		
 		this.hardBlocks = getWorldAdaptedBlocks(map);
 	}
 	
@@ -123,9 +122,7 @@ public abstract class Level implements LevelBase, Disposable {
 			
 			batch.setProjectionMatrix(camera.combined);
 			batch.begin();
-			for(LaunchPad launchPad : launchPads) {
-				launchPad.render(batch);
-			}
+			launchPadHandler.render(batch);
 			player1.render(batch);
 			player2.render(batch);
 			itemHandler.render(batch);
@@ -146,22 +143,6 @@ public abstract class Level implements LevelBase, Disposable {
 	}
 	
 	
-	private void initLaunchPads() {
-		launchPadPositions = new Array<Vector2>();
-		playerSpawnPoints = new Array<Vector2>();
-		launchPads = new Array<LaunchPad>();
-		for(int i = 1; i <= 4; i++) {
-			MapProperties spawnProperties = map.getLayers().get("spawn-points").getObjects().get("start" + i).getProperties();
-			
-			Vector2 launchPadPosition = new Vector2((Float)spawnProperties.get("x") * UNIT_SCALE, (Float)spawnProperties.get("y") * UNIT_SCALE);
-			this.launchPadPositions.add(launchPadPosition);
-			
-			LaunchPad launchPad = new LaunchPad(launchPadPosition.x, launchPadPosition.y, Paths.LANDING_PAD_TEXTUREPATH, world, 180, 25f);
-			this.launchPads.add(launchPad);
-			this.playerSpawnPoints.add(new Vector2(launchPadPosition.x + launchPad.getSprite().getWidth() / 4, launchPadPosition.y + launchPad.getSprite().getHeight()));
-		}
-	}
-	
 	private Array<Rectangle> getWorldAdaptedBlocks(TiledMap map) {
 		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
 		this.hardBlocks = new Array<Rectangle>();
@@ -178,7 +159,7 @@ public abstract class Level implements LevelBase, Disposable {
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.rect(player1.getBounds().x, player1.getBounds().y, player1.getBounds().width, player1.getBounds().height);
-		for(LaunchPad launchPad : launchPads) {
+		for(LaunchPad launchPad : launchPadHandler.getLaunchPads()) {
 			shapeRenderer.rect(launchPad.getBounds().x, launchPad.getBounds().y, launchPad.getBounds().width, launchPad.getBounds().height);
 		} for(Bullet bullet : player1.getBullets()) {
 			shapeRenderer.rect(bullet.getBounds().x, bullet.getBounds().y, bullet.getBounds().width, bullet.getBounds().height);
@@ -219,9 +200,7 @@ public abstract class Level implements LevelBase, Disposable {
 		mapRenderer.dispose();
 		player1.dispose();
 		player2.dispose();
-		for(LaunchPad launchPad : launchPads) {
-			launchPad.dispose();
-		}
+		launchPadHandler.dispose();
 		itemHandler.dispose();
 	}
 

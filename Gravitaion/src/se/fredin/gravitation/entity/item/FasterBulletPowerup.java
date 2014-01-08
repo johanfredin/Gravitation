@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 public class FasterBulletPowerup extends Powerup {
 
 	public FasterBulletPowerup(Array<Rectangle> spawnPoints, float width, float height, Player player1, Player player2) {
-		super(spawnPoints, width, height, Gdx.files.internal(Paths.FASTER_BULLET_TEXTURE).path(), player1, player2, "fast bullets");
+		super(spawnPoints, width, height, Gdx.files.internal(Paths.FASTER_BULLET_TEXTURE).path(), player1, player2, "fast bullets", true);
 	}
 	
 	@Override

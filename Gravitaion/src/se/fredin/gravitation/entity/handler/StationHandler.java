@@ -1,6 +1,6 @@
-package se.fredin.gravitation.entity.item.handler;
+package se.fredin.gravitation.entity.handler;
 
-import se.fredin.gravitation.entity.item.Station;
+import se.fredin.gravitation.entity.Station;
 import se.fredin.gravitation.entity.physical.Player;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

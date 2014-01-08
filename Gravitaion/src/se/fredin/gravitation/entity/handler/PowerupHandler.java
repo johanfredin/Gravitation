@@ -1,4 +1,4 @@
-package se.fredin.gravitation.entity.item.handler;
+package se.fredin.gravitation.entity.handler;
 
 import se.fredin.gravitation.entity.item.BigBulletPowerup;
 import se.fredin.gravitation.entity.item.ReverseBulletPowerup;

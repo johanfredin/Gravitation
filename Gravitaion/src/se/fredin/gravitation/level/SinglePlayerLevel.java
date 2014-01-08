@@ -2,8 +2,7 @@ package se.fredin.gravitation.level;
 
 import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.Gravitation;
-import se.fredin.gravitation.entity.item.handler.StationHandler;
-import se.fredin.gravitation.entity.physical.LaunchPad;
+import se.fredin.gravitation.entity.handler.StationHandler;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.screen.GameScreen;
@@ -24,8 +23,8 @@ public class SinglePlayerLevel extends Level {
 	public SinglePlayerLevel(String levelPath, GameScreen gameScreen, GameMode gameMode) {
 		super(levelPath, gameScreen, GameMode.SINGLE_PLAYER);
 		// Setup player
-		this.spawnPoint = new Vector2(playerSpawnPoints.get(0));
-		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1, gameMode);
+		this.spawnPoint = new Vector2(launchPadHandler.getFirstLaunchPadPosition());
+		this.player1 = new Player(spawnPoint.x, spawnPoint.y + 5, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1, gameMode);
 		this.stationHandler = new StationHandler(map, player1, UNIT_SCALE);
 		
 		// Add key support
@@ -51,9 +50,7 @@ public class SinglePlayerLevel extends Level {
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		for(LaunchPad launchPad : launchPads) {
-			launchPad.render(batch);
-		}
+		launchPadHandler.render(batch);
 		player1.render(batch);
 		stationHandler.render(batch);
 		batch.end();
@@ -82,12 +79,9 @@ public class SinglePlayerLevel extends Level {
 				player1.tick(delta);
 				stationHandler.tick(delta);
 						
-				for(LaunchPad launchPad : launchPads) {
-					launchPad.tick(delta);
-					launchPad.checkIfTaken(player1, delta);
-				}
+				launchPadHandler.tick(delta, player1, null);
 				world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-				player1.checkForCollision(hardBlocks, playerSpawnPoints, null);
+				player1.checkForCollision(hardBlocks, launchPadHandler.getFirstLaunchPadPosition(), null);
 			}
 			inGameMenu.tick(delta);
 		}

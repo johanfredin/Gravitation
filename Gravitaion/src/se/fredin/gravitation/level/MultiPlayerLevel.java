@@ -1,8 +1,7 @@
 package se.fredin.gravitation.level;
 
 import se.fredin.gravitation.GameMode;
-import se.fredin.gravitation.entity.item.handler.PowerupHandler;
-import se.fredin.gravitation.entity.physical.LaunchPad;
+import se.fredin.gravitation.entity.handler.PowerupHandler;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.screen.GameScreen;
@@ -25,11 +24,11 @@ public class MultiPlayerLevel extends Level {
 		super(levelPath, gameScreen, GameMode.MULTI_PLAYER);
 		
 		// Setup players
-		this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
-		this.player1 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1, gameMode);
+		this.spawnPoint = new Vector2(launchPadHandler.getRandomAvailableSpawnPoint());
+		this.player1 = new Player(spawnPoint.x, spawnPoint.y + 1, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1, gameMode);
 		
-		this.spawnPoint = new Vector2(playerSpawnPoints.get((int)(Math.random() * playerSpawnPoints.size)));
-		this.player2 = new Player(spawnPoint.x, spawnPoint.y, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64, 2, gameMode);
+		this.spawnPoint = new Vector2(launchPadHandler.getRandomAvailableSpawnPoint());
+		this.player2 = new Player(spawnPoint.x, spawnPoint.y + 1, Paths.SHIP_TEXTUREPATH2, this.world, 96, 64, 2, gameMode);
 		
 		this.itemHandler = new PowerupHandler(map, player1, player2, UNIT_SCALE);
 		
@@ -112,15 +111,12 @@ public class MultiPlayerLevel extends Level {
 				
 				player1.tick(delta);
 				player2.tick(delta);
-				player2.checkForCollision(hardBlocks, playerSpawnPoints, player1);
+				player2.checkForCollision(hardBlocks, launchPadHandler.getRandomAvailableSpawnPoint(), player1);
 				itemHandler.tick(delta);
 				
-				for(LaunchPad launchPad : launchPads) {
-					launchPad.tick(delta);
-					launchPad.checkIfTaken(player1, delta);
-				}
+				launchPadHandler.tick(delta, player1, player2);
 				world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
-				player1.checkForCollision(hardBlocks, playerSpawnPoints, player2);
+				player1.checkForCollision(hardBlocks, launchPadHandler.getRandomAvailableSpawnPoint(), player2);
 			}
 			inGameMenu.tick(delta);
 		}

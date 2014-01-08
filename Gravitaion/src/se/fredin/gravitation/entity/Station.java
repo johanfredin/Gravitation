@@ -1,4 +1,4 @@
-package se.fredin.gravitation.entity.item;
+package se.fredin.gravitation.entity;
 
 import se.fredin.gravitation.entity.physical.Player;
 

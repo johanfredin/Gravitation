@@ -1,7 +1,7 @@
 package se.fredin.gravitation.entity.physical;
 
 import se.fredin.gravitation.GameMode;
-import se.fredin.gravitation.entity.item.Bullet;
+import se.fredin.gravitation.entity.Bullet;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.utils.ParticleLoader;
 import se.fredin.gravitation.utils.Paths;
@@ -9,6 +9,7 @@ import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.PovDirection;
@@ -58,6 +59,9 @@ public class Player extends PhysicalEntity {
 	private boolean isBigBullets;
 	private final int PLAYER_NUM;
 	private int score;
+	private Sound explosionSound;
+	private Sound exhaustSound;
+	private Sound shootSound;
 	
 	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight, final int PLAYER_NUM, GameMode gameMode) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
@@ -74,6 +78,10 @@ public class Player extends PhysicalEntity {
 		gasTouchPad.setPosition(touchPadStage.getWidth() - gasTouchPad.getWidth() - 5, 5);
 		touchPadStage.addActor(movementTouchPad);
 		touchPadStage.addActor(gasTouchPad);
+		
+		this.explosionSound = Gdx.audio.newSound(Gdx.files.internal(Paths.EXPLOSION_SOUND_EFFECT));
+		this.exhaustSound = Gdx.audio.newSound(Gdx.files.internal(Paths.EXHAUST_SOUND_EFFECT));
+		this.shootSound = Gdx.audio.newSound(Gdx.files.internal(Paths.SHOOT_SOUND_EFFECT));
 	}
 
 	// PROPERTIES -----------------------------------------------------------------------------------------
@@ -135,12 +143,14 @@ public class Player extends PhysicalEntity {
 	
 	// ---------------------------------------------------------------------------------------------------
 	
-	public void die(Array<Vector2> spawnPoints) {
+	public void die(Vector2 spawnPoint) {
 		crashed = true;
 		explosion.setPosition(getPosition().x, getPosition().y);
+		shootSound.stop();
+		exhaustSound.stop();
 		explosion.start();
-		Vector2 spawnPoint = new Vector2(gameMode == GameMode.MULTI_PLAYER ? spawnPoints.get((int)(Math.random() * spawnPoints.size)) : spawnPoints.get(0));
-		setPosition(spawnPoint.x, spawnPoint.y);
+		explosionSound.play();
+		setPosition(spawnPoint.x, spawnPoint.y + 1);
 		if(bullets.size > 0) {
 			for(int i = 0; i < bullets.size; i++) {
 				bullets.get(i).dispose();
@@ -149,10 +159,10 @@ public class Player extends PhysicalEntity {
 		}
 	}
 	
-	public void checkForCollision(Array<Rectangle> hardBlocks, Array<Vector2> spawnPoints, Player opponent) {
+	public void checkForCollision(Array<Rectangle> hardBlocks, Vector2 spawnPoint, Player opponent) {
 		for(Rectangle rect : hardBlocks) {
 			if(bounds.overlaps(rect)) {
-				die(spawnPoints);
+				die(spawnPoint);
 			}
 			// check if bullets collided with walls
 			for(int i = 0; i < bullets.size; i++) {
@@ -169,7 +179,7 @@ public class Player extends PhysicalEntity {
 		if(gameMode == GameMode.MULTI_PLAYER) {
 			for(Bullet bullet : bullets) {
 				if(bullet.getBounds().overlaps(opponent.getBounds())) {
-					opponent.die(spawnPoints);
+					opponent.die(spawnPoint);
 					score++;
 				}
 			}
@@ -241,12 +251,16 @@ public class Player extends PhysicalEntity {
 		
 		body.applyForceToCenter(movement, true);
 		if(gasPressed) {
+			exhaustSound.play();
 			accelerate();
 		} if(leftPressed) {
 			body.applyAngularImpulse(isReversedSteering ? MathUtils.radDeg * -MAX_TURN_DEG : MathUtils.radDeg * MAX_TURN_DEG, true);
 		} if(rightPressed) {
 			body.applyAngularImpulse(isReversedSteering ? MathUtils.radDeg * MAX_TURN_DEG : MathUtils.radDeg * -MAX_TURN_DEG, true);
+		} else if(!gasPressed) {
+			exhaustSound.stop();
 		}
+		
 		
 		if(Gdx.app.getType() == ApplicationType.Android) {
 			handleTouchPadInput();
@@ -274,6 +288,7 @@ public class Player extends PhysicalEntity {
 	
 	public void shoot() {
 		if(ableToShoot) {
+			shootSound.play();
 			bullets.add(new Bullet(getPosition().x, getPosition().y, isBigBullets ? 8 : 2, isBigBullets ? 8 : 2, bulletSpeed, body, isBulletMovementReversed));
 		}
 	}
@@ -342,9 +357,16 @@ public class Player extends PhysicalEntity {
 	public void dispose() {
 		super.dispose();
 		touchPadStage.dispose();
+		explosionSound.dispose();
+		exhaustSound.dispose();
+		shootSound.dispose();
 	}
 	
 	public class GamePad extends ControllerAdapter {
+		final int A = 0;
+		final int X = 2;
+		final int START = 7;
+		
 		@Override
 		public boolean povMoved(Controller controller, int povIndex, PovDirection value) {
 			switch(value) {
@@ -365,12 +387,20 @@ public class Player extends PhysicalEntity {
 		@Override
 		public boolean buttonDown(Controller controller, int buttonIndex) {
 			switch(buttonIndex) {
-			case 0:
+			case A:
 				gasPressed = true;
 				exhaust.start();
 				break;
-			case 2:
+			case X:
 				shoot();
+				break;
+			case START:
+				if(Settings.isPaused) {
+					Settings.isPaused = false;
+				} else {
+					Settings.isPaused = true;
+				}
+				break;
 			default:
 				return false;
 			}
@@ -380,12 +410,12 @@ public class Player extends PhysicalEntity {
 		@Override
 		public boolean buttonUp(Controller controller, int buttonIndex) {
 			switch(buttonIndex) {
-			case 0:
+			case A:
 				gasPressed = false;
 				movement.set(0, 0);
 				exhaust.allowCompletion();
 				break;
-			case 1:
+			case X:
 				break;
 			default:
 				return false;

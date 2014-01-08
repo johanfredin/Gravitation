@@ -5,6 +5,7 @@ import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
@@ -20,8 +21,11 @@ public abstract class Powerup extends AbstractEntity {
 	protected TextureAtlas atlas;
 	protected Skin skin;
 	protected Image powerupExplanationImage;
+	private boolean isGoodPowerup;
+	private Sound goodPowerupSound;
+	private Sound badPowerupSound;
 	
-	public Powerup(Array<Rectangle> spawnPoints, float width, float height, String texturePath, Player player1, Player player2, String powerupExplanationPath) {
+	public Powerup(Array<Rectangle> spawnPoints, float width, float height, String texturePath, Player player1, Player player2, String powerupExplanationPath, boolean isGoodPowerup) {
 		super(spawnPoints, width, height, texturePath);
 		this.atlas = new TextureAtlas(Gdx.files.internal(Paths.MENU_ITEMS));
 		this.skin = new Skin(atlas);
@@ -30,6 +34,9 @@ public abstract class Powerup extends AbstractEntity {
 		
 		this.player1 = player1;
 		this.player2 = player2;
+		this.isGoodPowerup = isGoodPowerup;
+		this.goodPowerupSound = Gdx.audio.newSound(Gdx.files.internal(Paths.GOOD_POWERUP_SOUND_EFFECT));
+		this.badPowerupSound = Gdx.audio.newSound(Gdx.files.internal(Paths.BAD_POWERUP_SOUND_EFFECT));
 	}
 	
 	public abstract void affectEntity(Player player);
@@ -50,10 +57,20 @@ public abstract class Powerup extends AbstractEntity {
 			if(player1.getBounds().overlaps(bounds)) {
 				affectEntity(player1);
 				isAlive = false;
+				if(isGoodPowerup) {
+					goodPowerupSound.play();
+				} else {
+					badPowerupSound.play();
+				}
 				this.powerupExplanationImage.addAction(Actions.sequence(Actions.sizeTo(80, 8, 2, Interpolation.circle), Actions.sizeTo(0, 0, 2, Interpolation.circle)));
 			} if(player2.getBounds().overlaps(bounds)) {
 				affectEntity(player2);
 				isAlive = false;
+				if(isGoodPowerup) {
+					goodPowerupSound.play();
+				} else {
+					badPowerupSound.play();
+				}
 				this.powerupExplanationImage.addAction(Actions.sequence(Actions.sizeTo(80, 8, 2, Interpolation.circle), Actions.sizeTo(0, 0, 2, Interpolation.circle)));
 			}
 		} else {
@@ -84,5 +101,7 @@ public abstract class Powerup extends AbstractEntity {
 		skin.dispose();
 		player1.dispose();
 		player2.dispose();
+		goodPowerupSound.dispose();
+		badPowerupSound.dispose();
 	}
 }

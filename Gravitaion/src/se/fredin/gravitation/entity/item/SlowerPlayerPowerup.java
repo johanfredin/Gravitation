@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 public class SlowerPlayerPowerup extends Powerup {
 
 	public SlowerPlayerPowerup(Array<Rectangle> spawnPoints, float width, float height, Player player1, Player player2) {
-		super(spawnPoints, width, height, Gdx.files.internal(Paths.SLOW_POWERUP_TEXTURE).path(), player1, player2, "slow down");
+		super(spawnPoints, width, height, Gdx.files.internal(Paths.SLOW_POWERUP_TEXTURE).path(), player1, player2, "slow down", false);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -29,6 +30,7 @@ public abstract class Dialogue {
 	protected Stage stage;
 	protected Game game;
 	protected GameMode gameMode;
+	protected Sound buttonPressedSound;
 	private boolean isReplayPressed;
 	
 	public Dialogue(Game game, Level level, GameMode gameMode, OrthographicCamera camera) {
@@ -41,6 +43,8 @@ public abstract class Dialogue {
 		this.dialogImage = getImage("SQUARE", stage.getWidth() / 2, stage.getHeight() / 2.33f);
 		this.whiteRectImage = getImage("whiterect", stage.getWidth(), stage.getHeight());
 		whiteRectImage.addAction(Actions.fadeOut(0f));
+		
+		this.buttonPressedSound = Gdx.audio.newSound(Gdx.files.internal(Paths.MENU_SELECT_SOUND_EFFECT));
 		
 		dialogImage.setPosition(camera.position.x - dialogImage.getWidth() / 2, camera.position.y - dialogImage.getHeight() / 2);
 		stage.addActor(dialogImage);
@@ -67,6 +71,8 @@ public abstract class Dialogue {
 		actor.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				buttonPressedSound.play();
+				
 				switch(ACTION) {
 				case REPLAY:
 					whiteRectImage.addAction(Actions.fadeIn(1.33f));
@@ -102,13 +108,13 @@ public abstract class Dialogue {
 		stage.getSpriteBatch().end();
 	}
 	
-	public void render(String title) {
-	}
+	public void render(String title) {}
 	
 	public void dispose() {
 		stage.dispose();
 		atlas.dispose();
 		skin.dispose();
 		game.dispose();
+		buttonPressedSound.dispose();
 	}
 }

@@ -1,6 +1,7 @@
 package se.fredin.gravitation.screen.ui;
 
 import se.fredin.gravitation.GameMode;
+import se.fredin.gravitation.Gravitation;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -25,7 +26,7 @@ public class MainMenuScreen extends MenuBase {
 		super(game);
 		initButtonsAndImages();
 		setListener(singlePlayerButton, NEW_GAME);
-		if(notAndroid()) {
+		if(!Gravitation.isMobileDevice()) {
 			setListener(multiPlayerButton, MULTIPLAYER);
 		}
 		setListener(quitButton, QUIT);
@@ -54,7 +55,7 @@ public class MainMenuScreen extends MenuBase {
 		if(singlePlayerButtonClicked && whiteCanvasImage.getActions().size <= 0) {
 			stage.clear();
 			game.setScreen(new LevelSelect(game, GameMode.SINGLE_PLAYER));
-		} else if(multiPlayerButtonClicked && whiteCanvasImage.getActions().size <= 0 && notAndroid()) {
+		} else if(multiPlayerButtonClicked && whiteCanvasImage.getActions().size <= 0 && !Gravitation.isMobileDevice()) {
 			stage.clear();
 			game.setScreen(new LevelSelect(game, GameMode.MULTI_PLAYER));
 		} else if(quitButtonClicked) {
@@ -65,13 +66,13 @@ public class MainMenuScreen extends MenuBase {
 	
 	private void initButtonsAndImages() {
 		singlePlayerButton = new Button(skin.getDrawable("single player"));
-		if(notAndroid()) {
+		if(!Gravitation.isMobileDevice()) {
 			multiPlayerButton = new Button(skin.getDrawable("multiplayer"));
 		}
 		quitButton = new Button(skin.getDrawable("quit"));
 		
 		titleImage = new Image(skin.getDrawable("TITLE-SMALL"));
-		titleImage.setSize(300, 30);
+		titleImage.setSize(300 * getScale(), 30 * getScale());
 		titleImage.setPosition(camera.position.x - (titleImage.getWidth() / 2), camera.viewportHeight - titleImage.getHeight() - 2);
 		stage.addActor(titleImage);
 		
@@ -80,19 +81,19 @@ public class MainMenuScreen extends MenuBase {
 	}
 	
 	private void setPositionsAndSizes(float width, float height) {
-		float buttonWidth = 133.33f;
-		float buttonHeight = 13.33f;
-		float spacingY = 20;
+		float buttonWidth = 133.33f * getScale();
+		float buttonHeight = 13.33f * getScale();
+		float spacingY = 20 * getScale();
 		
 		whiteCanvasImage.setBounds(0, 0, width, height);
 		
 		singlePlayerButton.setSize(buttonWidth, buttonHeight);
 		float buttonCenterX = camera.position.x - (singlePlayerButton.getWidth() / 2);
 		singlePlayerButton.setBounds(buttonCenterX, height - titleImage.getHeight() - spacingY * 1.5f, buttonWidth, buttonHeight);
-		if(notAndroid()){
+		if(!Gravitation.isMobileDevice()){
 			multiPlayerButton.setBounds(buttonCenterX, singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
 		}
-		quitButton.setBounds(buttonCenterX, notAndroid() ? multiPlayerButton.getY() - spacingY : singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
+		quitButton.setBounds(buttonCenterX, !Gravitation.isMobileDevice() ? multiPlayerButton.getY() - spacingY : singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
 	}
 	
 	@Override
@@ -105,7 +106,7 @@ public class MainMenuScreen extends MenuBase {
 				if(whiteCanvasImage.getActions().size > 0) {
 					whiteCanvasImage.getActions().clear();
 				}
-				
+				buttonPressedSound.play();
 				switch(ACTION) {
 				case NEW_GAME:	// Start the game!!
 					animateActorAndFadeOutScreen(singlePlayerButton, 0.1f, 1.2f);
@@ -131,7 +132,7 @@ public class MainMenuScreen extends MenuBase {
 	
 	private void disableButtons() {
 		singlePlayerButton.setTouchable(Touchable.disabled);
-		if(notAndroid()) {
+		if(!Gravitation.isMobileDevice()) {
 			multiPlayerButton.setTouchable(Touchable.disabled);
 		}
 		quitButton.setTouchable(Touchable.disabled);

@@ -49,8 +49,6 @@ public class LevelSelect extends MenuBase {
 	private boolean level2ImagePressed;
 	private boolean level3ImagePressed;
 
-	private boolean killWhiteImage;
-	
 	public LevelSelect(Game game, GameMode gameMode) {
 		super(game);
 		this.gameMode = gameMode;
@@ -75,28 +73,28 @@ public class LevelSelect extends MenuBase {
 	
 	private void setupImages() {
 		this.levelSelectImage = new Image(skin.getDrawable("level select"));
-		levelSelectImage.setSize(200, 20);
+		levelSelectImage.setSize(200 * getScale(), 20 * getScale());
 		levelSelectImage.setPosition(camera.position.x - levelSelectImage.getWidth() / 2, camera.viewportHeight - levelSelectImage.getHeight() - 2);
 		stage.addActor(levelSelectImage);
 		
-		float spacingX = 28;
+		float spacingX = 28 * getScale();
 		this.level1Image = new Image(skin.getDrawable("level1_img"));
-		level1Image.setSize(64, 44);
+		level1Image.setSize(64 * getScale(), 44 * getScale());
 		level1Image.setPosition(spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
 		stage.addActor(level1Image);
 		
 		this.level2Image = new Image(skin.getDrawable("level2_img"));
-		level2Image.setSize(64, 44);
+		level2Image.setSize(64 * getScale(), 44 * getScale());
 		level2Image.setPosition(level1Image.getX() + level1Image.getWidth() + spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
 		stage.addActor(level2Image);
 		
 		this.level3Image = new Image(skin.getDrawable("level3_img"));
-		level3Image.setSize(64, 44);
+		level3Image.setSize(64 * getScale(), 44 * getScale());
 		level3Image.setPosition(level2Image.getX() + level2Image.getWidth() + spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
 		stage.addActor(level3Image);
 		
 		this.returnToMenuImage = new Image(skin.getDrawable("return to menu"));
-		returnToMenuImage.setSize(133.33f, 13.33f);
+		returnToMenuImage.setSize(133.33f * getScale(), 13.33f * getScale());
 		returnToMenuImage.setPosition(camera.position.x - returnToMenuImage.getWidth() / 2, 5);
 		stage.addActor(returnToMenuImage);
 		
@@ -166,27 +164,24 @@ public class LevelSelect extends MenuBase {
 				// Stop fading in if it hasn't stopped already
 				if(whiteCanvasImage.getActions().size > 0) {
 					whiteCanvasImage.getActions().clear();
-					killWhiteImage = true;
 				}
-				
+				buttonPressedSound.play();
 				switch(ACTION) {
 				case LEVEL_1:	// Start the game!!
 					animateActorAndFadeOutScreen(level1Image, 0.1f, 1.2f);
 					level1ImagePressed = true;
-					killWhiteImage = false;
 					return true;
 				case LEVEL_2:
 					animateActorAndFadeOutScreen(level2Image, 0.1f, 1.2f);
 					level2ImagePressed = true;
-					killWhiteImage = false;
 					return true;
 				case LEVEL_3:	// Quit the game
 					animateActorAndFadeOutScreen(level3Image, 0.1f, 1.2f);
 					level3ImagePressed = true;
-					killWhiteImage = false;
 					return true;
 				case RETURN_TO_MENU:
 					game.setScreen(new MainMenuScreen(game));
+					return true;
 				case LOW_SCORE:
 					Settings.defaultScoreLimit = Settings.LOW_SCORE_LIMIT;
 					animateActor(fiveImage, 0.1f);
@@ -232,11 +227,8 @@ public class LevelSelect extends MenuBase {
 		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		if(!killWhiteImage) {
-			whiteCanvasImage.draw(batch, 1);
-		}
+		whiteCanvasImage.draw(batch, 1);
 		batch.end();
-		
 		tick(delta);
 	}
 	

@@ -24,24 +24,20 @@ public class SinglePlayerLevel extends Level {
 		super(levelPath, gameScreen, GameMode.SINGLE_PLAYER);
 		// Setup player
 		this.spawnPoint = new Vector2(launchPadHandler.getFirstLaunchPadPosition());
-		this.player1 = new Player(spawnPoint.x, spawnPoint.y + 5, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1, gameMode);
+		this.player1 = new Player(spawnPoint.x, spawnPoint.y + 1, Paths.SHIP_TEXTUREPATH, this.world, 96, 64, 1, gameMode);
 		this.stationHandler = new StationHandler(map, player1, UNIT_SCALE);
 		
 		// Add key support
-		switch(Gdx.app.getType()) {
-		case Android:
+		if(Gravitation.isMobileDevice()) {
 			gameScreen.getCamera().setToOrtho(false, BaseScreen.VIEWPORT_WIDTH / 2, BaseScreen.VIEWPORT_HEIGHT / 2);
 			Gdx.input.setInputProcessor(player1.getTouchPadStage());
-			break;
-		case Desktop:
+		} else {
 			Gdx.input.setInputProcessor(new KeyInput(player1, null));
-		default:
-			break;
+			addGamepadSupport();
 		}
-		
 		this.inGameMenu = new SinglePlayerDialogue(gameScreen.getGame(), this, gameScreen.getCamera());
 		
-		addGamepadSupport();
+		
 	}
 	
 	@Override
@@ -79,7 +75,7 @@ public class SinglePlayerLevel extends Level {
 				player1.tick(delta);
 				stationHandler.tick(delta);
 						
-				launchPadHandler.tick(delta, player1, null);
+				launchPadHandler.tick(delta);
 				world.step(TIMESTEP, VELOCITYITERATIONS, POSITIONITERATIONS);
 				player1.checkForCollision(hardBlocks, launchPadHandler.getFirstLaunchPadPosition(), null);
 			}

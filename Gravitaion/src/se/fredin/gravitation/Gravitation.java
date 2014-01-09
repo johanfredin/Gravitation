@@ -1,9 +1,10 @@
 package se.fredin.gravitation;
 
 import se.fredin.gravitation.screen.GameScreen;
-import se.fredin.gravitation.screen.ui.MainMenuScreen;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.FPSLogger;
 
 public class Gravitation extends Game {
@@ -16,7 +17,7 @@ public class Gravitation extends Game {
 	@Override
 	public void create() {
 		logger = new FPSLogger();
-		setScreen(new GameScreen(this, GameMode.MULTI_PLAYER, 1));
+		setScreen(new GameScreen(this, GameMode.SINGLE_PLAYER, 1));
 	}
 	
 	@Override
@@ -42,10 +43,13 @@ public class Gravitation extends Game {
 		super.resume();
 	}
 	
+	public static boolean isMobileDevice() {
+		return Gdx.app.getType() == ApplicationType.iOS || Gdx.app.getType() == ApplicationType.Android;
+	}
+	
 	@Override
 	public void dispose() {
 		super.dispose();
-		getScreen().dispose();
 	}
 		
 	

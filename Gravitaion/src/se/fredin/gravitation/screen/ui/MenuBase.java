@@ -1,11 +1,11 @@
 package se.fredin.gravitation.screen.ui;
 
+import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.utils.Paths;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -39,8 +39,11 @@ public abstract class MenuBase extends BaseScreen {
 	
 	public abstract void setListener(Actor actor, final int ACTION);
 
-	protected boolean notAndroid() {
-		return Gdx.app.getType() != ApplicationType.Android;
+	protected float getScale() {
+		if(Gravitation.isMobileDevice()) {
+			return 0.5f;
+		}
+		return 1;
 	}
 	
 	@Override

@@ -62,6 +62,9 @@ public class Player extends PhysicalEntity {
 	private Sound explosionSound;
 	private Sound exhaustSound;
 	private Sound shootSound;
+	private Sound pauseSound;
+	
+	private boolean exhaustSoundPlaying;
 	
 	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight, final int PLAYER_NUM, GameMode gameMode) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
@@ -82,6 +85,7 @@ public class Player extends PhysicalEntity {
 		this.explosionSound = Gdx.audio.newSound(Gdx.files.internal(Paths.EXPLOSION_SOUND_EFFECT));
 		this.exhaustSound = Gdx.audio.newSound(Gdx.files.internal(Paths.EXHAUST_SOUND_EFFECT));
 		this.shootSound = Gdx.audio.newSound(Gdx.files.internal(Paths.SHOOT_SOUND_EFFECT));
+		this.pauseSound = Gdx.audio.newSound(Gdx.files.internal(Paths.PAUSE_SOUND_EFFECT));
 	}
 
 	// PROPERTIES -----------------------------------------------------------------------------------------
@@ -202,7 +206,7 @@ public class Player extends PhysicalEntity {
 		fixtureDef.shape = boxShape;
 		fixtureDef.friction = .75f;
 		fixtureDef.restitution = .1f;
-		fixtureDef.density = 7.5f;
+		fixtureDef.density = 8.5f;
 				
 		// add to world
 		body = world.createBody(bodyDef);
@@ -211,18 +215,8 @@ public class Player extends PhysicalEntity {
 		sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		body.setUserData(sprite);
 		
-		switch(Gdx.app.getType()) {
-		case Android:
-			body.setAngularDamping(4.66f);
-			body.setLinearDamping(0.5f);
-			break;
-		case Desktop:
-			body.setAngularDamping(3.1f);
-			body.setLinearDamping(0.5f);
-			break;
-		default:
-			break;
-		}
+		body.setAngularDamping(3.1f);
+		body.setLinearDamping(0.5f);
 		
 		boxShape.dispose();
 		return body;
@@ -251,14 +245,18 @@ public class Player extends PhysicalEntity {
 		
 		body.applyForceToCenter(movement, true);
 		if(gasPressed) {
-			exhaustSound.play();
+			if(!exhaustSoundPlaying && !isCrashed()) {
+				exhaustSound.play();
+				exhaustSoundPlaying = true;
+			}
 			accelerate();
 		} if(leftPressed) {
 			body.applyAngularImpulse(isReversedSteering ? MathUtils.radDeg * -MAX_TURN_DEG : MathUtils.radDeg * MAX_TURN_DEG, true);
 		} if(rightPressed) {
 			body.applyAngularImpulse(isReversedSteering ? MathUtils.radDeg * MAX_TURN_DEG : MathUtils.radDeg * -MAX_TURN_DEG, true);
-		} else if(!gasPressed) {
+		} if(!gasPressed) {
 			exhaustSound.stop();
+			exhaustSoundPlaying = false;
 		}
 		
 		
@@ -300,15 +298,13 @@ public class Player extends PhysicalEntity {
 		padbgTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		knobTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		Sprite padSprite = new Sprite(padbgTex);
-		padSprite.setSize(80, 80);
+		padSprite.setSize(30, 30);
 		Sprite knobSprite = new Sprite(knobTex);
-		knobSprite.setSize(30, 30);
+		knobSprite.setSize(13, 13);
 		skin.add("padbg", padSprite);
 		skin.add("knob", knobSprite);
 		TouchpadStyle touchpadStyle = new TouchpadStyle(skin.getDrawable("padbg"), skin.getDrawable("knob"));
 		Touchpad touchpad = new Touchpad(3, touchpadStyle);
-		touchPadStage = new Stage(BaseScreen.VIEWPORT_WIDTH, BaseScreen.VIEWPORT_HEIGHT, true);
-		touchPadStage.addActor(touchpad);
 		touchpad.setPosition(xPos, yPos);
 		return touchpad;
 	}
@@ -328,6 +324,7 @@ public class Player extends PhysicalEntity {
 		setExhaustRotation();
 	}
 	
+	
 	private void handleTouchPadInput() {
 		if(movementTouchPad.isTouched()) {
 			body.applyAngularImpulse(MathUtils.radDeg * -MAX_TURN_DEG * (movementTouchPad.getKnobPercentX() + movementTouchPad.getKnobPercentY()), true);
@@ -336,7 +333,7 @@ public class Player extends PhysicalEntity {
 		if(gasTouchPad.isTouched()) {
 			gasPressed = true;
 			exhaust.start();
-		} else {
+		} if(!gasTouchPad.isTouched()) {
 			gasPressed = false;
 			movement.set(0, 0);
 			exhaust.allowCompletion();
@@ -400,6 +397,7 @@ public class Player extends PhysicalEntity {
 				} else {
 					Settings.isPaused = true;
 				}
+				pauseSound.play();
 				break;
 			default:
 				return false;

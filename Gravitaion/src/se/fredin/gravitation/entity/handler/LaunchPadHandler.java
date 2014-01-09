@@ -43,6 +43,12 @@ public class LaunchPadHandler {
 		}
 	}
 	
+	public void tick(float delta) {
+		for(LaunchPad launchPad : launchPads) {
+			launchPad.tick(delta);
+		}
+	}
+	
 	public void tick(float delta, Player player1, Player player2) {
 		for(LaunchPad launchPad : launchPads) {
 			launchPad.tick(delta);

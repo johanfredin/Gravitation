@@ -10,7 +10,6 @@ import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.screen.ui.ingame.Dialogue;
 
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
@@ -86,7 +85,7 @@ public abstract class Level implements LevelBase, Disposable {
 	
 	protected void addGamepadSupport() {
 		// Add gamePad support
-		if(Gdx.app.getType() == ApplicationType.Desktop) {
+		if(!Gravitation.isMobileDevice()) {
 			for(int i = 0; i < Controllers.getControllers().size; i++) {
 				if(i == 0) {
 					Controllers.getControllers().get(i).addListener(player1.getGamePad());

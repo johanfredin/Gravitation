@@ -5,14 +5,17 @@ import se.fredin.gravitation.entity.physical.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.audio.Sound;
 
 public class KeyInput extends InputAdapter {
 
 	private Player player1, player2;
-
+	private Sound pauseSound;
+	
 	public KeyInput(Player player1, Player player2) {
 		this.player1 = player1;
 		this.player2 = player2;
+		this.pauseSound = Gdx.audio.newSound(Gdx.files.internal(Paths.PAUSE_SOUND_EFFECT));
 	}
 	
 	@Override
@@ -24,11 +27,10 @@ public class KeyInput extends InputAdapter {
 		case Keys.P:
 			if(Settings.isPaused) {
 				Settings.isPaused = false;
-				System.out.println("pause on");
 			} else {
 				Settings.isPaused = true;
-				System.out.println("pause off");
 			}
+			pauseSound.play();
 			break;
 		case Keys.LEFT:
 			player1.leftPressed = true;
@@ -67,45 +69,51 @@ public class KeyInput extends InputAdapter {
 		return true;
 	}
 		
-		@Override
-		public boolean keyUp(int keycode) {
-			switch(keycode) {
-			case Keys.UP:
-				player1.getExhaust().allowCompletion();
-				player1.gasPressed = false;
-				player1.setMovement(0, 0);
-				break;
-			case Keys.RIGHT:
-				player1.rightPressed = false;
-				break;
-			case Keys.LEFT:
-				player1.leftPressed = false;
-				break;
-			case Keys.CONTROL_RIGHT:
-				break;
-			case Keys.W:
-				if(player2 != null) {
-					player2.getExhaust().allowCompletion();
-					player2.gasPressed = false;
-					player2.setMovement(0, 0);
-				}
-				break;
-			case Keys.D:
-				if(player2 != null)
-					player2.rightPressed = false;
-				break;
-			case Keys.A:
-				if(player2 != null)
-					player2.leftPressed = false;
-				break;
-			case Keys.SPACE:
-				break;
-			default:
-				return false;
+	@Override
+	public boolean keyUp(int keycode) {
+		switch(keycode) {
+		case Keys.UP:
+			player1.getExhaust().allowCompletion();
+			player1.gasPressed = false;
+			player1.setMovement(0, 0);
+			break;
+		case Keys.RIGHT:
+			player1.rightPressed = false;
+			break;
+		case Keys.LEFT:
+			player1.leftPressed = false;
+			break;
+		case Keys.CONTROL_RIGHT:
+			break;
+		case Keys.W:
+			if(player2 != null) {
+				player2.getExhaust().allowCompletion();
+				player2.gasPressed = false;
+				player2.setMovement(0, 0);
 			}
-			return true;
+			break;
+		case Keys.D:
+			if(player2 != null)
+				player2.rightPressed = false;
+			break;
+		case Keys.A:
+			if(player2 != null)
+				player2.leftPressed = false;
+			break;
+		case Keys.SPACE:
+			break;
+		default:
+			return false;
 		}
+		return true;
+	}
 		
-		
+	public void dispose() {
+		player1.dispose();
+		if(player2 != null) {
+			player2.dispose();
+		}
+		pauseSound.dispose();
+	}
 	
 }

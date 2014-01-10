@@ -13,13 +13,13 @@ public class MultiPlayerDialogue extends Dialogue {
 	
 	public MultiPlayerDialogue(Game game, Level level, OrthographicCamera camera) {
 		super(game, level, GameMode.MULTI_PLAYER, camera);
-		player1WinsImage = getImage("player 1 wins", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
-		player2WinsImage = getImage("player 2 wins", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
-		drawImage = getImage("DRAW", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
+		player1WinsImage = uiHelper.getImage("player 1 wins", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
+		player2WinsImage = uiHelper.getImage("player 2 wins", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
+		drawImage = uiHelper.getImage("DRAW", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
 		
-		flashTitle(drawImage);
-		flashTitle(player1WinsImage);
-		flashTitle(player2WinsImage);
+		uiHelper.flashTitle(drawImage);
+		uiHelper.flashTitle(player1WinsImage);
+		uiHelper.flashTitle(player2WinsImage);
 		addToStageAndSetPositions(gameMode, dialogImage.getX() + (dialogImage.getWidth() / 2), dialogImage.getY() + dialogImage.getHeight());
 	}
 

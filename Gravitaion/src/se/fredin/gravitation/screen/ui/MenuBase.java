@@ -1,51 +1,38 @@
 package se.fredin.gravitation.screen.ui;
 
-import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.utils.Paths;
+import se.fredin.gravitation.utils.UiHelper;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public abstract class MenuBase extends BaseScreen {
 
 	protected Image whiteCanvasImage;
-	protected Skin skin;
-	protected TextureAtlas textureAtlas;
 	protected Stage stage;
+	protected UiHelper uiHelper;
 	
 	public MenuBase() {
 		super();
-		stage = new Stage();
-		stage.setViewport(camera.viewportWidth, camera.viewportHeight, false);
+		this.stage = new Stage(camera.viewportWidth, camera.viewportHeight, true);
+		this.uiHelper = new UiHelper(stage, Paths.MENU_ITEMS);
 	}
 	
 	public MenuBase(Game game) {
 		super(game);
-		stage = new Stage();
-		textureAtlas = new TextureAtlas(Gdx.files.internal(Paths.MENU_ITEMS));
-		skin = new Skin();
-		skin.addRegions(textureAtlas);
-		whiteCanvasImage = new Image(skin.getDrawable("whiterect"));
+		this.stage = new Stage(camera.viewportWidth, camera.viewportHeight, true);
+		this.uiHelper = new UiHelper(stage, Paths.MENU_ITEMS);
+		this.whiteCanvasImage = uiHelper.getImage("whiterect", 0, 0, stage.getWidth(), stage.getHeight());
 		Gdx.input.setInputProcessor(stage);
 	}
 	
 	public abstract void setListener(Actor actor, final int ACTION);
 
-	protected float getScale() {
-		if(Gravitation.isMobileDevice()) {
-			return 0.5f;
-		}
-		return 1;
-	}
-	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -68,24 +55,6 @@ public abstract class MenuBase extends BaseScreen {
 		stage.setViewport(camera.viewportWidth, camera.viewportHeight, false);
 	}
 	
-	/*
-	 * Flashes the button pressed, plays a sound effect and fades out the screen
-	 * @button - the button that was pressed
-	 * @duration - the fade in duration for the next screen.
-	 */
-	protected void animateActorAndFadeOutScreen(Actor actorToAnimate, Actor actorToFadeOut, float buttonFlashDuration, float fadeInDuration) {
-		actorToAnimate.addAction(Actions.repeat(3, Actions.sequence(Actions.fadeOut(buttonFlashDuration), Actions.after(Actions.fadeIn(buttonFlashDuration)))));
-		actorToFadeOut.addAction(Actions.sequence(Actions.delay(buttonFlashDuration * 3), Actions.fadeIn(fadeInDuration)));
-	}
-	
-	protected void animateActor(Actor actor, float buttonFlashDuration) {
-		actor.addAction(Actions.repeat(3, Actions.sequence(Actions.fadeOut(buttonFlashDuration), Actions.after(Actions.fadeIn(buttonFlashDuration)))));
-	}
-	
-	protected boolean isFinishedActing(Actor actor) {
-		return actor.getActions().size <= 0;
-	}
-	
 	public void pause(){}
 
 	@Override
@@ -95,8 +64,7 @@ public abstract class MenuBase extends BaseScreen {
 	public void dispose() {
 		super.dispose();
 		stage.dispose();
-		skin.dispose();
-		textureAtlas.dispose();
+		uiHelper.dispose();
 	}
 
 }

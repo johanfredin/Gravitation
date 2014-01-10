@@ -13,8 +13,8 @@ public class SinglePlayerDialogue extends Dialogue {
 	
 	public SinglePlayerDialogue(Game game, Level level, OrthographicCamera camera) {
 		super(game, level, GameMode.SINGLE_PLAYER, camera);// 100, 10
-		levelCompleteImage = getImage("level complete", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
-		flashTitle(levelCompleteImage);
+		levelCompleteImage = uiHelper.getImage("level complete", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
+		uiHelper.flashTitle(levelCompleteImage);
 		addToStageAndSetPositions(gameMode, dialogImage.getX() + (dialogImage.getWidth() / 2), dialogImage.getY() + dialogImage.getHeight());
 	}
 

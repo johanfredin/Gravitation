@@ -7,6 +7,11 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.FPSLogger;
 
+/**
+ * Starts up the game
+ * @author johan
+ *
+ */
 public class Gravitation extends Game {
 
 	private FPSLogger logger;
@@ -41,6 +46,10 @@ public class Gravitation extends Game {
 		super.resume();
 	}
 	
+	/**
+	 * Used to check if the game is being played on a mobile device or not
+	 * @return <b>true</b> if game is played on Android or iOS
+	 */
 	public static boolean isMobileDevice() {
 		return Gdx.app.getType() == ApplicationType.iOS || Gdx.app.getType() == ApplicationType.Android;
 	}

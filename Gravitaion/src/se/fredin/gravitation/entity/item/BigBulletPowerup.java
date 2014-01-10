@@ -7,6 +7,11 @@ import com.badlogic.gdx.utils.Array;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.utils.Paths;
 
+/**
+ * A powerup that makes the bullets bigger
+ * @author johan
+ *
+ */
 public class BigBulletPowerup extends Powerup {
 
 	public BigBulletPowerup(Array<Rectangle> spawnPoints, float width, float height, Player player1, Player player2) {

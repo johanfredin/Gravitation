@@ -7,24 +7,41 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Disposable;
 
-public class Station {
+/**
+ * Class that handles a station that the player needs to pass in single player mode.
+ * @author johan
+ *
+ */
+public class Station implements Disposable {
 
 	private ShapeRenderer shapeRenderer;
 	private Player player;
 	private boolean isAlive;
 	private boolean isTaken;
 	private Rectangle bounds;
-	public final int STATION_NR;
 	
-	public Station(float x, float y, float width, float height, Player player, int stationNr) {
+	/**
+	 * Creates a new Station
+	 * @param x - the x position of the station
+	 * @param y - the y position of the station
+	 * @param width - the width of the station
+	 * @param height - the height of the station
+	 * @param player - the Player object that will interact with the station
+	 * @param stationNr - the number of the station
+	 */
+	public Station(float x, float y, float width, float height, Player player, byte stationNr) {
 		this.player = player;
-		this.STATION_NR = stationNr;
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setColor(Color.GREEN);
 		this.bounds = new Rectangle(x, y, width, height);
 	}
 	
+	/**
+	 * Renders the station to the screen if it is not taken
+	 * @param batch - the SpriteBatch responsible for rendering the station
+	 */
 	public void render(SpriteBatch batch) {
 		if(isAlive && !isTaken) {
 			shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
@@ -34,6 +51,10 @@ public class Station {
 		}
 	}
 	
+	/**
+	 * Checks the state of the station
+	 * @param delta - the time interval
+	 */
 	public void tick(float delta) {
 		if(player.getBounds().overlaps(bounds) && isAlive) {
 			isAlive = false;
@@ -41,26 +62,31 @@ public class Station {
 		}
 	}
 	
-	public boolean isAlive() {
-		return isAlive;
-	}
-	
+	/**
+	 * set the state of this station
+	 * @param isAlive - <b>true<b/> if this station should be alive
+	 */
 	public void setAlive(boolean isAlive) {
 		this.isAlive = isAlive;
 	}
 	
+	/**
+	 * Check if this station is taken
+	 * @return - <b>true<b/> if the station is taken
+	 */
 	public boolean isTaken() {
 		return isTaken;
 	}
 	
-	public void setTaken(boolean isTaken) {
-		this.isTaken = isTaken;
-	}
-	
+	/**
+	 * Return the boundaries of this station
+	 * @return - the boundaries of this station
+	 */
 	public Rectangle getBounds() {
 		return this.bounds;
 	}
 	
+	@Override
 	public void dispose() {
 		shapeRenderer.dispose();
 		player.dispose();

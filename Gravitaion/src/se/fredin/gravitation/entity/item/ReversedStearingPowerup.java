@@ -7,6 +7,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * A powerup that will make the steering reversed
+ * @author johan
+ *
+ */
 public class ReversedStearingPowerup extends Powerup {
 
 	public ReversedStearingPowerup(Array<Rectangle> spawnPoints, float width, float height, Player player, Player player2) {

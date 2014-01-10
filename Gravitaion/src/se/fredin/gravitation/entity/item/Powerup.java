@@ -15,6 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * Class for making powerups that will affect the players good or bad.
+ * @author johan
+ *
+ */
 public abstract class Powerup extends AbstractEntity {
 
 	protected Player player1, player2;
@@ -25,6 +30,17 @@ public abstract class Powerup extends AbstractEntity {
 	private Sound goodPowerupSound;
 	private Sound badPowerupSound;
 	
+	/**
+	 * Creates a new Powerup on a random map position. Gives it a specified width and height and assigns a sprite to it.
+	 * @param spawnPoints - The different spawnpoints that this powerup will get a random position from
+	 * @param width - the width of the powerup
+	 * @param height - the height of the powerup
+	 * @param texturePath - the location of the texture that the Sprite will use
+	 * @param player1 - the first Player this powerup will interact with
+	 * @param player2 - the second Player this powerup will interact with
+	 * @param powerupExplanationPath - the location of the text image that will popup once a player has interacted with the powerup
+	 * @param isGoodPowerup - <b>true</b> if this powerup will affect the player in a good way
+	 */
 	public Powerup(Array<Rectangle> spawnPoints, float width, float height, String texturePath, Player player1, Player player2, String powerupExplanationPath, boolean isGoodPowerup) {
 		super(spawnPoints, width, height, texturePath);
 		this.atlas = new TextureAtlas(Gdx.files.internal(Paths.MENU_ITEMS));
@@ -39,8 +55,16 @@ public abstract class Powerup extends AbstractEntity {
 		this.badPowerupSound = Gdx.audio.newSound(Gdx.files.internal(Paths.BAD_POWERUP_SOUND_EFFECT));
 	}
 	
+	/**
+	 * Will decide how to affect the player once interaction has taken place
+	 * @param player - the player to affect
+	 */
 	public abstract void affectEntity(Player player);
 	
+	/**
+	 * Will remove the effect from the player.
+	 * @param player - the player to remove this powerup from
+	 */
 	public abstract void removePower(Player player);
 	
 	protected Image getImage(String name, float width, float height) {

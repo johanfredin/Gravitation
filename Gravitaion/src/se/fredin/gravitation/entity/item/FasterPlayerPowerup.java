@@ -8,6 +8,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * A powerup that makes the player faster
+ * @author johan
+ *
+ */
 public class FasterPlayerPowerup extends Powerup {
 
 	public FasterPlayerPowerup(Array<Rectangle> spawnPoints, float width, float height, Player player1, Player player2) {

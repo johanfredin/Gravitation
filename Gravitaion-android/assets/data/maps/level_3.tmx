@@ -54,35 +54,23 @@
   <object x="190" y="140" width="31" height="38"/>
  </objectgroup>
  <objectgroup color="#ffff00" name="powerups" width="32" height="32">
-  <object x="69" y="227" width="52" height="44"/>
-  <object x="488" y="294" width="41" height="28"/>
-  <object x="666" y="95" width="39" height="43"/>
-  <object x="868" y="251" width="83" height="49"/>
-  <object x="813" y="77" width="19" height="37"/>
-  <object x="463" y="906" width="31" height="20"/>
+  <object x="388" y="297" width="41" height="28"/>
+  <object x="707" y="75" width="39" height="43"/>
   <object x="241" y="736"/>
-  <object x="689" y="684"/>
-  <object x="564" y="691"/>
-  <object x="368" y="716"/>
-  <object x="293" y="671"/>
-  <object x="76" y="471"/>
-  <object x="381" y="615"/>
-  <object x="81" y="689"/>
+  <object x="588" y="708"/>
+  <object x="347" y="635"/>
   <object x="75" y="568"/>
-  <object x="88" y="392"/>
-  <object x="381" y="84"/>
+  <object x="67" y="337"/>
   <object x="297" y="84"/>
-  <object x="157" y="87"/>
-  <object x="401" y="515"/>
-  <object x="752" y="503"/>
-  <object x="737" y="927"/>
-  <object x="924" y="475"/>
-  <object x="905" y="688"/>
+  <object x="100" y="79"/>
+  <object x="720" y="495"/>
+  <object x="893" y="934"/>
+  <object x="924" y="222"/>
+  <object x="913" y="501"/>
   <object x="937" y="789"/>
   <object x="279" y="932"/>
-  <object x="224" y="873"/>
   <object x="80" y="828"/>
-  <object x="414" y="963"/>
+  <object x="470" y="935"/>
  </objectgroup>
  <layer name="passages" width="32" height="32">
   <data encoding="base64" compression="gzip">

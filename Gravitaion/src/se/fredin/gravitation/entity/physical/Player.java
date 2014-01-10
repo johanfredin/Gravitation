@@ -155,12 +155,6 @@ public class Player extends PhysicalEntity {
 		explosion.start();
 		explosionSound.play();
 		setPosition(spawnPoint.x, spawnPoint.y + 1);
-		if(bullets.size > 0) {
-			for(int i = 0; i < bullets.size; i++) {
-				bullets.get(i).dispose();
-			}
-			bullets.clear();
-		}
 	}
 	
 	public void checkForCollision(Array<Rectangle> hardBlocks, Vector2 spawnPoint, Player opponent) {

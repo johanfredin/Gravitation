@@ -1,11 +1,11 @@
 package se.fredin.gravitation.level;
 
-import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.entity.handler.PowerupHandler;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.BaseScreen;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.screen.ui.ingame.MultiPlayerDialogue;
+import se.fredin.gravitation.utils.GameMode;
 import se.fredin.gravitation.utils.KeyInput;
 import se.fredin.gravitation.utils.Paths;
 import se.fredin.gravitation.utils.Settings;

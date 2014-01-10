@@ -1,7 +1,7 @@
 package se.fredin.gravitation.screen.ui;
 
-import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.Gravitation;
+import se.fredin.gravitation.utils.GameMode;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -109,17 +109,17 @@ public class MainMenuScreen extends MenuBase {
 				buttonPressedSound.play();
 				switch(ACTION) {
 				case NEW_GAME:	// Start the game!!
-					animateActorAndFadeOutScreen(singlePlayerButton, 0.1f, 1.2f);
+					animateActorAndFadeOutScreen(singlePlayerButton, whiteCanvasImage, 0.1f, 1.2f);
 					singlePlayerButtonClicked = true;
 					disableButtons();
 					return true;
 				case MULTIPLAYER:
-					animateActorAndFadeOutScreen(multiPlayerButton, 0.1f, 1.2f);
+					animateActorAndFadeOutScreen(multiPlayerButton, whiteCanvasImage, 0.1f, 1.2f);
 					multiPlayerButtonClicked = true;
 					disableButtons();
 					return true;
 				case QUIT:	// Quit the game
-					animateActorAndFadeOutScreen(quitButton, 0.1f, 1.2f);
+					animateActorAndFadeOutScreen(quitButton, whiteCanvasImage, 0.1f, 1.2f);
 					quitButtonClicked = true;
 					disableButtons();
 					return true;

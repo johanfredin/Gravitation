@@ -1,8 +1,8 @@
 package se.fredin.gravitation.entity.physical;
 
-import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.entity.Bullet;
 import se.fredin.gravitation.screen.BaseScreen;
+import se.fredin.gravitation.utils.GameMode;
 import se.fredin.gravitation.utils.ParticleLoader;
 import se.fredin.gravitation.utils.Paths;
 import se.fredin.gravitation.utils.Settings;

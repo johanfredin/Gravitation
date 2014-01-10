@@ -13,16 +13,13 @@ public class Bullet extends AbstractEntity {
 	private Vector2 movement;
 	private float speed;
 	private boolean isMovementReversed;
-	private float bulletRot;
-	private float bulletXSpeed;
-	private float bulletYSpeed;
 	
 	public Bullet(float x, float y, float width, float height, float speed, Body body, boolean isMovementReversed) {
 		super(x, y, width, height, Gdx.files.internal(Paths.BULLET_TEXTUREPATH).path());
 		this.speed = speed;
-		this.bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
-		this.bulletXSpeed = MathUtils.cos(bulletRot);
-		this.bulletYSpeed = MathUtils.sin(bulletRot);
+		float bulletRot = (float)(body.getTransform().getRotation() + MathUtils.PI / 2);
+		float bulletXSpeed = MathUtils.cos(bulletRot);
+		float bulletYSpeed = MathUtils.sin(bulletRot);
 		this.isMovementReversed = isMovementReversed;
 		this.movement = new Vector2(speed * bulletXSpeed, speed * bulletYSpeed);
 	}
@@ -60,16 +57,17 @@ public class Bullet extends AbstractEntity {
 		return movement;
 	}
 
+	public boolean isMovementReversed() {
+		return isMovementReversed;
+	}
+	
+	public void setMovementReversed(boolean isMovementReversed) {
+		this.isMovementReversed = isMovementReversed;
+	}
+	
 	@Override
 	public void dispose() {
 		super.dispose();
 	}
 	
-	public boolean isMovementReversed() {
-		return isMovementReversed;
-	}
-	public void setMovementReversed(boolean isMovementReversed) {
-		this.isMovementReversed = isMovementReversed;
-	}
-
 }

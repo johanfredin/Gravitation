@@ -1,9 +1,9 @@
 package se.fredin.gravitation.screen.ui.ingame;
 
-import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.level.Level;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.screen.ui.MainMenuScreen;
+import se.fredin.gravitation.utils.GameMode;
 import se.fredin.gravitation.utils.Paths;
 import se.fredin.gravitation.utils.Settings;
 

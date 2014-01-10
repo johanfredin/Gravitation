@@ -1,9 +1,9 @@
 package se.fredin.gravitation.screen;
 
-import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.level.Level;
 import se.fredin.gravitation.level.MultiPlayerLevel;
 import se.fredin.gravitation.level.SinglePlayerLevel;
+import se.fredin.gravitation.utils.GameMode;
 import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Game;

@@ -56,6 +56,7 @@ public abstract class PhysicalEntity extends AbstractEntity {
 	
 	@Override
 	public void dispose() {
+		super.dispose();
 		world.dispose();
 		sprite.getTexture().dispose();
 	}

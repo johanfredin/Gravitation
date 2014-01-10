@@ -73,19 +73,19 @@ public abstract class MenuBase extends BaseScreen {
 	 * @button - the button that was pressed
 	 * @duration - the fade in duration for the next screen.
 	 */
-	protected void animateActorAndFadeOutScreen(Actor actor, float buttonFlashDuration, float fadeInDuration) {
-		actor.addAction(Actions.repeat(3, Actions.sequence(Actions.fadeOut(buttonFlashDuration), Actions.after(Actions.fadeIn(buttonFlashDuration)))));
-		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(buttonFlashDuration * 6), Actions.fadeIn(fadeInDuration)));
+	protected void animateActorAndFadeOutScreen(Actor actorToAnimate, Actor actorToFadeOut, float buttonFlashDuration, float fadeInDuration) {
+		actorToAnimate.addAction(Actions.repeat(3, Actions.sequence(Actions.fadeOut(buttonFlashDuration), Actions.after(Actions.fadeIn(buttonFlashDuration)))));
+		actorToFadeOut.addAction(Actions.sequence(Actions.delay(buttonFlashDuration * 6), Actions.fadeIn(fadeInDuration)));
 	}
 	
 	protected void animateActor(Actor actor, float buttonFlashDuration) {
 		actor.addAction(Actions.repeat(3, Actions.sequence(Actions.fadeOut(buttonFlashDuration), Actions.after(Actions.fadeIn(buttonFlashDuration)))));
 	}
 	
-	protected void setAlpha(Actor actor, float alpha,float duration) {
-		actor.addAction(Actions.alpha(alpha, duration));
+	protected boolean isFinishedActing(Actor actor) {
+		return actor.getActions().size <= 0;
 	}
-
+	
 	public void pause(){}
 
 	@Override

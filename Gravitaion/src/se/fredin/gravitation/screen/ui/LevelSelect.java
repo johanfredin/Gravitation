@@ -1,7 +1,7 @@
 package se.fredin.gravitation.screen.ui;
 
-import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.screen.GameScreen;
+import se.fredin.gravitation.utils.GameMode;
 import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Game;
@@ -15,35 +15,34 @@ public class LevelSelect extends MenuBase {
 
 	private GameMode gameMode;
 	
-	private Image levelSelectImage, 
-				  level1Image, 
-				  level2Image, 
-				  level3Image, 
-				  returnToMenuImage,
-				  timeLimitImage,
-				  scoreImage,
-				  fiveImage,
-				  tenImage,
-				  twentyImage,
-				  unlimitedImage,
-				  fiveTimeImage,
-				  tenTimeImage,
-				  twentTimeyImage,
-				  unlimitedTimeImage;
+	private Image levelSelectImage;
+	private Image level1Image; 
+	private Image level2Image; 
+	private Image level3Image; 
+	private Image returnToMenuImage;
+	private Image timeLimitImage;
+	private Image scoreImage;
+	private Image fiveImage;
+	private Image tenImage;
+	private Image twentyImage;
+	private Image unlimitedImage;
+	private Image fiveTimeImage;
+	private Image tenTimeImage;
+	private Image twentTimeyImage;
+	private Image unlimitedTimeImage;
 	
-	private final int LEVEL_1 = 1, 
-			          LEVEL_2 = 2, 
-			          LEVEL_3 = 3, 
-			          RETURN_TO_MENU = 4,
-			          SHORT_TIME = 5,
-			          MEDIUM_TIME = 6,
-			          LONG_TIME = 7,
-			          UNLIMITED_TIME = 8,
-			          LOW_SCORE = 9,
-			          MEDIUM_SCORE = 10,
-			          HIGH_SCORE = 11,
-			          UNLIMITED_SCORE = 12;
-					  
+	private final int LEVEL_1 = 1;
+	private final int LEVEL_2 = 2; 
+	private final int LEVEL_3 = 3; 
+	private final int RETURN_TO_MENU = 4;
+	private final int SHORT_TIME = 5;
+	private final int MEDIUM_TIME = 6;
+	private final int LONG_TIME = 7;
+	private final int UNLIMITED_TIME = 8;
+	private final int LOW_SCORE = 9;
+	private final int MEDIUM_SCORE = 10;
+	private final int HIGH_SCORE = 11;
+	private final int UNLIMITED_SCORE = 12;
 	
 	private boolean level1ImagePressed;
 	private boolean level2ImagePressed;
@@ -68,7 +67,6 @@ public class LevelSelect extends MenuBase {
 			setListener(unlimitedTimeImage, UNLIMITED_TIME);
 		}
 		setListener(returnToMenuImage, RETURN_TO_MENU);
-
 	}
 	
 	private void setupImages() {
@@ -168,51 +166,44 @@ public class LevelSelect extends MenuBase {
 				buttonPressedSound.play();
 				switch(ACTION) {
 				case LEVEL_1:	// Start the game!!
-					animateActorAndFadeOutScreen(level1Image, 0.1f, 1.2f);
+					animateActorAndFadeOutScreen(level1Image, whiteCanvasImage, 0.1f, 1.2f);
 					level1ImagePressed = true;
 					return true;
 				case LEVEL_2:
-					animateActorAndFadeOutScreen(level2Image, 0.1f, 1.2f);
+					animateActorAndFadeOutScreen(level2Image, whiteCanvasImage, 0.1f, 1.2f);
 					level2ImagePressed = true;
 					return true;
 				case LEVEL_3:	// Quit the game
-					animateActorAndFadeOutScreen(level3Image, 0.1f, 1.2f);
+					animateActorAndFadeOutScreen(level3Image, whiteCanvasImage, 0.1f, 1.2f);
 					level3ImagePressed = true;
 					return true;
 				case RETURN_TO_MENU:
+					animateActor(returnToMenuImage, 0.1f);
 					game.setScreen(new MainMenuScreen(game));
 					return true;
 				case LOW_SCORE:
 					Settings.defaultScoreLimit = Settings.LOW_SCORE_LIMIT;
-					animateActor(fiveImage, 0.1f);
 					return true;
 				case MEDIUM_SCORE:
 					Settings.defaultScoreLimit = Settings.MEDIUM_SCORE_LIMIT;
-					animateActor(tenImage, 0.1f);
 					return true;
 				case HIGH_SCORE:
 					Settings.defaultScoreLimit = Settings.HIGH_SCORE_LIMIT;
-					animateActor(twentyImage, 0.1f);
 					return true;
 				case UNLIMITED_SCORE:
 					Settings.isUnlimitedcore = true;
-					animateActor(unlimitedImage, 0.1f);
 					return true;
 				case SHORT_TIME:
 					Settings.defaultTimeLimit = Settings.SHORT_TIME_LIMIT;
-					animateActor(fiveTimeImage, 0.1f);
 					return true;
 				case MEDIUM_TIME:
 					Settings.defaultTimeLimit = Settings.MEDIUM_TIME_LIMIT;
-					setAlpha(tenTimeImage, 0.2f, 1);
 					return true;
 				case LONG_TIME:
 					Settings.defaultTimeLimit = Settings.LONG_TIME_LIMIT;
-					animateActor(twentTimeyImage, 0.1f);
 					return true;
 				case UNLIMITED_TIME:
 					Settings.isUnlimitedTime = true;
-					animateActor(unlimitedTimeImage, 0.1f);
 					return true;
 				default:
 					return false;

@@ -1,6 +1,5 @@
 package se.fredin.gravitation.level;
 
-import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.Gravitation;
 import se.fredin.gravitation.entity.Bullet;
 import se.fredin.gravitation.entity.handler.LaunchPadHandler;
@@ -9,6 +8,7 @@ import se.fredin.gravitation.entity.physical.LaunchPad;
 import se.fredin.gravitation.entity.physical.Player;
 import se.fredin.gravitation.screen.GameScreen;
 import se.fredin.gravitation.screen.ui.ingame.Dialogue;
+import se.fredin.gravitation.utils.GameMode;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controllers;

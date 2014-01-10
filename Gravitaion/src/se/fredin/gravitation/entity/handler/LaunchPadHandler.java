@@ -18,10 +18,6 @@ public class LaunchPadHandler {
 	private Array<Vector2> playerSpawnPoints;
 	
 	public LaunchPadHandler(TiledMap map, final float UNIT_SCALE, World world) {
-		initLaunchPads(map, UNIT_SCALE, world);
-	}
-	
-	private void initLaunchPads(TiledMap map, final float UNIT_SCALE, World world) {
 		launchPadPositions = new Array<Vector2>();
 		playerSpawnPoints = new Array<Vector2>();
 		launchPads = new Array<LaunchPad>();

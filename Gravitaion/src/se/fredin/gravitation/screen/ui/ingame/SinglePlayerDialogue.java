@@ -1,7 +1,7 @@
 package se.fredin.gravitation.screen.ui.ingame;
 
-import se.fredin.gravitation.GameMode;
 import se.fredin.gravitation.level.Level;
+import se.fredin.gravitation.utils.GameMode;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;

@@ -7,9 +7,17 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+/**
+ * Class that should be used for multiplayer pop up menus
+ * @author johan
+ *
+ */
 public class MultiPlayerDialogue extends Dialogue {
 
-	private Image player1WinsImage, player2WinsImage, drawImage;
+	private Image player1WinsImage;
+	private Image player2WinsImage;
+	private Image drawImage;
+	
 	
 	public MultiPlayerDialogue(Game game, Level level, OrthographicCamera camera) {
 		super(game, level, GameMode.MULTI_PLAYER, camera);
@@ -17,9 +25,9 @@ public class MultiPlayerDialogue extends Dialogue {
 		player2WinsImage = uiHelper.getImage("player 2 wins", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
 		drawImage = uiHelper.getImage("DRAW", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
 		
-		uiHelper.flashTitle(drawImage);
-		uiHelper.flashTitle(player1WinsImage);
-		uiHelper.flashTitle(player2WinsImage);
+		uiHelper.flashActor(drawImage);
+		uiHelper.flashActor(player1WinsImage);
+		uiHelper.flashActor(player2WinsImage);
 		addToStageAndSetPositions(gameMode, dialogImage.getX() + (dialogImage.getWidth() / 2), dialogImage.getY() + dialogImage.getHeight());
 	}
 
@@ -35,6 +43,7 @@ public class MultiPlayerDialogue extends Dialogue {
 		stage.addActor(backToMenuImage);
 	}
 	
+	@Override
 	public void render(String title) {
 		render();
 		switch(title) {

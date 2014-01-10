@@ -29,6 +29,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
+/**
+ * Manages the levels of the game
+ * @author johan
+ *
+ */
 public abstract class Level implements LevelBase, Disposable {
 
 	protected OrthogonalTiledMapRenderer mapRenderer;
@@ -57,7 +62,12 @@ public abstract class Level implements LevelBase, Disposable {
 	protected Box2DDebugRenderer box2DRenderer;
 	protected ShapeRenderer shapeRenderer;
 	
-	
+	/**
+	 * Creates a new level tied to a tiled map, using box2d physics
+	 * @param levelPath the path to the level
+	 * @param gameScreen the GameScreen in charge of changing levels
+	 * @param gameMode the current game mode
+	 */
 	public Level(String levelPath, GameScreen gameScreen, GameMode gameMode) {
 		this.gameMode = gameMode;
 		this.gameScreen = gameScreen;
@@ -83,6 +93,10 @@ public abstract class Level implements LevelBase, Disposable {
 		this.hardBlocks = getWorldAdaptedBlocks(map);
 	}
 	
+	/**
+	 * Adds gamepad support to desktop version. Looks for gamepads, then checks the amount of players and assigns gamepads
+	 * to each of them
+	 */
 	protected void addGamepadSupport() {
 		// Add gamePad support
 		if(!Gravitation.isMobileDevice()) {
@@ -153,6 +167,10 @@ public abstract class Level implements LevelBase, Disposable {
 		return hardBlocks;
 	}
 	
+	/**
+	 * Draws shapes around all the boundaries.
+	 * @param camera the camera the shaperenderer will use
+	 */
 	protected void debugRender(OrthographicCamera camera) {
 		box2DRenderer.render(world, camera.combined);
 		shapeRenderer.setProjectionMatrix(camera.combined);
@@ -168,6 +186,14 @@ public abstract class Level implements LevelBase, Disposable {
 		shapeRenderer.end();
 	}
 	
+	/**
+	 * Makes the camera follow the player
+	 * @param camera the camera
+	 * @param player the player the camera will follow
+	 * @param xPos the x position of the viewport
+	 * @param mapWidth the width of the map
+	 * @param mapHeight the height of the map
+	 */
 	protected void moveCamera(OrthographicCamera camera, Player player, int xPos, float mapWidth, float mapHeight) {
 		Gdx.gl.glViewport(xPos, 0, gameMode == GameMode.MULTI_PLAYER  && !multiPlayerMatchEnded ? Gdx.graphics.getWidth() / 2 : Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		

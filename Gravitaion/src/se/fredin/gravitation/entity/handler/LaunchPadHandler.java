@@ -25,9 +25,9 @@ public class LaunchPadHandler implements Disposable {
 	
 	/**
 	 * Creates the launchpads and gives them to the map.
-	 * @param map - the TiledMap the launchpads should be given to
-	 * @param UNIT_SCALE - the unitscale that this map uses
-	 * @param world - the box2D World 
+	 * @param map the TiledMap the launchpads should be given to
+	 * @param UNIT_SCALE the unitscale that this map uses
+	 * @param world the box2D World 
 	 */
 	public LaunchPadHandler(TiledMap map, final float UNIT_SCALE, World world) {
 		launchPadPositions = new Array<Vector2>();
@@ -47,7 +47,7 @@ public class LaunchPadHandler implements Disposable {
 	
 	/**
 	 * Renders the launchpads
-	 * @param batch - the SpriteBatch responsible for rendering the launchpads
+	 * @param batch the SpriteBatch responsible for rendering the launchpads
 	 */
 	public void render(SpriteBatch batch) {
 		for(LaunchPad launchPad : launchPads) {
@@ -57,7 +57,7 @@ public class LaunchPadHandler implements Disposable {
 	
 	/**
 	 * Updates the launchpads
-	 * @param delta - the time interval
+	 * @param delta the time interval
 	 */
 	public void tick(float delta) {
 		for(LaunchPad launchPad : launchPads) {
@@ -67,9 +67,9 @@ public class LaunchPadHandler implements Disposable {
 	
 	/**
 	 * Updates the launchpads and checks if a player is currently on a launchpad
-	 * @param delta - the time interval
-	 * @param player1 - player one
-	 * @param player2 - player two
+	 * @param delta the time interval
+	 * @param player1 player one
+	 * @param player2 player two
 	 */
 	public void tick(float delta, Player player1, Player player2) {
 		for(LaunchPad launchPad : launchPads) {
@@ -81,7 +81,7 @@ public class LaunchPadHandler implements Disposable {
 	/**
 	 * Checks all the launchpads to see if a player has landed on one. Then returns a random
 	 * launchpad position from the launchpads where a player is not currently positioned.
-	 * @return
+	 * @return a randomly selected spawnpoint
 	 */
 	public Vector2 getRandomAvailableSpawnPoint() {
 		Array<Vector2> spawnPoints = new Array<Vector2>();
@@ -95,7 +95,7 @@ public class LaunchPadHandler implements Disposable {
 	
 	/**
 	 * Get the position of the first launchpad
-	 * @return - the position of the first launchpad
+	 * @return the position of the first launchpad
 	 */
 	public Vector2 getFirstLaunchPadPosition() {
 		return launchPads.get(0).getPosition();
@@ -103,7 +103,7 @@ public class LaunchPadHandler implements Disposable {
 
 	/**
 	 * Get the launchpads
-	 * @return - the launchpads
+	 * @return the launchpads
 	 */
 	public Array<LaunchPad> getLaunchPads() {
 		return launchPads;
@@ -111,7 +111,7 @@ public class LaunchPadHandler implements Disposable {
 	
 	/**
 	 * Get the spawn points
-	 * @return - the spawn points
+	 * @return the spawn points
 	 */
 	public Array<Vector2> getPlayerSpawnPoints() {
 		return playerSpawnPoints;

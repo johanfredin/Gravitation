@@ -32,10 +32,10 @@ public class PowerupHandler implements Disposable {
 	
 	/**
 	 * Creates the powerups
-	 * @param map - the TiledMap to give the powerups to
-	 * @param player1 - the first player to interact with the powerups
-	 * @param player2 - the second player to interact with the powerups
-	 * @param unitScale - the unitscale of the map
+	 * @param map the TiledMap to give the powerups to
+	 * @param player1 the first player to interact with the powerups
+	 * @param player2 the second player to interact with the powerups
+	 * @param unitScale the unitscale of the map
 	 */
 	public PowerupHandler(TiledMap map, Player player1, Player player2, float unitScale) {
 		this.spawnPoints = getWorldAdaptedPowerupLocations(map, unitScale);
@@ -81,7 +81,7 @@ public class PowerupHandler implements Disposable {
 	
 	/**
 	 * Renders the powerups 
-	 * @param batch - the SpriteBatch responsible for drawing to the screen
+	 * @param batch the SpriteBatch responsible for drawing to the screen
 	 */
 	public void render(SpriteBatch batch) {
 		for(Powerup powerup : tmpPowerups) {
@@ -93,7 +93,7 @@ public class PowerupHandler implements Disposable {
 	 * Updates the powerups.
 	 * If there are less than 10 powerups on the map another powerup will be added to 
 	 * a random location after a specified time interval
-	 * @param delta - the time interval
+	 * @param delta the time interval
 	 */
 	public void tick(float delta) {
 		timer += delta;

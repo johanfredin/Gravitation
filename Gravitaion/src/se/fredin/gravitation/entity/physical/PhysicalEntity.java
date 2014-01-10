@@ -11,6 +11,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
+/**
+ * Class that handles box2D objects. Creates a box2D entity and ads it to a world
+ * @author johan
+ *
+ */
 public abstract class PhysicalEntity extends AbstractEntity {
 	
 	protected World world;
@@ -18,6 +23,15 @@ public abstract class PhysicalEntity extends AbstractEntity {
 	protected float bodyWidth, bodyHeight;
 	protected final float PIXELS_TO_METER = 1 / 32f;
 	
+	/**
+	 * Creates a new Physical entity. Gives it a position, width and height, a sprite and gives it to a box2D world.
+	 * @param xPos the x position of the physical entity
+	 * @param yPos the y position of the physical entity
+	 * @param texturePath the path of the texture used for the sprite
+	 * @param world the box2D world to give the physical entity to
+	 * @param bodyWidth the width of the physical entity
+	 * @param bodyHeight the height of the physical entity
+	 */
 	public PhysicalEntity(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
 		super(xPos, yPos, bodyWidth, bodyHeight, texturePath);
 		this.world = world;
@@ -32,6 +46,14 @@ public abstract class PhysicalEntity extends AbstractEntity {
 		this.bounds = new Rectangle(getPosition().x - sprite.getWidth() / 2, getPosition().y - sprite.getHeight() / 2, sprite.getWidth(), sprite.getHeight());
 	}
 	
+	/**
+	 * Creates a box2D body with a specified position, width and height
+	 * @param xPos the x position of the body
+	 * @param yPos the y position of the body
+	 * @param bodyWidth the width of the body
+	 * @param bodyHeight the height of the body
+	 * @return the body
+	 */
 	public abstract Body getSpecifiedBody(float xPos, float yPos,float bodyWidth, float bodyHeight);
 	
 	@Override
@@ -44,6 +66,10 @@ public abstract class PhysicalEntity extends AbstractEntity {
 		return body.getPosition();
 	}
 	
+	/**
+	 * Get the sprite of the physical entity
+	 * @return the sprite of the physical entity
+	 */
 	public Sprite getSprite() {
 		return sprite;
 	}

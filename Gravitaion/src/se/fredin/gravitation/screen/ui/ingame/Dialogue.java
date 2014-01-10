@@ -18,10 +18,16 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Disposable;
 
-public abstract class Dialogue {
+/**
+ * The main UI handler class for making in game pop up menus
+ * @author johan
+ *
+ */
+public abstract class Dialogue implements Disposable {
 
-	protected final int REPLAY = 1, BACK_TO_MENU = 2;
+	protected final byte REPLAY = 1, BACK_TO_MENU = 2;
 	protected Image dialogImage, replayImage, backToMenuImage, whiteRectImage;
 	protected UiHelper uiHelper;
 	protected Stage stage;
@@ -31,6 +37,13 @@ public abstract class Dialogue {
 	private boolean isReplayPressed;
 	protected boolean isReturnToMenuPressed;
 	
+	/**
+	 * Creates a new Dialogue instance.
+	 * @param game the game instance used for switching screens
+	 * @param level the current level
+	 * @param gameMode the selected game mode
+	 * @param camera the camera responsible for this menu
+	 */
 	public Dialogue(Game game, Level level, GameMode gameMode, OrthographicCamera camera) {
 		this.game = game;
 		this.gameMode = gameMode;
@@ -54,13 +67,23 @@ public abstract class Dialogue {
 		
 	}
 	
+	/**
+	 * Puts the stage actors at the specified positions
+	 * @param gameMode the current game mode
+	 * @param centerX the center x position of the menu
+	 * @param height the height of the menu
+	 */
 	public abstract void addToStageAndSetPositions(GameMode gameMode, float centerX, float height);
 	
+	/**
+	 * Get the stage of this menu
+	 * @return the stage of this menu
+	 */
 	public Stage getStage() {
 		return stage;
 	}
 	
-	private void setListener(Actor actor, final int ACTION, final Level level) {
+	private void setListener(Actor actor, final byte ACTION, final Level level) {
 		actor.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -81,6 +104,10 @@ public abstract class Dialogue {
 		});
 	}
 	
+	/**
+	 * Updates this menu
+	 * @param delta the time interval between updates
+	 */
 	public void tick(float delta) {
 		stage.act(delta);
 		whiteRectImage.act(delta);
@@ -91,6 +118,9 @@ public abstract class Dialogue {
 		}
 	}
 	
+	/**
+	 * Renders the menu to the screen
+	 */
 	public void render() {
 		stage.draw();
 		stage.getSpriteBatch().begin();
@@ -98,8 +128,13 @@ public abstract class Dialogue {
 		stage.getSpriteBatch().end();
 	}
 	
+	/**
+	 * Renders the menu to the screen
+	 * @param title the title image to be displayed on this menu
+	 */
 	public void render(String title) {}
 	
+	@Override
 	public void dispose() {
 		stage.dispose();
 		uiHelper.dispose();

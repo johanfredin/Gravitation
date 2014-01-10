@@ -8,6 +8,12 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+/**
+ * Launchpad class creates a launchpad in which the player will spawn. Launchpad is a physical entity
+ * and will interact with the player.
+ * @author johan
+ *
+ */
 public class LaunchPad extends PhysicalEntity {
 
 	private boolean isTaken;
@@ -26,6 +32,12 @@ public class LaunchPad extends PhysicalEntity {
 		bounds.setPosition(getPosition().x - sprite.getWidth() / 2, getPosition().y - sprite.getHeight() / 3);
 	}
 	
+	/**
+	 * Check if a player is currently positioned on the launchpad
+	 * @param player1 the first player that might be positioned on the launchpad 
+	 * @param player2 the second player that might be positioned on the launchpad
+	 * @param delta the time interval
+	 */
 	public void checkIfTaken(Player player1, Player player2, float delta) {
 		if(this.bounds.overlaps(player1.getBounds()) || this.bounds.overlaps(player2.getBounds())) {
 			isTaken = true;
@@ -63,6 +75,10 @@ public class LaunchPad extends PhysicalEntity {
 		return body;
 	}
 	
+	/**
+	 * Check if this launchpad is taken
+	 * @return <b>true</b> if this launchpad is taken
+	 */
 	public boolean isTaken() {
 		return isTaken;
 	}

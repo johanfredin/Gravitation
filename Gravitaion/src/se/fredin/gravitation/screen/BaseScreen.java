@@ -11,6 +11,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
+/**
+ * The basic screen setting class that all other screen classes extend from
+ * @author johan
+ *
+ */
 public abstract class BaseScreen implements Disposable, Screen {
 	
 	public static int VIEWPORT_WIDTH = 320;
@@ -18,9 +23,12 @@ public abstract class BaseScreen implements Disposable, Screen {
 	protected Sound buttonPressedSound;
 	protected OrthographicCamera camera, camera2;
 	protected SpriteBatch batch;
-	protected Game game;					// used to switch screens
+	protected Game game;
 	
-	protected BaseScreen() {
+	/**
+	 * Creates a new BaseScreen with a Camera and a SpriteBatch. also sets the viewport for mobile devises and desktop
+	 */
+	public BaseScreen() {
 		camera = new OrthographicCamera();
 		batch = new SpriteBatch();
 		if(Gravitation.isMobileDevice()) {
@@ -31,6 +39,10 @@ public abstract class BaseScreen implements Disposable, Screen {
 		buttonPressedSound = Gdx.audio.newSound(Gdx.files.internal(Paths.MENU_SELECT_SOUND_EFFECT));
 	}
 	
+	/**
+	 * Creates a new BaseScreen with a Camera and a SpriteBatch. also sets the viewport for mobile devises and desktop
+	 * @param game the game instance this screen will use to switch screen
+	 */
 	public BaseScreen(Game game) {
 		this();
 		this.game = game;
@@ -38,10 +50,18 @@ public abstract class BaseScreen implements Disposable, Screen {
 		camera2.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 	}
 	
+	/**
+	 * Get the game instance of the BaseScreen
+	 * @return the game instance
+	 */
 	public Game getGame() {
 		return this.game;
 	}
 	
+	/**
+	 * Get the camera of the basescreen
+	 * @return the camera of the basescreen
+	 */
 	public OrthographicCamera getCamera() {
 		return camera;
 	}
@@ -52,6 +72,18 @@ public abstract class BaseScreen implements Disposable, Screen {
 		camera2.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 	}
 
+	@Override
+	public void show() {}
+	
+	@Override
+	public void hide() {}
+	
+	@Override
+	public void pause() {}
+	
+	@Override
+	public void resume() {}
+	
 	@Override
 	public void dispose() {
 		batch.dispose();

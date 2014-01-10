@@ -15,6 +15,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+/***
+ * Class handeling multiplayer levels
+ * @author johan
+ *
+ */
 public class MultiPlayerLevel extends Level {
 
 	private float timer = 0f;
@@ -125,6 +130,7 @@ public class MultiPlayerLevel extends Level {
 	@Override
 	public void dispose() {
 		super.dispose();
+		inGameMenu.dispose();
 	}
 
 }

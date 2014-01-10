@@ -33,6 +33,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * Class that handles the player, also contains a nested class for gamepads and a touchpad for android/ios
+ * @author johan
+ *
+ */
 public class Player extends PhysicalEntity {
 	
 	private boolean isReversedSteering;
@@ -66,6 +71,17 @@ public class Player extends PhysicalEntity {
 	
 	private boolean exhaustSoundPlaying;
 	
+	/**
+	 * Creates a new player instance
+	 * @param xPos the x position of the player
+	 * @param yPos the y position of the player
+	 * @param texturePath the path to the texture used for the sprite
+	 * @param world the box2D world this player will live in
+	 * @param bodyWidth the width of the player
+	 * @param bodyHeight the height of the player 
+	 * @param PLAYER_NUM the number of the player (1 or 2)
+	 * @param gameMode the current game mode
+	 */
 	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight, final int PLAYER_NUM, GameMode gameMode) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
 		this.gameMode = gameMode;
@@ -89,64 +105,126 @@ public class Player extends PhysicalEntity {
 	}
 
 	// PROPERTIES -----------------------------------------------------------------------------------------
+	/**
+	 * get the number associated with the player
+	 * @return the number associated with the player
+	 */
 	public int getPlayerNum() {
 		return this.PLAYER_NUM;
 	}
 	
+	/**
+	 * Get the score the player has
+	 * @return the score of the player
+	 */
 	public int getScore() {
 		return this.score;
 	}
 	
+	/**
+	 * Returns the exhaust particle emitter
+	 * @return the exhaust particle emitter
+	 */
 	public ParticleEmitter getExhaust() {
 		return exhaust;
 	}
 	
+	/**
+	 * Set reversed steering
+	 * @param isReversedSteering <b>true</b> to set steering to reversed
+	 */
 	public void setReversedSteering(boolean isReversedSteering) {
 		this.isReversedSteering = isReversedSteering;
 	}
 	
+	/**
+	 * Set the speed of the bullets
+	 * @param bulletSpeed the speed of the bullets
+	 */
 	public void setBulletSpeed(float bulletSpeed) {
 		this.bulletSpeed = bulletSpeed;
 	}
 	
+	/**
+	 * Set the bullet movement to reversed of not
+	 * @param isBulletMovementReversed <b>true</b> to set bullet movement to reversed
+	 */
 	public void setBulletMovementReversed(boolean isBulletMovementReversed) {
 		this.isBulletMovementReversed = isBulletMovementReversed;
 	}
 	
+	/**
+	 * Get the bullets of the player
+	 * @return the bullets of the player
+	 */
 	public Array<Bullet> getBullets() {
 		return bullets;
 	}
 	
+	/**
+	 * Set the speed of the player
+	 * @param speed the speed of the player
+	 */
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 	
+	/**
+	 * Set the movement vector of the player
+	 * @param x the movement on the x axis
+	 * @param y the movement on the y axis
+	 */
 	public void setMovement(float x, float y) {
 		this.movement.set(x, y);
 	}
 	
+	/**
+	 * Set the bullets to be big or not
+	 * @param isBigBullets <b>true</b> to set the bullets to big
+	 */
 	public void setBigBullets(boolean isBigBullets) {
 		this.isBigBullets = isBigBullets;
 	}
 	
+	/**
+	 * Check if player has crashed
+	 * @return <b>true</b> if the player has crashed
+	 */
 	public boolean isCrashed() {
 		return crashed;
 	}
 	
+	/**
+	 * Get the explosion particle emitter
+	 * @return the explosion particle emitter
+	 */
 	public ParticleEmitter getExplosion() {
 		return explosion;
 	}
 	
+	/**
+	 * Get the gamepad for the player
+	 * @return the gamepad for the player
+	 */
 	public GamePad getGamePad() {
 		return gamePad;
 	}
 	
+	/**
+	 * Get the touchpad stage for the player
+	 * @return the touchpad stage for the player
+	 */
 	public Stage getTouchPadStage() {
 		return touchPadStage;
 	}
 	
 	// ---------------------------------------------------------------------------------------------------
 	
+	/**
+	 * When player dies this should be called. Stops the players sound,
+	 * resets position of the player and creates an explosion particle effect
+	 * @param spawnPoint the spawnpoint on which the player will be transfered to
+	 */
 	public void die(Vector2 spawnPoint) {
 		crashed = true;
 		explosion.setPosition(getPosition().x, getPosition().y);
@@ -157,6 +235,12 @@ public class Player extends PhysicalEntity {
 		setPosition(spawnPoint.x, spawnPoint.y + 1);
 	}
 	
+	/**
+	 * Handles collision with walls and opposing players bullets.
+	 * @param hardBlocks the walls
+	 * @param spawnPoint the spawnpoint on which this player will be transfered
+	 * @param opponent the opposing player
+	 */
 	public void checkForCollision(Array<Rectangle> hardBlocks, Vector2 spawnPoint, Player opponent) {
 		for(Rectangle rect : hardBlocks) {
 			if(bounds.overlaps(rect)) {
@@ -178,6 +262,8 @@ public class Player extends PhysicalEntity {
 			for(Bullet bullet : bullets) {
 				if(bullet.getBounds().overlaps(opponent.getBounds())) {
 					opponent.die(spawnPoint);
+					bullet.dispose();
+					bullets.removeValue(bullet, true);
 					score++;
 				}
 			}
@@ -278,6 +364,10 @@ public class Player extends PhysicalEntity {
 		}
 	}
 	
+	/**
+	 * Creates a new bullet and sets it moving in the direction the player is pointing.
+	 * Also plays a bullet sound
+	 */
 	public void shoot() {
 		if(ableToShoot) {
 			shootSound.play();
@@ -345,6 +435,7 @@ public class Player extends PhysicalEntity {
 		}
 	}
 	
+	@Override
 	public void dispose() {
 		super.dispose();
 		touchPadStage.dispose();
@@ -353,10 +444,15 @@ public class Player extends PhysicalEntity {
 		shootSound.dispose();
 	}
 	
+	/**
+	 * Nested class for getting a gamepad controller to the player
+	 * @author johan
+	 *
+	 */
 	public class GamePad extends ControllerAdapter {
-		final int A = 0;
-		final int X = 2;
-		final int START = 7;
+		private final byte A = 0;
+		private final byte X = 2;
+		private final byte START = 7;
 		
 		@Override
 		public boolean povMoved(Controller controller, int povIndex, PovDirection value) {

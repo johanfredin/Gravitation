@@ -14,25 +14,25 @@ public interface Entity extends Disposable {
 	
 	/**
 	 * Renders to the screen
-	 * @param batch - The SpriteBatch used for rendering
+	 * @param batch The SpriteBatch used for rendering
 	 */
 	void render(SpriteBatch batch);
 	
 	/**
 	 * Updates entity
-	 * @param delta - the time interval
+	 * @param delta the time interval
 	 */
 	void tick(float delta);
 	
 	/**
 	 * Get the position of the entity
-	 * @return - The position of the entity
+	 * @return The position of the entity
 	 */
 	Vector2 getPosition();
 	
 	/**
 	 * Get the boundaries of the entity, used for collision control
-	 * @return - The boundaries of the entity
+	 * @return The boundaries of the entity
 	 */
 	Rectangle getBounds();
 	

@@ -1,6 +1,10 @@
 package se.fredin.gravitation.utils;
 
-
+/**
+ * Contains the paths to the assets used in the game
+ * @author johan
+ *
+ */
 public class Paths {
 
 	public static final String SHIP_TEXTUREPATH = "data/objects/shipS1.png";

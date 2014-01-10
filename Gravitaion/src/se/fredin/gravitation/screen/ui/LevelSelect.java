@@ -14,6 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+/**
+ * UI screen for handling level selection as well as match settings be this a multiplayer game
+ * @author johan
+ *
+ */
 public class LevelSelect extends MenuBase {
 
 	private ShapeRenderer shapeRenderer;
@@ -37,24 +42,29 @@ public class LevelSelect extends MenuBase {
 	private Image longTimeImage;
 	private Image unlimitedTimeImage;
 	
-	private final int LEVEL_1 = 1;
-	private final int LEVEL_2 = 2; 
-	private final int LEVEL_3 = 3; 
-	private final int RETURN_TO_MENU = 4;
-	private final int SHORT_TIME = 5;
-	private final int MEDIUM_TIME = 6;
-	private final int LONG_TIME = 7;
-	private final int UNLIMITED_TIME = 8;
-	private final int LOW_SCORE = 9;
-	private final int MEDIUM_SCORE = 10;
-	private final int HIGH_SCORE = 11;
-	private final int UNLIMITED_SCORE = 12;
+	private final byte LEVEL_1 = 1;
+	private final byte LEVEL_2 = 2; 
+	private final byte LEVEL_3 = 3; 
+	private final byte RETURN_TO_MENU = 4;
+	private final byte SHORT_TIME = 5;
+	private final byte MEDIUM_TIME = 6;
+	private final byte LONG_TIME = 7;
+	private final byte UNLIMITED_TIME = 8;
+	private final byte LOW_SCORE = 9;
+	private final byte MEDIUM_SCORE = 10;
+	private final byte HIGH_SCORE = 11;
+	private final byte UNLIMITED_SCORE = 12;
 	
 	private boolean level1ImagePressed;
 	private boolean level2ImagePressed;
 	private boolean level3ImagePressed;
 	private boolean returnToMenuPressed;
 
+	/**
+	 * Creates a new LevelSelect instance with a game for switching screens and the specified game mode
+	 * @param game the game instance responsible for switching screens
+	 * @param gameMode the selected game mode, multiplayer or single player
+	 */
 	public LevelSelect(Game game, GameMode gameMode) {
 		super(game);
 		this.gameMode = gameMode;
@@ -163,7 +173,7 @@ public class LevelSelect extends MenuBase {
 	}
 	
 	@Override
-	public void setListener(Actor actor, final int ACTION) {
+	public void setListener(Actor actor, final byte ACTION) {
 		actor.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

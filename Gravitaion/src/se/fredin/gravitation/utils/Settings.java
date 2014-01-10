@@ -1,5 +1,10 @@
 package se.fredin.gravitation.utils;
 
+/**
+ * Handless the game settings
+ * @author johan
+ *
+ */
 public class Settings {
 	
 	// finals

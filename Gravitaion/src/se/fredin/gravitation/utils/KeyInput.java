@@ -7,11 +7,22 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ * Input handler class for keyboard
+ * @author johan
+ *
+ */
 public class KeyInput extends InputAdapter {
 
 	private Player player1, player2;
 	private Sound pauseSound;
 	
+	/**
+	 * Creates a new instance of the KeyInput
+	 * @param player1 the first player to give keyboard input to
+	 * @param player2 the second player to give keyboard input to, 
+	 * if this is a single player game, set this to <b>null</b>
+	 */
 	public KeyInput(Player player1, Player player2) {
 		this.player1 = player1;
 		this.player2 = player2;

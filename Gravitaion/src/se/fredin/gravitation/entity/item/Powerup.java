@@ -32,14 +32,14 @@ public abstract class Powerup extends AbstractEntity {
 	
 	/**
 	 * Creates a new Powerup on a random map position. Gives it a specified width and height and assigns a sprite to it.
-	 * @param spawnPoints - The different spawnpoints that this powerup will get a random position from
-	 * @param width - the width of the powerup
-	 * @param height - the height of the powerup
-	 * @param texturePath - the location of the texture that the Sprite will use
-	 * @param player1 - the first Player this powerup will interact with
-	 * @param player2 - the second Player this powerup will interact with
-	 * @param powerupExplanationPath - the location of the text image that will popup once a player has interacted with the powerup
-	 * @param isGoodPowerup - <b>true</b> if this powerup will affect the player in a good way
+	 * @param spawnPoints The different spawnpoints that this powerup will get a random position from
+	 * @param width the width of the powerup
+	 * @param height the height of the powerup
+	 * @param texturePath the location of the texture that the Sprite will use
+	 * @param player1 the first Player this powerup will interact with
+	 * @param player2 the second Player this powerup will interact with
+	 * @param powerupExplanationPath the location of the text image that will popup once a player has interacted with the powerup
+	 * @param isGoodPowerup <b>true</b> if this powerup will affect the player in a good way
 	 */
 	public Powerup(Array<Rectangle> spawnPoints, float width, float height, String texturePath, Player player1, Player player2, String powerupExplanationPath, boolean isGoodPowerup) {
 		super(spawnPoints, width, height, texturePath);
@@ -57,13 +57,13 @@ public abstract class Powerup extends AbstractEntity {
 	
 	/**
 	 * Will decide how to affect the player once interaction has taken place
-	 * @param player - the player to affect
+	 * @param player the player to affect
 	 */
 	public abstract void affectEntity(Player player);
 	
 	/**
 	 * Will remove the effect from the player.
-	 * @param player - the player to remove this powerup from
+	 * @param player the player to remove this powerup from
 	 */
 	public abstract void removePower(Player player);
 	

@@ -7,6 +7,11 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+/**
+ * Class used for a single player level
+ * @author johan
+ *
+ */
 public class SinglePlayerDialogue extends Dialogue {
 	
 	private Image levelCompleteImage;
@@ -14,7 +19,7 @@ public class SinglePlayerDialogue extends Dialogue {
 	public SinglePlayerDialogue(Game game, Level level, OrthographicCamera camera) {
 		super(game, level, GameMode.SINGLE_PLAYER, camera);// 100, 10
 		levelCompleteImage = uiHelper.getImage("level complete", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
-		uiHelper.flashTitle(levelCompleteImage);
+		uiHelper.flashActor(levelCompleteImage);
 		addToStageAndSetPositions(gameMode, dialogImage.getX() + (dialogImage.getWidth() / 2), dialogImage.getY() + dialogImage.getHeight());
 	}
 

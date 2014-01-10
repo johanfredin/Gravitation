@@ -11,18 +11,21 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+/**
+ * The main UI handler for the menus that take up the whole screen.
+ * @author johan
+ *
+ */
 public abstract class MenuBase extends BaseScreen {
 
 	protected Image whiteCanvasImage;
 	protected Stage stage;
 	protected UiHelper uiHelper;
 	
-	public MenuBase() {
-		super();
-		this.stage = new Stage(camera.viewportWidth, camera.viewportHeight, true);
-		this.uiHelper = new UiHelper(stage, Paths.MENU_ITEMS);
-	}
-	
+	/**
+	 * Creates a new MenuBase instance with a stage and a UiHelper and gives input control to the stage
+	 * @param game the game instance used for switching screens
+	 */
 	public MenuBase(Game game) {
 		super(game);
 		this.stage = new Stage(camera.viewportWidth, camera.viewportHeight, true);
@@ -31,7 +34,12 @@ public abstract class MenuBase extends BaseScreen {
 		Gdx.input.setInputProcessor(stage);
 	}
 	
-	public abstract void setListener(Actor actor, final int ACTION);
+	/**
+	 * Sets up a listener to passed in actor and depending on the action the actor will behave differently
+	 * @param actor the Actor to give a listener to
+	 * @param ACTION the action you wish to happen once this actor has been touched
+	 */
+	protected abstract void setListener(Actor actor, final byte ACTION);
 
 	@Override
 	public void render(float delta) {
@@ -39,26 +47,19 @@ public abstract class MenuBase extends BaseScreen {
 		stage.draw();
 	}
 	
+	/**
+	 * Updates the stage
+	 * @param delta the time interval
+	 */
 	public void tick(float delta) {
 		stage.act(delta);
 	}
 
 	@Override
-	public void show() {}
-
-	@Override
-	public void hide() {}
-	
-	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
 		stage.setViewport(camera.viewportWidth, camera.viewportHeight, false);
 	}
-	
-	public void pause(){}
-
-	@Override
-	public void resume() {}
 	
 	@Override
 	public void dispose() {

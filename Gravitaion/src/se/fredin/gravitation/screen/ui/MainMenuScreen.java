@@ -13,6 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+/**
+ * Class that is responsible for the main menu
+ * @author johan
+ *
+ */
 public class MainMenuScreen extends MenuBase {
 	
 	private Button singlePlayerButton, multiPlayerButton, quitButton;
@@ -20,7 +25,9 @@ public class MainMenuScreen extends MenuBase {
 	private boolean multiPlayerButtonClicked;
 	private boolean quitButtonClicked;
 	private Image titleImage;
-	private final byte SINGLE_PLAYER = 1, MULTIPLAYER = 2, QUIT = 3;		// button actions
+	private final byte SINGLE_PLAYER = 1; 
+	private final byte MULTIPLAYER = 2; 
+	private final byte QUIT = 3;		
 	
 	public MainMenuScreen(Game game) {
 		super(game);
@@ -97,7 +104,7 @@ public class MainMenuScreen extends MenuBase {
 	}
 	
 	@Override
-	public void setListener(Actor actor, final int ACTION) {
+	public void setListener(Actor actor, final byte ACTION) {
 		stage.addActor(actor);		// add button to the scene as an actor
 		actor.addListener(new InputListener() {
 			@Override

@@ -8,11 +8,22 @@ import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Game;
 
+/**
+ * Screen that handles rendering and updating the levels. No UI screens use the game screen class
+ * @author johan
+ *
+ */
 public class GameScreen extends BaseScreen {
 	
 	private Level level;
 	private GameMode gameMode;
 	
+	/**
+	 * Creates a new game screen and starts a new level, multiplayer or single player
+	 * @param game the game instance responsible for switching screens
+	 * @param gameMode the current game mode, multiplayer or single playeer
+	 * @param level_index the current index of the level
+	 */
 	public GameScreen(Game game, GameMode gameMode, int level_index) {
 		super(game);
 		Settings.currentLevel = level_index;
@@ -58,4 +69,9 @@ public class GameScreen extends BaseScreen {
 	@Override
 	public void resume() {}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		level.dispose();
+	}
 }

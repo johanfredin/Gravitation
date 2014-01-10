@@ -21,13 +21,13 @@ public class Bullet extends AbstractEntity {
 	
 	/**
 	 * Creates a new bullet and sets it moving immediately.
-	 * @param x - the x position of the bullet.
-	 * @param y - the y position of the bullet.
-	 * @param width - the width of the bullet.
-	 * @param height - the height of the bullet.
-	 * @param speed - the speed of the bullet.
-	 * @param body - the box2D object that fired the bullet.
-	 * @param isMovementReversed - sets the bullet to go forward or backward.
+	 * @param x the x position of the bullet.
+	 * @param y the y position of the bullet.
+	 * @param width the width of the bullet.
+	 * @param height the height of the bullet.
+	 * @param speed the speed of the bullet.
+	 * @param body the box2D object that fired the bullet.
+	 * @param isMovementReversed sets the bullet to go forward or backward.
 	 */
 	public Bullet(float x, float y, float width, float height, float speed, Body body, boolean isMovementReversed) {
 		super(x, y, width, height, Gdx.files.internal(Paths.BULLET_TEXTUREPATH).path());
@@ -58,7 +58,7 @@ public class Bullet extends AbstractEntity {
 	
 	/**
 	 * Sets the speed of the bullet
-	 * @param speed - the speed of the bullet.
+	 * @param speed the speed of the bullet.
 	 */
 	public void setSpeed(float speed) {
 		this.speed = speed;
@@ -66,7 +66,7 @@ public class Bullet extends AbstractEntity {
 	
 	/**
 	 * Get the speed of the bullet
-	 * @return - the speed of the bullet
+	 * @return the speed of the bullet
 	 */
 	public float getSpeed() {
 		return speed;
@@ -74,8 +74,8 @@ public class Bullet extends AbstractEntity {
 
 	/**
 	 * Set the movement of the bullet.
-	 * @param xSpeed - the movement on the x-axis of the bullet
-	 * @param ySpeed - the movement on the y-axis of the bullet
+	 * @param xSpeed the movement on the x-axis of the bullet
+	 * @param ySpeed the movement on the y-axis of the bullet
 	 */
 	public void setMovement(float xSpeed, float ySpeed) {
 		this.movement.set(xSpeed, ySpeed);
@@ -83,7 +83,7 @@ public class Bullet extends AbstractEntity {
 	
 	/**
 	 * Get the movement of the bullet
-	 * @return - the movement of the bullet
+	 * @return the movement of the bullet
 	 */
 	public Vector2 getMovement() {
 		return movement;
@@ -99,7 +99,7 @@ public class Bullet extends AbstractEntity {
 	
 	/**
 	 * Set weather or not the movement of the bullet should be reversed
-	 * @param isMovementReversed - <b>true</b> will make movement reversed
+	 * @param isMovementReversed <b>true</b> will make movement reversed
 	 */
 	public void setMovementReversed(boolean isMovementReversed) {
 		this.isMovementReversed = isMovementReversed;

@@ -24,11 +24,11 @@ public abstract class AbstractEntity implements Entity {
 	/**
 	 * Creates a new entity with given width and height at the specified position.
 	 * Gives it a sprite with the given texture and creates a bounding box around it.
-	 * @param x - the x position of the entity
-	 * @param y - the y position of the entity
-	 * @param width - the width of the entity
-	 * @param height - the height of the entity
-	 * @param texturePath - the path to the given texture used for the sprite
+	 * @param x the x position of the entity
+	 * @param y the y position of the entity
+	 * @param width the width of the entity
+	 * @param height the height of the entity
+	 * @param texturePath the path to the given texture used for the sprite
 	 */
 	public AbstractEntity(float x, float y, float width, float height, String texturePath) {
 		this.position = new Vector2(x, y);
@@ -41,10 +41,10 @@ public abstract class AbstractEntity implements Entity {
 	 * Creates a new entity with given width and height.
 	 * The position of the entity will be a random value from the array passed in.
 	 * Gives it a sprite with the given texture and creates a bounding box around it.
-	 * @param spawnPoints - The array with positions that the entity will randomly select from.
-	 * @param width - the width of the entity.
-	 * @param height - the height of the entity.
-	 * @param texturePath - the path to the given texture used for the sprite.
+	 * @param spawnPoints The array with positions that the entity will randomly select from.
+	 * @param width the width of the entity.
+	 * @param height the height of the entity.
+	 * @param texturePath the path to the given texture used for the sprite.
 	 */
 	public AbstractEntity(Array<Rectangle> spawnPoints, float width, float height, String texturePath) {
 		this.spawnPoints = spawnPoints;
@@ -74,8 +74,8 @@ public abstract class AbstractEntity implements Entity {
 	
 	/**
 	 * Sets the position of the entity
-	 * @param x - the x position of the entity
-	 * @param y - the y position of the entity
+	 * @param x the x position of the entity
+	 * @param y the y position of the entity
 	 */
 	public void setPosition(float x, float y) {
 		this.position.set(x, y);

@@ -21,9 +21,9 @@ public class StationHandler implements Disposable {
 	
 	/**
 	 * Creates the stations
-	 * @param map - the TiledMap to give the stations to
-	 * @param player - the player to interact with the powerups
-	 * @param unitScale - the unitscale of the map
+	 * @param map the TiledMap to give the stations to
+	 * @param player the player to interact with the powerups
+	 * @param unitScale the unitscale of the map
 	 */
 	public StationHandler(TiledMap map, Player player, float unitScale) {
 		this.stations = getWorldAdaptedStationStations(map, unitScale, player);
@@ -48,8 +48,7 @@ public class StationHandler implements Disposable {
 	
 	/**
 	 * Updates the stations. Lights up the next station once the player has passed one.
-	 * 
-	 * @param delta
+	 * @param delta the time interval
 	 */
 	public void tick(float delta) {
 		for(int i = 0; i < stations.size; i++) {
@@ -68,7 +67,7 @@ public class StationHandler implements Disposable {
 
 	/**
 	 * Draws the stations to the screen
-	 * @param batch - the SpriteBatch responsible for drawing to the screen.
+	 * @param batch the SpriteBatch responsible for drawing to the screen.
 	 */
 	public void render(SpriteBatch batch) {
 		for(Station station : stations) {
@@ -78,7 +77,7 @@ public class StationHandler implements Disposable {
 	
 	/**
 	 * Check if the last station has been passed
-	 * @return - <b>true</b> if the last station has been passed
+	 * @return <b>true</b> if the last station has been passed
 	 */
 	public boolean isLastStationPassed() {
 		return lastStationPassed;

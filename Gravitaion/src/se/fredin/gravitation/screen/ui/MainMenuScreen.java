@@ -52,13 +52,13 @@ public class MainMenuScreen extends MenuBase {
 		
 		whiteCanvasImage.act(delta);
 		
-		if(singlePlayerButtonClicked && whiteCanvasImage.getActions().size <= 0) {
+		if(singlePlayerButtonClicked && isFinishedActing(whiteCanvasImage)) {
 			stage.clear();
 			game.setScreen(new LevelSelect(game, GameMode.SINGLE_PLAYER));
-		} else if(multiPlayerButtonClicked && whiteCanvasImage.getActions().size <= 0 && !Gravitation.isMobileDevice()) {
+		} else if(multiPlayerButtonClicked && isFinishedActing(whiteCanvasImage)) {
 			stage.clear();
 			game.setScreen(new LevelSelect(game, GameMode.MULTI_PLAYER));
-		} else if(quitButtonClicked) {
+		} else if(quitButtonClicked && isFinishedActing(whiteCanvasImage)) {
 			Gdx.app.exit();
 		}
 
@@ -77,7 +77,7 @@ public class MainMenuScreen extends MenuBase {
 		stage.addActor(titleImage);
 		
 		// add fade in effect
-		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(0.5f), Actions.fadeOut(4f)));	
+		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(0.5f), Actions.fadeOut(2f)));	
 	}
 	
 	private void setPositionsAndSizes(float width, float height) {

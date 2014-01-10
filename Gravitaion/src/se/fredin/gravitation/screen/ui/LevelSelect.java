@@ -5,6 +5,9 @@ import se.fredin.gravitation.utils.GameMode;
 import se.fredin.gravitation.utils.Settings;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -13,8 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class LevelSelect extends MenuBase {
 
-	private GameMode gameMode;
+	private ShapeRenderer shapeRenderer;
+	private Rectangle scoreSelectionBounds;
+	private Rectangle timeSelectionBounds;
 	
+	private GameMode gameMode;
 	private Image levelSelectImage;
 	private Image level1Image; 
 	private Image level2Image; 
@@ -22,13 +28,13 @@ public class LevelSelect extends MenuBase {
 	private Image returnToMenuImage;
 	private Image timeLimitImage;
 	private Image scoreImage;
-	private Image fiveImage;
-	private Image tenImage;
-	private Image twentyImage;
-	private Image unlimitedImage;
-	private Image fiveTimeImage;
-	private Image tenTimeImage;
-	private Image twentTimeyImage;
+	private Image lowScoreImage;
+	private Image mediumScoreImage;
+	private Image highScoreImage;
+	private Image unlimitedScoreImage;
+	private Image shortTimeImage;
+	private Image mediumTimeImage;
+	private Image longTimeImage;
 	private Image unlimitedTimeImage;
 	
 	private final int LEVEL_1 = 1;
@@ -47,23 +53,30 @@ public class LevelSelect extends MenuBase {
 	private boolean level1ImagePressed;
 	private boolean level2ImagePressed;
 	private boolean level3ImagePressed;
+	private boolean returnToMenuPressed;
 
 	public LevelSelect(Game game, GameMode gameMode) {
 		super(game);
 		this.gameMode = gameMode;
 		setupImages();
-
+		
+		if(gameMode == GameMode.MULTI_PLAYER) {
+			shapeRenderer = new ShapeRenderer();
+			scoreSelectionBounds = new Rectangle(mediumScoreImage.getX(), mediumScoreImage.getY(), mediumScoreImage.getWidth(), mediumScoreImage.getHeight());
+			timeSelectionBounds = new Rectangle(mediumTimeImage.getX(), mediumTimeImage.getY(), mediumTimeImage.getWidth(), mediumTimeImage.getHeight());
+		}
+		
 		setListener(level1Image, LEVEL_1);
 		setListener(level2Image, LEVEL_2);
 		setListener(level3Image, LEVEL_3);
 		if(gameMode == GameMode.MULTI_PLAYER) {
-			setListener(fiveImage, LOW_SCORE);
-			setListener(tenImage, MEDIUM_SCORE);
-			setListener(twentyImage, HIGH_SCORE);
-			setListener(unlimitedImage, UNLIMITED_SCORE);
-			setListener(fiveTimeImage, SHORT_TIME);
-			setListener(tenTimeImage, MEDIUM_TIME);
-			setListener(twentTimeyImage, LONG_TIME);
+			setListener(lowScoreImage, LOW_SCORE);
+			setListener(mediumScoreImage, MEDIUM_SCORE);
+			setListener(highScoreImage, HIGH_SCORE);
+			setListener(unlimitedScoreImage, UNLIMITED_SCORE);
+			setListener(shortTimeImage, SHORT_TIME);
+			setListener(mediumTimeImage, MEDIUM_TIME);
+			setListener(longTimeImage, LONG_TIME);
 			setListener(unlimitedTimeImage, UNLIMITED_TIME);
 		}
 		setListener(returnToMenuImage, RETURN_TO_MENU);
@@ -97,61 +110,61 @@ public class LevelSelect extends MenuBase {
 		stage.addActor(returnToMenuImage);
 		
 		if(gameMode == GameMode.MULTI_PLAYER) {
-			scoreImage = new Image(skin.getDrawable("score"));
+			this.scoreImage = new Image(skin.getDrawable("score"));
 			scoreImage.setSize(75, 7.5f);
 			scoreImage.setPosition(5, level3Image.getY() - scoreImage.getHeight() - 5);
 			stage.addActor(scoreImage);
 			
-			timeLimitImage = new Image(skin.getDrawable("time limit"));
+			this.timeLimitImage = new Image(skin.getDrawable("time limit"));
 			timeLimitImage.setSize(75, 7.5f);
 			timeLimitImage.setPosition(17, scoreImage.getY() - scoreImage.getHeight() - 2);
 			stage.addActor(timeLimitImage);
 			
-			fiveImage = new Image(skin.getDrawable("5"));
-			fiveImage.setSize(7.5f, 7.5f);
-			fiveImage.setPosition(scoreImage.getX() + timeLimitImage.getWidth() + 15, scoreImage.getY());
-			stage.addActor(fiveImage);
+			this.lowScoreImage = new Image(skin.getDrawable("5"));
+			lowScoreImage.setSize(7.5f, 7.5f);
+			lowScoreImage.setPosition(scoreImage.getX() + timeLimitImage.getWidth() + 15, scoreImage.getY());
+			stage.addActor(lowScoreImage);
 			
-			tenImage = new Image(skin.getDrawable("10"));
-			tenImage.setSize(15, 7.5f);
-			tenImage.setPosition(fiveImage.getX() + fiveImage.getWidth() + 5, scoreImage.getY());
-			stage.addActor(tenImage);
+			this.mediumScoreImage = new Image(skin.getDrawable("10"));
+			mediumScoreImage.setSize(15, 7.5f);
+			mediumScoreImage.setPosition(lowScoreImage.getX() + lowScoreImage.getWidth() + 5, scoreImage.getY());
+			stage.addActor(mediumScoreImage);
 			
-			twentyImage = new Image(skin.getDrawable("20"));
-			twentyImage.setSize(15, 7.5f);
-			twentyImage.setPosition(tenImage.getX() + tenImage.getWidth() + 5, scoreImage.getY());
-			stage.addActor(twentyImage);
+			this.highScoreImage = new Image(skin.getDrawable("20"));
+			highScoreImage.setSize(15, 7.5f);
+			highScoreImage.setPosition(mediumScoreImage.getX() + mediumScoreImage.getWidth() + 5, scoreImage.getY());
+			stage.addActor(highScoreImage);
 			
-			unlimitedImage = new Image(skin.getDrawable("unlimited"));
-			unlimitedImage.setSize(75, 7.5f);
-			unlimitedImage.setPosition(twentyImage.getX() + twentyImage.getWidth() + 5, scoreImage.getY());
-			stage.addActor(unlimitedImage);
+			this.unlimitedScoreImage = new Image(skin.getDrawable("unlimited"));
+			unlimitedScoreImage.setSize(75, 7.5f);
+			unlimitedScoreImage.setPosition(highScoreImage.getX() + highScoreImage.getWidth() + 5, scoreImage.getY());
+			stage.addActor(unlimitedScoreImage);
 			
-			fiveTimeImage = new Image(skin.getDrawable("5"));
-			fiveTimeImage.setSize(7.5f, 7.5f);
-			fiveTimeImage.setPosition(scoreImage.getX() + timeLimitImage.getWidth() + 15, timeLimitImage.getY());
-			stage.addActor(fiveTimeImage);
+			this.shortTimeImage = new Image(skin.getDrawable("5"));
+			shortTimeImage.setSize(7.5f, 7.5f);
+			shortTimeImage.setPosition(scoreImage.getX() + timeLimitImage.getWidth() + 15, timeLimitImage.getY());
+			stage.addActor(shortTimeImage);
 			
-			tenTimeImage = new Image(skin.getDrawable("10"));
-			tenTimeImage.setSize(15, 7.5f);
-			tenTimeImage.setPosition(fiveTimeImage.getX() + fiveTimeImage.getWidth() + 5, timeLimitImage.getY());
-			stage.addActor(tenTimeImage);
+			this.mediumTimeImage = new Image(skin.getDrawable("10"));
+			mediumTimeImage.setSize(15, 7.5f);
+			mediumTimeImage.setPosition(shortTimeImage.getX() + shortTimeImage.getWidth() + 5, timeLimitImage.getY());
+			stage.addActor(mediumTimeImage);
 			
-			twentTimeyImage = new Image(skin.getDrawable("20"));
-			twentTimeyImage.setSize(15, 7.5f);
-			twentTimeyImage.setPosition(tenTimeImage.getX() + tenTimeImage.getWidth() + 5, timeLimitImage.getY());
-			stage.addActor(twentTimeyImage);
+			this.longTimeImage = new Image(skin.getDrawable("20"));
+			longTimeImage.setSize(15, 7.5f);
+			longTimeImage.setPosition(mediumTimeImage.getX() + mediumTimeImage.getWidth() + 5, timeLimitImage.getY());
+			stage.addActor(longTimeImage);
 			
-			unlimitedTimeImage = new Image(skin.getDrawable("unlimited"));
+			this.unlimitedTimeImage = new Image(skin.getDrawable("unlimited"));
 			unlimitedTimeImage.setSize(75f, 7.5f);
-			unlimitedTimeImage.setPosition(twentTimeyImage.getX() + twentTimeyImage.getWidth() + 5, timeLimitImage.getY());
+			unlimitedTimeImage.setPosition(longTimeImage.getX() + longTimeImage.getWidth() + 5, timeLimitImage.getY());
 			stage.addActor(unlimitedTimeImage);
 		}
 		
 		whiteCanvasImage.setBounds(0, 0, camera.viewportWidth, camera.viewportHeight);
 		
 		// add fade in effect
-		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(0.5f), Actions.fadeOut(4f)));	
+		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(0.5f), Actions.fadeOut(2f)));	
 	}
 	
 	@Override
@@ -159,10 +172,6 @@ public class LevelSelect extends MenuBase {
 		actor.addListener(new InputListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				// Stop fading in if it hasn't stopped already
-				if(whiteCanvasImage.getActions().size > 0) {
-					whiteCanvasImage.getActions().clear();
-				}
 				buttonPressedSound.play();
 				switch(ACTION) {
 				case LEVEL_1:	// Start the game!!
@@ -179,31 +188,47 @@ public class LevelSelect extends MenuBase {
 					return true;
 				case RETURN_TO_MENU:
 					animateActor(returnToMenuImage, 0.1f);
-					game.setScreen(new MainMenuScreen(game));
+					returnToMenuPressed = true;
 					return true;
 				case LOW_SCORE:
 					Settings.defaultScoreLimit = Settings.LOW_SCORE_LIMIT;
+					scoreSelectionBounds.set(lowScoreImage.getX(), lowScoreImage.getY(), lowScoreImage.getWidth(), lowScoreImage.getHeight());
+					animateActor(lowScoreImage, 0.1f);
 					return true;
 				case MEDIUM_SCORE:
 					Settings.defaultScoreLimit = Settings.MEDIUM_SCORE_LIMIT;
+					scoreSelectionBounds.set(mediumScoreImage.getX(), mediumScoreImage.getY(), mediumScoreImage.getWidth(), mediumScoreImage.getHeight());
+					animateActor(mediumScoreImage, 0.1f);
 					return true;
 				case HIGH_SCORE:
 					Settings.defaultScoreLimit = Settings.HIGH_SCORE_LIMIT;
+					scoreSelectionBounds.set(highScoreImage.getX(), highScoreImage.getY(), highScoreImage.getWidth(), highScoreImage.getHeight());
+					animateActor(highScoreImage, 0.1f);
 					return true;
 				case UNLIMITED_SCORE:
 					Settings.isUnlimitedcore = true;
+					scoreSelectionBounds.set(unlimitedScoreImage.getX(), unlimitedScoreImage.getY(), unlimitedScoreImage.getWidth(), unlimitedScoreImage.getHeight());
+					animateActor(unlimitedScoreImage, 0.1f);
 					return true;
 				case SHORT_TIME:
 					Settings.defaultTimeLimit = Settings.SHORT_TIME_LIMIT;
+					timeSelectionBounds.set(shortTimeImage.getX(), shortTimeImage.getY(), shortTimeImage.getWidth(), shortTimeImage.getHeight());
+					animateActor(shortTimeImage, 0.1f);
 					return true;
 				case MEDIUM_TIME:
 					Settings.defaultTimeLimit = Settings.MEDIUM_TIME_LIMIT;
+					timeSelectionBounds.set(mediumTimeImage.getX(), mediumTimeImage.getY(), mediumTimeImage.getWidth(), mediumTimeImage.getHeight());
+					animateActor(mediumTimeImage, 0.1f);
 					return true;
 				case LONG_TIME:
 					Settings.defaultTimeLimit = Settings.LONG_TIME_LIMIT;
+					timeSelectionBounds.set(longTimeImage.getX(), longTimeImage.getY(), longTimeImage.getWidth(), longTimeImage.getHeight());
+					animateActor(longTimeImage, 0.1f);
 					return true;
 				case UNLIMITED_TIME:
 					Settings.isUnlimitedTime = true;
+					timeSelectionBounds.set(unlimitedTimeImage.getX(), unlimitedTimeImage.getY(), unlimitedTimeImage.getWidth(), unlimitedTimeImage.getHeight());
+					animateActor(unlimitedTimeImage, 0.1f);
 					return true;
 				default:
 					return false;
@@ -220,6 +245,15 @@ public class LevelSelect extends MenuBase {
 		batch.begin();
 		whiteCanvasImage.draw(batch, 1);
 		batch.end();
+		
+		if(gameMode == GameMode.MULTI_PLAYER) {
+			shapeRenderer.setProjectionMatrix(camera.combined);
+			shapeRenderer.begin(ShapeType.Line);
+			shapeRenderer.rect(scoreSelectionBounds.x, scoreSelectionBounds.y, scoreSelectionBounds.width, scoreSelectionBounds.height);
+			shapeRenderer.rect(timeSelectionBounds.x, timeSelectionBounds.y, timeSelectionBounds.width, timeSelectionBounds.height);
+			shapeRenderer.end();
+		}
+		
 		tick(delta);
 	}
 	
@@ -229,21 +263,27 @@ public class LevelSelect extends MenuBase {
 		
 		whiteCanvasImage.act(delta);
 		
-		if(level1ImagePressed && whiteCanvasImage.getActions().size <= 0) {
+		if(level1ImagePressed && isFinishedActing(whiteCanvasImage)) {
 			stage.clear();
 			game.setScreen(new GameScreen(game, gameMode, 1));
-		} else if(level2ImagePressed && whiteCanvasImage.getActions().size <= 0) {
+		} else if(level2ImagePressed && isFinishedActing(whiteCanvasImage)) {
 			stage.clear();
 			game.setScreen(new GameScreen(game, gameMode, 2));
-		} else if(level3ImagePressed && whiteCanvasImage.getActions().size <= 0) {
+		} else if(level3ImagePressed && isFinishedActing(whiteCanvasImage)) {
 			stage.clear();
 			game.setScreen(new GameScreen(game, gameMode, 3));
+		} else if(returnToMenuPressed && isFinishedActing(returnToMenuImage)) {
+			stage.clear();
+			game.setScreen(new MainMenuScreen(game));
 		}
 	}
 	
 	@Override
 	public void dispose() {
 		super.dispose();
+		if(gameMode == GameMode.MULTI_PLAYER) {
+			shapeRenderer.dispose();
+		}
 	}
 
 }

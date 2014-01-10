@@ -75,7 +75,7 @@ public abstract class MenuBase extends BaseScreen {
 	 */
 	protected void animateActorAndFadeOutScreen(Actor actorToAnimate, Actor actorToFadeOut, float buttonFlashDuration, float fadeInDuration) {
 		actorToAnimate.addAction(Actions.repeat(3, Actions.sequence(Actions.fadeOut(buttonFlashDuration), Actions.after(Actions.fadeIn(buttonFlashDuration)))));
-		actorToFadeOut.addAction(Actions.sequence(Actions.delay(buttonFlashDuration * 6), Actions.fadeIn(fadeInDuration)));
+		actorToFadeOut.addAction(Actions.sequence(Actions.delay(buttonFlashDuration * 3), Actions.fadeIn(fadeInDuration)));
 	}
 	
 	protected void animateActor(Actor actor, float buttonFlashDuration) {

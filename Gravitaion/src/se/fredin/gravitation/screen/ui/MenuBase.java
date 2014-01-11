@@ -58,7 +58,7 @@ public abstract class MenuBase extends BaseScreen {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		stage.setViewport(camera.viewportWidth, camera.viewportHeight, false);
+		stage.setViewport(camera.viewportWidth, camera.viewportHeight);
 	}
 	
 	@Override

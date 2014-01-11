@@ -14,13 +14,7 @@ public class Paths {
 	public static final String EXHAUST_PARTICLE_PROPERTIES_PATH = "data/effects/exhaust.p";
 	public static final String EXPLOSION_PARTICLE_PROPERTIES_PATH = "data/effects/explosion.p";
 	public static final String LANDING_PAD_TEXTUREPATH = "data/tileset/landing.png";
-	public static final String SLOW_POWERUP_TEXTURE = "data/objects/slowerplayer_powerup.png";
-	public static final String FAST_POWERUP_TEXTURE = "data/objects/fasterplayer_powerup.png";
-	public static final String FASTER_BULLET_TEXTURE = "data/objects/fasterbullet_powerup.png";
-	public static final String SLOWER_BULLET_TEXTURE = "data/objects/slowerbullet_powerup.png";
-	public static final String REVERSE_BULLET_TEXTURE = "data/objects/reversebullet_powerup.png";
-	public static final String BIG_BULLET_TEXTURE = "data/objects/bigbullet_powerup.png";
-	public static final String REVERSED_STEARING_TEXTURE = "data/objects/reversedsteering_powerup.png";
+	public static final String POWERUP_IMAGE_PATH = "data/skins/powerup_image.png";
 	public static final String MENU_ITEMS = "data/skins/menuitems.pack";
 	public static final String EXHAUST_SOUND_EFFECT = "data/sound/exhaust.wav";
 	public static final String MENU_SELECT_SOUND_EFFECT = "data/sound/menuselection.wav";

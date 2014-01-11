@@ -47,7 +47,7 @@ public abstract class Dialogue implements Disposable {
 	public Dialogue(Game game, Level level, GameMode gameMode, OrthographicCamera camera) {
 		this.game = game;
 		this.gameMode = gameMode;
-		this.stage = new Stage(camera.viewportWidth, camera.viewportHeight);
+		this.stage = new Stage(camera.viewportWidth, camera.viewportHeight, false);
 		this.uiHelper = new UiHelper(stage, Paths.MENU_ITEMS);
 		
 		this.dialogImage = uiHelper.getImage("SQUARE", stage.getWidth() / 2, stage.getHeight() / 2.33f);

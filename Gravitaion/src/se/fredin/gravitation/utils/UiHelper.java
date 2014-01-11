@@ -67,6 +67,20 @@ public class UiHelper implements Disposable {
 	}
 	
 	/**
+	 * Gets a new Image with specified width and height
+	 * @param nameOfImage
+	 * @param skin the skin holding the image
+	 * @param width the width of the image
+	 * @param height the height of the image
+	 * @return a new Image with specified width and height
+	 */
+	public static Image getImage(Skin skin, String nameOfImage, float width, float height) {
+		Image image = new Image(skin.getDrawable(nameOfImage));
+		image.setSize(width, height);
+		return image;
+	}
+	
+	/**
 	 * Gets a new Image with a specified width and height at a specified position
 	 * @param nameOfImage - the name of the image in the pack file
 	 * @param xPos the x position of the image
@@ -144,6 +158,15 @@ public class UiHelper implements Disposable {
 	 * @return <b>true</b> if this actor is done with its actions
 	 */
 	public boolean isFinishedActing(Actor actor) {
+		return actor.getActions().size <= 0;
+	}
+	
+	/**
+	 * Checks if this actor is finished with its actions
+	 * @param actor the actor to check
+	 * @return <b>true</b> if this actor is done with its actions
+	 */
+	public static boolean isNotActing(Actor actor) {
 		return actor.getActions().size <= 0;
 	}
 

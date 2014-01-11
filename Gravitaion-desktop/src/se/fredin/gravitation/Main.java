@@ -8,10 +8,9 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Gravitation";
 		cfg.useGL20 = true;
-		cfg.width = 1920;
-		cfg.height = 1080;
-		cfg.vSyncEnabled = false;
-		cfg.fullscreen = true;
+		cfg.width = 640;
+		cfg.height = 480;
+		cfg.fullscreen = false;
 		
 		new LwjglApplication(new Gravitation(), cfg);
 	}

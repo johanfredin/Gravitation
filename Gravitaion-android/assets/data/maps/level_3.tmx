@@ -82,9 +82,9 @@
   <object name="1" x="32" y="586" width="96" height="8"/>
   <object name="2" x="32" y="202" width="96" height="8"/>
   <object name="3" x="650" y="32" width="8" height="128"/>
-  <object name="4" x="669" y="810" width="96" height="8"/>
+  <object name="4" x="672" y="810" width="96" height="8"/>
   <object name="5" x="833" y="812" width="160" height="8"/>
-  <object name="6" x="810" y="30" width="9" height="98"/>
+  <object name="6" x="810" y="30" width="8" height="98"/>
   <object name="7" x="554" y="544" width="8" height="96"/>
   <object name="8" x="320" y="490" width="128" height="8"/>
   <object name="9" x="192" y="298" width="445" height="8"/>

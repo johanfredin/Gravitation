@@ -1,7 +1,10 @@
 package se.fredin.gravitation.entity;
 
 import se.fredin.gravitation.entity.physical.Player;
+import se.fredin.gravitation.utils.Paths;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -21,6 +24,8 @@ public class Station implements Disposable {
 	private boolean isAlive;
 	private boolean isTaken;
 	private Rectangle bounds;
+	private Sound stationPassedSound;
+	private boolean stationPassedSoundPlaying;
 	
 	/**
 	 * Creates a new Station
@@ -36,6 +41,7 @@ public class Station implements Disposable {
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setColor(Color.GREEN);
 		this.bounds = new Rectangle(x, y, width, height);
+		this.stationPassedSound = Gdx.audio.newSound(Gdx.files.internal(Paths.STATION_PASSED_SOUND));
 	}
 	
 	/**
@@ -57,6 +63,10 @@ public class Station implements Disposable {
 	 */
 	public void tick(float delta) {
 		if(player.getBounds().overlaps(bounds) && isAlive) {
+			if(!stationPassedSoundPlaying) {
+				stationPassedSound.play();
+				stationPassedSoundPlaying = true;
+			}
 			isAlive = false;
 			isTaken = true;
 		}
@@ -90,6 +100,7 @@ public class Station implements Disposable {
 	public void dispose() {
 		shapeRenderer.dispose();
 		player.dispose();
+		stationPassedSound.dispose();
 	}
 
 	

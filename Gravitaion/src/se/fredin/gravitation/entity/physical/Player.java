@@ -91,10 +91,10 @@ public class Player extends PhysicalEntity {
 		this.exhaust = ParticleLoader.getEmitter(Paths.EXHAUST_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 2.66f, 3);
 		this.explosion = ParticleLoader.getEmitter(Paths.EXPLOSION_PARTICLE_PROPERTIES_PATH, Paths.EXHAUST_TEXTUREPATH, 4, 4f);
 		this.bullets = new Array<Bullet>();
-		this.movementTouchPad = getTouchPad("data/skins/backKnob.png", "data/skins/steerKnob.png", 5, 5);
+		this.movementTouchPad = getTouchPad("data/skins/backKnob.png", "data/skins/steerKnob.png", 1, 1);
 		this.gasTouchPad = getTouchPad("data/skins/backKnob.png", "data/skins/gasKnob.png", 100, 5);
 		this.touchPadStage = new Stage(BaseScreen.VIEWPORT_WIDTH, BaseScreen.VIEWPORT_HEIGHT / 4, true);
-		gasTouchPad.setPosition(touchPadStage.getWidth() - gasTouchPad.getWidth() - 5, 5);
+		gasTouchPad.setPosition(touchPadStage.getWidth() - gasTouchPad.getWidth() - 1, 1);
 		touchPadStage.addActor(movementTouchPad);
 		touchPadStage.addActor(gasTouchPad);
 		
@@ -384,7 +384,7 @@ public class Player extends PhysicalEntity {
 		Sprite padSprite = new Sprite(padbgTex);
 		padSprite.setSize(30, 30);
 		Sprite knobSprite = new Sprite(knobTex);
-		knobSprite.setSize(13, 13);
+		knobSprite.setSize(20, 20);
 		skin.add("padbg", padSprite);
 		skin.add("knob", knobSprite);
 		TouchpadStyle touchpadStyle = new TouchpadStyle(skin.getDrawable("padbg"), skin.getDrawable("knob"));

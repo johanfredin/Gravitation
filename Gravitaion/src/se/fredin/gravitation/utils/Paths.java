@@ -23,4 +23,5 @@ public class Paths {
 	public static final String SHOOT_SOUND_EFFECT = "data/sound/shoot.wav";
 	public static final String EXPLOSION_SOUND_EFFECT = "data/sound/explosion.wav";
 	public static final String PAUSE_SOUND_EFFECT = "data/sound/pause.wav";
+	public static final String STATION_PASSED_SOUND = "data/sound/stationpassed.wav";
 }

@@ -52,63 +52,63 @@ new game
   orig: 525, 40
   offset: 0, 0
   index: -1
-controls
+return to menu
   rotate: false
   xy: 0, 330
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-return to menu
+multiplayer
   rotate: false
   xy: 0, 290
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-multiplayer
+replay
   rotate: false
   xy: 0, 250
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-replay
+level select
   rotate: false
   xy: 0, 210
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-level select
+player 1 wins
   rotate: false
   xy: 0, 170
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-player 1 wins
+level complete
   rotate: false
   xy: 0, 130
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-level complete
+DRAW
   rotate: false
   xy: 0, 90
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-DRAW
+PAUSE
   rotate: false
   xy: 0, 50
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
-PAUSE
+resume
   rotate: false
   xy: 0, 10
   size: 525, 40
@@ -171,23 +171,30 @@ reversed bullets
   orig: 332, 20
   offset: 0, 0
   index: -1
+androidcontrols
+  rotate: false
+  xy: 789, 230
+  size: 200, 100
+  orig: 200, 100
+  offset: 0, 0
+  index: -1
 big bullets
   rotate: false
-  xy: 789, 311
+  xy: 789, 211
   size: 212, 19
   orig: 212, 19
   offset: 0, 0
   index: -1
 slow down
   rotate: false
-  xy: 789, 291
+  xy: 789, 191
   size: 187, 20
   orig: 187, 20
   offset: 0, 0
   index: -1
 speed up
   rotate: false
-  xy: 789, 272
+  xy: 789, 172
   size: 166, 19
   orig: 166, 19
   offset: 0, 0
@@ -201,7 +208,7 @@ speed up
   index: -1
 10
   rotate: false
-  xy: 789, 232
+  xy: 789, 132
   size: 65, 40
   orig: 65, 40
   offset: 0, 0
@@ -225,58 +232,51 @@ menuitems2.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-resume
-  rotate: false
-  xy: 0, 160
-  size: 525, 40
-  orig: 525, 40
-  offset: 0, 0
-  index: -1
 quit
   rotate: false
-  xy: 0, 120
+  xy: 0, 128
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 single player
   rotate: false
-  xy: 0, 80
+  xy: 0, 88
   size: 525, 40
   orig: 525, 40
   offset: 0, 0
   index: -1
 TITLE-SMALL
   rotate: false
-  xy: 0, 40
+  xy: 0, 48
   size: 400, 40
   orig: 400, 40
   offset: 0, 0
   index: -1
 keys
   rotate: false
-  xy: 525, 72
+  xy: 525, 40
   size: 264, 128
   orig: 264, 128
   offset: 0, 0
   index: -1
 keyboard
   rotate: false
-  xy: 0, 0
+  xy: 0, 8
   size: 304, 40
   orig: 304, 40
   offset: 0, 0
   index: -1
 options
   rotate: false
-  xy: 400, 32
+  xy: 304, 0
   size: 243, 40
   orig: 243, 40
   offset: 0, 0
   index: -1
 fast bullets
   rotate: false
-  xy: 304, 12
+  xy: 547, 20
   size: 244, 20
   orig: 244, 20
   offset: 0, 0

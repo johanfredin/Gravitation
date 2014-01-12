@@ -20,14 +20,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 public class MainMenuScreen extends MenuBase {
 	
-	private Button singlePlayerButton, multiPlayerButton, quitButton;
+	private Button singlePlayerButton, optionsButton, multiPlayerButton, quitButton;
 	private boolean singlePlayerButtonClicked;
 	private boolean multiPlayerButtonClicked;
 	private boolean quitButtonClicked;
 	private Image titleImage;
 	private final byte SINGLE_PLAYER = 1; 
-	private final byte MULTIPLAYER = 2; 
-	private final byte QUIT = 3;		
+	private final byte OPTIONS = 2; 
+	private final byte MULTIPLAYER = 3; 
+	private final byte QUIT = 4;
+	protected boolean optionsButtonPressed;		
 	
 	public MainMenuScreen(Game game) {
 		super(game);
@@ -36,6 +38,7 @@ public class MainMenuScreen extends MenuBase {
 		if(!Gravitation.isMobileDevice()) {
 			setListener(multiPlayerButton, MULTIPLAYER);
 		}
+		setListener(optionsButton, OPTIONS);
 		setListener(quitButton, QUIT);
 		setPositionsAndSizes(camera.viewportWidth, camera.viewportHeight);	
 	}
@@ -65,6 +68,9 @@ public class MainMenuScreen extends MenuBase {
 		} else if(multiPlayerButtonClicked && uiHelper.isFinishedActing(whiteCanvasImage)) {
 			stage.clear();
 			game.setScreen(new LevelSelect(game, GameMode.MULTI_PLAYER));
+		} else if(optionsButtonPressed && uiHelper.isFinishedActing(optionsButton)) {
+			stage.clear();
+			game.setScreen(new OptionsScreen(game));
 		} else if(quitButtonClicked && uiHelper.isFinishedActing(whiteCanvasImage)) {
 			Gdx.app.exit();
 		}
@@ -76,6 +82,7 @@ public class MainMenuScreen extends MenuBase {
 		if(!Gravitation.isMobileDevice()) {
 			multiPlayerButton = uiHelper.getButton("multiplayer");
 		}
+		optionsButton = uiHelper.getButton("options");
 		quitButton = uiHelper.getButton("quit");
 		
 		titleImage = uiHelper.getImage("TITLE-SMALL", 300 * uiHelper.getScale(), 30 * uiHelper.getScale());
@@ -96,11 +103,12 @@ public class MainMenuScreen extends MenuBase {
 		
 		singlePlayerButton.setSize(buttonWidth, buttonHeight);
 		float buttonCenterX = camera.position.x - (singlePlayerButton.getWidth() / 2);
-		singlePlayerButton.setBounds(buttonCenterX, height - titleImage.getHeight() - spacingY * 1.5f, buttonWidth, buttonHeight);
+		singlePlayerButton.setBounds(buttonCenterX, height - titleImage.getHeight() - spacingY * 1.25f, buttonWidth, buttonHeight);
 		if(!Gravitation.isMobileDevice()){
 			multiPlayerButton.setBounds(buttonCenterX, singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
 		}
-		quitButton.setBounds(buttonCenterX, !Gravitation.isMobileDevice() ? multiPlayerButton.getY() - spacingY : singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
+		optionsButton.setBounds(buttonCenterX, !Gravitation.isMobileDevice() ? multiPlayerButton.getY() - spacingY : singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
+		quitButton.setBounds(buttonCenterX, optionsButton.getY() - spacingY, buttonWidth, buttonHeight);
 	}
 	
 	@Override
@@ -118,6 +126,11 @@ public class MainMenuScreen extends MenuBase {
 				case SINGLE_PLAYER:	// Start a single player game!!
 					uiHelper.animateActorAndFadeOutScreen(singlePlayerButton, whiteCanvasImage, 0.1f, 1.2f);
 					singlePlayerButtonClicked = true;
+					disableButtons();
+					return true;
+				case OPTIONS: // Options
+					uiHelper.animateActorAndFadeOutScreen(optionsButton, whiteCanvasImage, 0.1f, 1.2f);
+					optionsButtonPressed = true;
 					disableButtons();
 					return true;
 				case MULTIPLAYER: // Start a multiplayer game
@@ -142,6 +155,7 @@ public class MainMenuScreen extends MenuBase {
 		if(!Gravitation.isMobileDevice()) {
 			multiPlayerButton.setTouchable(Touchable.disabled);
 		}
+		optionsButton.setTouchable(Touchable.disabled);
 		quitButton.setTouchable(Touchable.disabled);
 	}
 	

@@ -16,10 +16,21 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+/***
+ * Class handling single player levels.
+ * @author Johan Fredin
+ *
+ */
 public class SinglePlayerLevel extends Level {
 
 	private StationHandler stationHandler;
 	
+	/**
+	 * Creates a new single player level tied to a tiled map, using box2d physics.
+	 * @param levelPath The path to the level.
+	 * @param gameScreen The GameScreen in charge of changing levels.
+	 * @param gameMode The current game mode.
+	 */
 	public SinglePlayerLevel(String levelPath, GameScreen gameScreen, GameMode gameMode) {
 		super(levelPath, gameScreen, GameMode.SINGLE_PLAYER);
 		// Setup player
@@ -29,15 +40,13 @@ public class SinglePlayerLevel extends Level {
 		
 		// Add key support
 		if(Gravitation.isMobileDevice()) {
-			gameScreen.getCamera().setToOrtho(false, BaseScreen.VIEWPORT_WIDTH / 2, BaseScreen.VIEWPORT_HEIGHT / 2);
+			gameScreen.getCamera().setToOrtho(false, BaseScreen.viewportWidth / 2, BaseScreen.viewportHeight / 2);
 			Gdx.input.setInputProcessor(player1.getTouchPadStage());
 		} else {
 			Gdx.input.setInputProcessor(new KeyInput(player1, null));
 			addGamepadSupport();
 		}
 		this.inGameMenu = new SinglePlayerDialogue(gameScreen.getGame(), this, gameScreen.getCamera());
-		
-		
 	}
 	
 	@Override

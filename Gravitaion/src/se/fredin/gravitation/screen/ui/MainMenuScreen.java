@@ -14,24 +14,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /**
- * Class that is responsible for the main menu
- * @author johan
+ * Class that is responsible for the main menu.
+ * @author Johan Fredin
  *
  */
 public class MainMenuScreen extends MenuBase {
 	
-	private Button singlePlayerButton, controlsButton, multiPlayerButton, quitButton;
-	private boolean singlePlayerButtonClicked;
-	private boolean multiPlayerButtonClicked;
-	private boolean quitButtonClicked;
-	private boolean controlsButtonPressed;		
-	private Image titleImage;
 	private final byte SINGLE_PLAYER = 1; 
 	private final byte OPTIONS = 2; 
 	private final byte MULTIPLAYER = 3; 
 	private final byte QUIT = 4;
 	
+	private boolean singlePlayerButtonClicked;
+	private boolean multiPlayerButtonClicked;
+	private boolean quitButtonClicked;
+	private boolean controlsButtonPressed;
 	
+	private Button singlePlayerButton, controlsButton, multiPlayerButton, quitButton;
+	private Image titleImage;
+	
+	/**
+	 * Creates a new MainMenu instance.
+	 * @param game The game instance responsible for switching screens.
+	 */
 	public MainMenuScreen(Game game) {
 		super(game);
 		initButtonsAndImages();
@@ -78,39 +83,6 @@ public class MainMenuScreen extends MenuBase {
 
 	}
 	
-	private void initButtonsAndImages() {
-		singlePlayerButton = uiHelper.getButton("single player");
-		if(!Gravitation.isMobileDevice()) {
-			multiPlayerButton = uiHelper.getButton("multiplayer");
-		}
-		controlsButton = uiHelper.getButton("controls2");
-		quitButton = uiHelper.getButton("quit");
-		
-		titleImage = uiHelper.getImage("TITLE-SMALL", 300 * uiHelper.getScale(), 30 * uiHelper.getScale());
-		titleImage.setSize(300 * uiHelper.getScale(), 30 * uiHelper.getScale());
-		titleImage.setPosition(camera.position.x - (titleImage.getWidth() / 2), camera.viewportHeight - titleImage.getHeight() - 2);
-		stage.addActor(titleImage);
-		
-		// add fade in effect
-		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(0.5f), Actions.fadeOut(2f)));	
-	}
-	
-	private void setPositionsAndSizes(float width, float height) {
-		float buttonWidth = 133.33f * uiHelper.getScale();
-		float buttonHeight = 13.33f * uiHelper.getScale();
-		float spacingY = 20 * uiHelper.getScale();
-		
-		whiteCanvasImage.setBounds(0, 0, width, height);
-		singlePlayerButton.setSize(buttonWidth, buttonHeight);
-		float buttonCenterX = camera.position.x - (singlePlayerButton.getWidth() / 2);
-		singlePlayerButton.setPosition(buttonCenterX, height - titleImage.getHeight() - spacingY * 1.25f);
-		if(!Gravitation.isMobileDevice()){
-			multiPlayerButton.setBounds(buttonCenterX, singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
-		}
-		controlsButton.setBounds(buttonCenterX, !Gravitation.isMobileDevice() ? multiPlayerButton.getY() - spacingY : singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
-		quitButton.setBounds(buttonCenterX, controlsButton.getY() - spacingY, buttonWidth, buttonHeight);
-	}
-	
 	@Override
 	public void setListener(Actor actor, final byte ACTION) {
 		stage.addActor(actor);		// add button to the scene as an actor
@@ -150,6 +122,39 @@ public class MainMenuScreen extends MenuBase {
 		});
 	}
 	
+	private void initButtonsAndImages() {
+		singlePlayerButton = uiHelper.getButton("single player");
+		if(!Gravitation.isMobileDevice()) {
+			multiPlayerButton = uiHelper.getButton("multiplayer");
+		}
+		controlsButton = uiHelper.getButton("controls2");
+		quitButton = uiHelper.getButton("quit");
+		
+		titleImage = uiHelper.getImage("TITLE-SMALL", 300 * uiHelper.getScale(), 30 * uiHelper.getScale());
+		titleImage.setSize(300 * uiHelper.getScale(), 30 * uiHelper.getScale());
+		titleImage.setPosition(camera.position.x - (titleImage.getWidth() / 2), camera.viewportHeight - titleImage.getHeight() - 2);
+		stage.addActor(titleImage);
+		
+		// add fade in effect
+		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(0.5f), Actions.fadeOut(2f)));	
+	}
+	
+	private void setPositionsAndSizes(float width, float height) {
+		float buttonWidth = 133.33f * uiHelper.getScale();
+		float buttonHeight = 13.33f * uiHelper.getScale();
+		float spacingY = 20 * uiHelper.getScale();
+		
+		whiteCanvasImage.setBounds(0, 0, width, height);
+		singlePlayerButton.setSize(buttonWidth, buttonHeight);
+		float buttonCenterX = camera.position.x - (singlePlayerButton.getWidth() / 2);
+		singlePlayerButton.setPosition(buttonCenterX, height - titleImage.getHeight() - spacingY * 1.25f);
+		if(!Gravitation.isMobileDevice()){
+			multiPlayerButton.setBounds(buttonCenterX, singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
+		}
+		controlsButton.setBounds(buttonCenterX, !Gravitation.isMobileDevice() ? multiPlayerButton.getY() - spacingY : singlePlayerButton.getY() - spacingY, buttonWidth, buttonHeight);
+		quitButton.setBounds(buttonCenterX, controlsButton.getY() - spacingY, buttonWidth, buttonHeight);
+	}
+	
 	private void disableButtons() {
 		singlePlayerButton.setTouchable(Touchable.disabled);
 		if(!Gravitation.isMobileDevice()) {
@@ -158,10 +163,4 @@ public class MainMenuScreen extends MenuBase {
 		controlsButton.setTouchable(Touchable.disabled);
 		quitButton.setTouchable(Touchable.disabled);
 	}
-	
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
-
 }

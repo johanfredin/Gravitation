@@ -30,12 +30,19 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * Manages the levels of the game
- * @author johan
+ * Manages the levels of the game.
+ * @author Johan Fredin
  *
  */
 public abstract class Level implements LevelBase, Disposable {
 
+	protected final float MAP_WIDTH;
+	protected final float MAP_HEIGHT;
+	protected final float UNIT_SCALE = 1 / 3.20f;
+	protected final float TIMESTEP = 1 / 60f;
+	protected final int VELOCITYITERATIONS = 8;
+	protected final int POSITIONITERATIONS = 3;
+	
 	protected OrthogonalTiledMapRenderer mapRenderer;
 	protected World world;
 	protected TiledMap map;
@@ -51,29 +58,23 @@ public abstract class Level implements LevelBase, Disposable {
 	protected boolean controlsGivenToStage;
 	protected boolean multiPlayerMatchEnded;
 	
-	protected final float MAP_WIDTH;
-	protected final float MAP_HEIGHT;
-	protected final float UNIT_SCALE = 1 / 3.20f;
-	protected final float TIMESTEP = 1 / 60f;
-	protected final int VELOCITYITERATIONS = 8;
-	protected final int POSITIONITERATIONS = 3;
-	
 	// For debugging
 	protected Box2DDebugRenderer box2DRenderer;
 	protected ShapeRenderer shapeRenderer;
 	
 	/**
-	 * Creates a new level tied to a tiled map, using box2d physics
-	 * @param levelPath the path to the level
-	 * @param gameScreen the GameScreen in charge of changing levels
-	 * @param gameMode the current game mode
+	 * Creates a new level tied to a tiled map, using box2d physics.
+	 * @param levelPath The path to the level.
+	 * @param gameScreen The GameScreen in charge of changing levels.
+	 * @param gameMode The current game mode.
 	 */
 	public Level(String levelPath, GameScreen gameScreen, GameMode gameMode) {
 		this.gameMode = gameMode;
 		this.gameScreen = gameScreen;
 		
 		// Setup box2d world
-		this.world = new World(new Vector2(0, -9.82f), true);
+		final float EARTH_GRAVITY = -9.82f;
+		this.world = new World(new Vector2(0, EARTH_GRAVITY), true);
 		this.box2DRenderer = new Box2DDebugRenderer();
 		this.shapeRenderer = new ShapeRenderer();
 		this.shapeRenderer.setColor(Color.RED);
@@ -89,28 +90,7 @@ public abstract class Level implements LevelBase, Disposable {
 		
 		// Setup launchpads
 		this.launchPadHandler = new LaunchPadHandler(map, UNIT_SCALE, world);
-		
 		this.hardBlocks = getWorldAdaptedBlocks(map);
-	}
-	
-	/**
-	 * Adds gamepad support to desktop version. Looks for gamepads, then checks the amount of players and assigns gamepads
-	 * to each of them
-	 */
-	protected void addGamepadSupport() {
-		// Add gamePad support
-		if(!Gravitation.isMobileDevice()) {
-			for(int i = 0; i < Controllers.getControllers().size; i++) {
-				if(i == 0) {
-					Controllers.getControllers().get(i).addListener(player1.getGamePad());
-					if(gameMode == GameMode.SINGLE_PLAYER) {
-						return;
-					}
-				} else if(i == 1) {
-					Controllers.getControllers().get(i).addListener(player2.getGamePad());
-				}
-			}
-		} 
 	}
 	
 	@Override
@@ -128,43 +108,23 @@ public abstract class Level implements LevelBase, Disposable {
 		return;
 	}
 	
-	private void renderHalf(OrthographicCamera camera, SpriteBatch batch, int cameraXPos, boolean leftSide) {
-		if(!multiPlayerMatchEnded) {
-			mapRenderer.setView(camera);
-			mapRenderer.render();
-			
-			batch.setProjectionMatrix(camera.combined);
-			batch.begin();
-			launchPadHandler.render(batch);
-			player1.render(batch);
-			player2.render(batch);
-			itemHandler.render(batch);
-			batch.end();
-	
-			shapeRenderer.setProjectionMatrix(camera.combined);
-			shapeRenderer.begin(ShapeType.Filled);
-			shapeRenderer.rect(leftSide ? camera.position.x - camera.viewportWidth / 2 : camera.position.x + camera.viewportWidth / 2, 0, 2, Gdx.graphics.getHeight());
-			shapeRenderer.end();
-			
-			if(Gravitation.DEBUG_MODE) {
-				debugRender(camera);
+	/*
+	 * Adds gamepad support to desktop version. Looks for gamepads, then checks the amount of players and assigns gamepads
+	 * to each of them.
+	 */
+	protected void addGamepadSupport() {
+		if(!Gravitation.isMobileDevice()) {
+			for(int i = 0; i < Controllers.getControllers().size; i++) {
+				if(i == 0) {
+					Controllers.getControllers().get(i).addListener(player1.getGamePad());
+					if(gameMode == GameMode.SINGLE_PLAYER) {
+						return;
+					}
+				} else if(i == 1) {
+					Controllers.getControllers().get(i).addListener(player2.getGamePad());
+				}
 			}
-		}
-		
-		moveCamera(camera, (leftSide ? player1 : player2), cameraXPos, MAP_WIDTH, MAP_HEIGHT);
-		camera.update();
-	}
-	
-	
-	private Array<Rectangle> getWorldAdaptedBlocks(TiledMap map) {
-		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
-		this.hardBlocks = new Array<Rectangle>();
-		for(RectangleMapObject rect : rectangleMapObjects) {
-			rect.getRectangle().set(rect.getRectangle().x * UNIT_SCALE, rect.getRectangle().y * UNIT_SCALE, 
-				 rect.getRectangle().width * UNIT_SCALE, rect.getRectangle().height * UNIT_SCALE);
-			hardBlocks.add(rect.getRectangle());
-		}
-		return hardBlocks;
+		} 
 	}
 	
 	/**
@@ -218,7 +178,6 @@ public abstract class Level implements LevelBase, Disposable {
 			camera.position.y = mapHeight - centerY;
 	}
 	
-	
 	@Override
 	public void dispose() {
 		map.dispose();
@@ -229,5 +188,43 @@ public abstract class Level implements LevelBase, Disposable {
 		itemHandler.dispose();
 	}
 
+	private void renderHalf(OrthographicCamera camera, SpriteBatch batch, int cameraXPos, boolean leftSide) {
+		if(!multiPlayerMatchEnded) {
+			mapRenderer.setView(camera);
+			mapRenderer.render();
+			
+			batch.setProjectionMatrix(camera.combined);
+			batch.begin();
+			launchPadHandler.render(batch);
+			player1.render(batch);
+			player2.render(batch);
+			itemHandler.render(batch);
+			batch.end();
+	
+			shapeRenderer.setProjectionMatrix(camera.combined);
+			shapeRenderer.begin(ShapeType.Filled);
+			shapeRenderer.rect(leftSide ? camera.position.x - camera.viewportWidth / 2 : camera.position.x + camera.viewportWidth / 2, 0, 2, Gdx.graphics.getHeight());
+			shapeRenderer.end();
+			
+			if(Gravitation.DEBUG_MODE) {
+				debugRender(camera);
+			}
+		}
+		
+		moveCamera(camera, (leftSide ? player1 : player2), cameraXPos, MAP_WIDTH, MAP_HEIGHT);
+		camera.update();
+	}
+	
+	
+	private Array<Rectangle> getWorldAdaptedBlocks(TiledMap map) {
+		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("collision").getObjects().getByType(RectangleMapObject.class);
+		this.hardBlocks = new Array<Rectangle>();
+		for(RectangleMapObject rect : rectangleMapObjects) {
+			rect.getRectangle().set(rect.getRectangle().x * UNIT_SCALE, rect.getRectangle().y * UNIT_SCALE, 
+				 rect.getRectangle().width * UNIT_SCALE, rect.getRectangle().height * UNIT_SCALE);
+			hardBlocks.add(rect.getRectangle());
+		}
+		return hardBlocks;
+	}
 	
 }

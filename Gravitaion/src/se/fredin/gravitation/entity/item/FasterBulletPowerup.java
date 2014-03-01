@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * A powerup that makes the bullets faster
- * @author johan
+ * @author Johan Fredin
  *
  */
 public class FasterBulletPowerup extends Powerup {

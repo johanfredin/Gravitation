@@ -15,8 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /**
- * UI screen for handling level selection as well as match settings be this a multiplayer game
- * @author johan
+ * UI screen for handling level selection as well as match settings be this a multiplayer game.
+ * @author Johan Fredin
  *
  */
 public class LevelSelect extends MenuBase {
@@ -61,9 +61,9 @@ public class LevelSelect extends MenuBase {
 	private boolean returnToMenuPressed;
 
 	/**
-	 * Creates a new LevelSelect instance with a game for switching screens and the specified game mode
-	 * @param game the game instance responsible for switching screens
-	 * @param gameMode the selected game mode, multiplayer or single player
+	 * Creates a new LevelSelect instance with a game for switching screens and the specified game mode.
+	 * @param game The game instance responsible for switching screens.
+	 * @param gameMode The selected game mode, multiplayer or single player.
 	 */
 	public LevelSelect(Game game, GameMode gameMode) {
 		super(game);
@@ -90,86 +90,6 @@ public class LevelSelect extends MenuBase {
 			setListener(unlimitedTimeImage, UNLIMITED_TIME);
 		}
 		setListener(returnToMenuImage, RETURN_TO_MENU);
-	}
-	
-	private void setupImages() {
-		float scale = uiHelper.getScale();
-		float spacingX = 28 * scale;
-		float titleWidth = 200 * scale;
-		float titleHeight = 20 * scale;
-		float levelImageWidth = 64 * scale;
-		float levelImageHeight = 44 * scale;
-		
-		this.levelSelectImage = uiHelper.getImage("level select", titleWidth, titleHeight);
-		levelSelectImage.setPosition(camera.position.x - levelSelectImage.getWidth() / 2, camera.viewportHeight - levelSelectImage.getHeight() - 2);
-		stage.addActor(levelSelectImage);
-		
-		this.level1Image = uiHelper.getImage("level1_img", levelImageWidth, levelImageHeight);
-		level1Image.setPosition(spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
-		stage.addActor(level1Image);
-		
-		this.level2Image = uiHelper.getImage("level2_img", levelImageWidth, levelImageHeight);
-		level2Image.setPosition(level1Image.getX() + level1Image.getWidth() + spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
-		stage.addActor(level2Image);
-		
-		this.level3Image = uiHelper.getImage("level3_img", levelImageWidth, levelImageHeight);
-		level3Image.setPosition(level2Image.getX() + level2Image.getWidth() + spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
-		stage.addActor(level3Image);
-		
-		this.returnToMenuImage = uiHelper.getImage("return to menu", 133.33f * scale, 13.33f * scale);
-		returnToMenuImage.setPosition(camera.position.x - returnToMenuImage.getWidth() / 2, 5);
-		stage.addActor(returnToMenuImage);
-		
-		if(gameMode == GameMode.MULTI_PLAYER) {
-			float numberImageSize = 7.5f * scale;
-			float textImageWidth = 75 * scale;
-			float textImageHeight = 7.5f * scale;
-			
-			this.scoreImage = uiHelper.getImage("score", textImageWidth, textImageHeight);
-			scoreImage.setPosition(5, level3Image.getY() - scoreImage.getHeight() - 5);
-			stage.addActor(scoreImage);
-			
-			this.timeLimitImage = uiHelper.getImage("time limit", textImageWidth, textImageHeight);
-			timeLimitImage.setPosition(17, scoreImage.getY() - scoreImage.getHeight() - 2);
-			stage.addActor(timeLimitImage);
-			
-			this.lowScoreImage = uiHelper.getImage("5", numberImageSize, numberImageSize);
-			lowScoreImage.setPosition(scoreImage.getX() + timeLimitImage.getWidth() + 15, scoreImage.getY());
-			stage.addActor(lowScoreImage);
-			
-			this.mediumScoreImage = uiHelper.getImage("10", numberImageSize * 2, numberImageSize);
-			mediumScoreImage.setPosition(lowScoreImage.getX() + lowScoreImage.getWidth() + 5, scoreImage.getY());
-			stage.addActor(mediumScoreImage);
-			
-			this.highScoreImage = uiHelper.getImage("20", numberImageSize * 2, numberImageSize);
-			highScoreImage.setPosition(mediumScoreImage.getX() + mediumScoreImage.getWidth() + 5, scoreImage.getY());
-			stage.addActor(highScoreImage);
-			
-			this.unlimitedScoreImage = uiHelper.getImage("unlimited", textImageWidth, textImageHeight);
-			unlimitedScoreImage.setPosition(highScoreImage.getX() + highScoreImage.getWidth() + 5, scoreImage.getY());
-			stage.addActor(unlimitedScoreImage);
-			
-			this.shortTimeImage = uiHelper.getImage("5", numberImageSize, numberImageSize);
-			shortTimeImage.setPosition(scoreImage.getX() + timeLimitImage.getWidth() + 15, timeLimitImage.getY());
-			stage.addActor(shortTimeImage);
-			
-			this.mediumTimeImage = uiHelper.getImage("10", numberImageSize * 2, numberImageSize);
-			mediumTimeImage.setPosition(shortTimeImage.getX() + shortTimeImage.getWidth() + 5, timeLimitImage.getY());
-			stage.addActor(mediumTimeImage);
-			
-			this.longTimeImage = uiHelper.getImage("20", numberImageSize * 2, numberImageSize);
-			longTimeImage.setPosition(mediumTimeImage.getX() + mediumTimeImage.getWidth() + 5, timeLimitImage.getY());
-			stage.addActor(longTimeImage);
-			
-			this.unlimitedTimeImage = uiHelper.getImage("unlimited", textImageWidth, textImageHeight);
-			unlimitedTimeImage.setPosition(longTimeImage.getX() + longTimeImage.getWidth() + 5, timeLimitImage.getY());
-			stage.addActor(unlimitedTimeImage);
-		}
-		
-		whiteCanvasImage.setBounds(0, 0, camera.viewportWidth, camera.viewportHeight);
-		
-		// add fade in effect
-		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(0.5f), Actions.fadeOut(2f)));	
 	}
 	
 	@Override
@@ -290,5 +210,84 @@ public class LevelSelect extends MenuBase {
 			shapeRenderer.dispose();
 		}
 	}
-
+	
+	private void setupImages() {
+		float scale = uiHelper.getScale();
+		float spacingX = 28 * scale;
+		float titleWidth = 200 * scale;
+		float titleHeight = 20 * scale;
+		float levelImageWidth = 64 * scale;
+		float levelImageHeight = 44 * scale;
+		
+		this.levelSelectImage = uiHelper.getImage("level select", titleWidth, titleHeight);
+		levelSelectImage.setPosition(camera.position.x - levelSelectImage.getWidth() / 2, camera.viewportHeight - levelSelectImage.getHeight() - 2);
+		stage.addActor(levelSelectImage);
+		
+		this.level1Image = uiHelper.getImage("level1_img", levelImageWidth, levelImageHeight);
+		level1Image.setPosition(spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
+		stage.addActor(level1Image);
+		
+		this.level2Image = uiHelper.getImage("level2_img", levelImageWidth, levelImageHeight);
+		level2Image.setPosition(level1Image.getX() + level1Image.getWidth() + spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
+		stage.addActor(level2Image);
+		
+		this.level3Image = uiHelper.getImage("level3_img", levelImageWidth, levelImageHeight);
+		level3Image.setPosition(level2Image.getX() + level2Image.getWidth() + spacingX, levelSelectImage.getY() - level1Image.getHeight() - 5);
+		stage.addActor(level3Image);
+		
+		this.returnToMenuImage = uiHelper.getImage("return to menu", 133.33f * scale, 13.33f * scale);
+		returnToMenuImage.setPosition(camera.position.x - returnToMenuImage.getWidth() / 2, 5);
+		stage.addActor(returnToMenuImage);
+		
+		if(gameMode == GameMode.MULTI_PLAYER) {
+			float numberImageSize = 7.5f * scale;
+			float textImageWidth = 75 * scale;
+			float textImageHeight = 7.5f * scale;
+			
+			this.scoreImage = uiHelper.getImage("score", textImageWidth, textImageHeight);
+			scoreImage.setPosition(5, level3Image.getY() - scoreImage.getHeight() - 5);
+			stage.addActor(scoreImage);
+			
+			this.timeLimitImage = uiHelper.getImage("time limit", textImageWidth, textImageHeight);
+			timeLimitImage.setPosition(17, scoreImage.getY() - scoreImage.getHeight() - 2);
+			stage.addActor(timeLimitImage);
+			
+			this.lowScoreImage = uiHelper.getImage("5", numberImageSize, numberImageSize);
+			lowScoreImage.setPosition(scoreImage.getX() + timeLimitImage.getWidth() + 15, scoreImage.getY());
+			stage.addActor(lowScoreImage);
+			
+			this.mediumScoreImage = uiHelper.getImage("10", numberImageSize * 2, numberImageSize);
+			mediumScoreImage.setPosition(lowScoreImage.getX() + lowScoreImage.getWidth() + 5, scoreImage.getY());
+			stage.addActor(mediumScoreImage);
+			
+			this.highScoreImage = uiHelper.getImage("20", numberImageSize * 2, numberImageSize);
+			highScoreImage.setPosition(mediumScoreImage.getX() + mediumScoreImage.getWidth() + 5, scoreImage.getY());
+			stage.addActor(highScoreImage);
+			
+			this.unlimitedScoreImage = uiHelper.getImage("unlimited", textImageWidth, textImageHeight);
+			unlimitedScoreImage.setPosition(highScoreImage.getX() + highScoreImage.getWidth() + 5, scoreImage.getY());
+			stage.addActor(unlimitedScoreImage);
+			
+			this.shortTimeImage = uiHelper.getImage("5", numberImageSize, numberImageSize);
+			shortTimeImage.setPosition(scoreImage.getX() + timeLimitImage.getWidth() + 15, timeLimitImage.getY());
+			stage.addActor(shortTimeImage);
+			
+			this.mediumTimeImage = uiHelper.getImage("10", numberImageSize * 2, numberImageSize);
+			mediumTimeImage.setPosition(shortTimeImage.getX() + shortTimeImage.getWidth() + 5, timeLimitImage.getY());
+			stage.addActor(mediumTimeImage);
+			
+			this.longTimeImage = uiHelper.getImage("20", numberImageSize * 2, numberImageSize);
+			longTimeImage.setPosition(mediumTimeImage.getX() + mediumTimeImage.getWidth() + 5, timeLimitImage.getY());
+			stage.addActor(longTimeImage);
+			
+			this.unlimitedTimeImage = uiHelper.getImage("unlimited", textImageWidth, textImageHeight);
+			unlimitedTimeImage.setPosition(longTimeImage.getX() + longTimeImage.getWidth() + 5, timeLimitImage.getY());
+			stage.addActor(unlimitedTimeImage);
+		}
+		
+		whiteCanvasImage.setBounds(0, 0, camera.viewportWidth, camera.viewportHeight);
+		
+		// add fade in effect
+		whiteCanvasImage.addAction(Actions.sequence(Actions.delay(0.5f), Actions.fadeOut(2f)));	
+	}
 }

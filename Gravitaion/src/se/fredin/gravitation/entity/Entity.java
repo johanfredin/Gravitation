@@ -7,32 +7,32 @@ import com.badlogic.gdx.utils.Disposable;
 
 /**
  * A common interface that contains the main methods that all entities should have.
- * @author johan
+ * @author Johan Fredin
  *
  */
 public interface Entity extends Disposable {
 	
 	/**
-	 * Renders to the screen
-	 * @param batch The SpriteBatch used for rendering
+	 * Renders to the screen.
+	 * @param batch The SpriteBatch used for rendering.
 	 */
 	void render(SpriteBatch batch);
 	
 	/**
-	 * Updates entity
-	 * @param delta the time interval
+	 * Updates entity.
+	 * @param delta The time interval since last render occurred.
 	 */
 	void tick(float delta);
 	
 	/**
-	 * Get the position of the entity
-	 * @return The position of the entity
+	 * Get the position of the entity.
+	 * @return The position of the entity.
 	 */
 	Vector2 getPosition();
 	
 	/**
-	 * Get the boundaries of the entity, used for collision control
-	 * @return The boundaries of the entity
+	 * Get the boundaries of the entity, used for collision control.
+	 * @return The boundaries of the entity.
 	 */
 	Rectangle getBounds();
 	

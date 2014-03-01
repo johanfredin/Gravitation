@@ -17,8 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Class for making powerups that will affect the players good or bad.
- * @author johan
+ * Class for making powerups that will affect the players in a good or a bad way.
+ * @author Johan fredin
  *
  */
 public abstract class Powerup extends AbstractEntity {
@@ -32,14 +32,14 @@ public abstract class Powerup extends AbstractEntity {
 	private Sound badPowerupSound;
 	
 	/**
-	 * Creates a new Powerup on a random map position. Gives it a specified width and height and assigns a sprite to it.
-	 * @param spawnPoints The different spawnpoints that this powerup will get a random position from
-	 * @param width the width of the powerup
-	 * @param height the height of the powerup
-	 * @param player1 the first Player this powerup will interact with
-	 * @param player2 the second Player this powerup will interact with
-	 * @param powerupExplanationPath the location of the text image that will popup once a player has interacted with the powerup
-	 * @param isGoodPowerup <b>true</b> if this powerup will affect the player in a good way
+	 * Creates a new Powerup object on a random map position. Gives it a specified width and height and assigns a sprite to it.
+	 * @param spawnPoints The different spawnpoints that this powerup will get a random position from.
+	 * @param width The width of the powerup.
+	 * @param height The height of the powerup.
+	 * @param player1 The first Player this powerup will interact with.
+	 * @param player2 The second Player this powerup will interact with.
+	 * @param powerupExplanationPath The location of the text image that will pop-up once a player has interacted with the powerup.
+	 * @param isGoodPowerup <b>true</b> if this powerup will affect the player in a good way.
 	 */
 	public Powerup(Array<Rectangle> spawnPoints, float width, float height, Player player1, Player player2, String powerupExplanationPath, boolean isGoodPowerup) {
 		this(spawnPoints, width, height, Gdx.files.internal(Paths.POWERUP_IMAGE_PATH).path(), player1, player2, powerupExplanationPath, isGoodPowerup);
@@ -56,15 +56,15 @@ public abstract class Powerup extends AbstractEntity {
 	}
 	
 	/**
-	 * Creates a new Powerup on a random map position. Gives it a specified width and height and assigns a sprite to it.
-	 * @param spawnPoints The different spawnpoints that this powerup will get a random position from
-	 * @param width the width of the powerup
-	 * @param height the height of the powerup
-	 * @param texturePath the location of the texture that the Sprite will use
-	 * @param player1 the first Player this powerup will interact with
-	 * @param player2 the second Player this powerup will interact with
-	 * @param powerupExplanationPath the location of the text image that will popup once a player has interacted with the powerup
-	 * @param isGoodPowerup <b>true</b> if this powerup will affect the player in a good way
+	 * Creates a new Powerup object on a random map position. Gives it a specified width and height and assigns a sprite to it.
+	 * @param spawnPoints The different spawnpoints that this powerup will get a random position from.
+	 * @param width The width of the powerup.
+	 * @param height The height of the powerup.
+	 * @param texturePath The location of the texture that the Sprite will use.
+	 * @param player1 The first Player this powerup will interact with.
+	 * @param player2 The second Player this powerup will interact with.
+	 * @param powerupExplanationPath The location of the text image that will popup once a player has interacted with the powerup.
+	 * @param isGoodPowerup <b>true</b> if this powerup will affect the player in a good way.
 	 */
 	public Powerup(Array<Rectangle> spawnPoints, float width, float height, String texturePath, Player player1, Player player2, String powerupExplanationPath, boolean isGoodPowerup) {
 		super(spawnPoints, width, height, texturePath);
@@ -80,14 +80,14 @@ public abstract class Powerup extends AbstractEntity {
 	}
 	
 	/**
-	 * Will decide how to affect the player once interaction has taken place
-	 * @param player the player to affect
+	 * Will decide how to affect the player once interaction with powerup has taken place.
+	 * @param player The player to affect
 	 */
 	public abstract void affectEntity(Player player);
 	
 	/**
-	 * Will remove the effect from the player.
-	 * @param player the player to remove this powerup from
+	 * Will remove the effect of this powerup from the player.
+	 * @param player The player to remove this powerup from.
 	 */
 	public abstract void removePower(Player player);
 	

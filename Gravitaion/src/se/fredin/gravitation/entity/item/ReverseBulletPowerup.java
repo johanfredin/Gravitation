@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * A powerup that makes the bullets travel in the opposite direction
- * @author johan
+ * A powerup that makes the bullets travel in the opposite direction.
+ * @author Johan Fredin
  *
  */
 public class ReverseBulletPowerup extends Powerup {

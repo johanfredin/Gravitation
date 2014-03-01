@@ -8,6 +8,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+/**
+ * Class responsible for the options menu.
+ * @author johan
+ *
+ */
 public class OptionsScreen extends MenuBase {
 
 	private Image mobileDeviceControlsImage;
@@ -16,11 +21,27 @@ public class OptionsScreen extends MenuBase {
 	private Image gamePadControlsImage;
 	private Image returnToMenuImage;
 	
+	/**
+	 * Creates a new Options instance.
+	 * @param game The game instance responsible for switching screens.
+	 */
 	public OptionsScreen(Game game) {
 		super(game);
 		initImages();
 		setPositionsAndSizes(camera.viewportWidth, camera.viewportHeight);	
 		setListener(returnToMenuImage, (byte) 1);
+	}
+
+	@Override
+	protected void setListener(Actor actor, byte ACTION) {
+		actor.addListener(new InputListener(){
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				buttonPressedSound.play();
+				game.setScreen(new MainMenuScreen(game));
+				return true;
+			}
+		});
 	}
 
 	private void initImages() {
@@ -57,17 +78,4 @@ public class OptionsScreen extends MenuBase {
 		returnToMenuImage.setPosition(width / 2 - returnToMenuImage.getWidth() / 2, Gravitation.isMobileDevice() ? mobileDeviceControlsImage.getY() - mobileDeviceControlsImage.getHeight() : gamePadControlsImage.getY() - spacingY * 1.33f);
 		stage.addActor(returnToMenuImage);
 	}
-	
-	@Override
-	protected void setListener(Actor actor, byte ACTION) {
-		actor.addListener(new InputListener(){
-			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-				buttonPressedSound.play();
-				game.setScreen(new MainMenuScreen(game));
-				return true;
-			}
-		});
-	}
-
 }

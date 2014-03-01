@@ -34,15 +34,45 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Class that handles the player, also contains a nested class for gamepads and a touchpad for android/ios
- * @author johan
+ * Class that handles the player, also contains a nested class for gamepads and a touchpad for Android/iOS
+ * @author Johan Fredin
  *
  */
 public class Player extends PhysicalEntity {
 	
+	private final int PLAYER_NUM;
+	private final float MAX_TURN_DEG = (float)(Math.PI);
+	private final float RESPAWN_TIME = 2.0f;
+	
+	/**
+	 * Checks whether or not left button was pressed.
+	 */
+	public boolean leftPressed;
+	/**
+	 * Checks whether or not right button was pressed.
+	 */
+	public boolean rightPressed;
+	/**
+	 * Checks whether or not acceleration button was pressed.
+	 */
+	public boolean gasPressed;
+	
+	private boolean crashed;
+	private boolean ableToShoot = true;
 	private boolean isReversedSteering;
-	private Vector2 movement;
+	private boolean isBulletMovementReversed;
+	private boolean isBigBullets;
+	private boolean exhaustSoundPlaying;
+	
 	private float bulletSpeed = Settings.DEFAULT_BULLET_SPEED;
+	private float timePassed;
+	private float speed = Settings.DEFAULT_SPEED;
+	private float xSpeed;
+	private float ySpeed;
+	private float shipRot;
+	private int score;
+	
+	private Vector2 movement;
 	private Touchpad movementTouchPad, gasTouchPad;
 	private Stage touchPadStage;
 	private GamePad gamePad;
@@ -50,37 +80,21 @@ public class Player extends PhysicalEntity {
 	private ParticleEmitter explosion;
 	private Array<Bullet> bullets;
 	private GameMode gameMode;
-	private float speed = Settings.DEFAULT_SPEED;
-	private float xSpeed;
-	private float ySpeed;
-	private float shipRot;
-	private final float MAX_TURN_DEG = (float)(Math.PI);
-	private final float RESPAWN_TIME = 2.0f;
-	public boolean leftPressed, rightPressed, gasPressed;
-	private boolean crashed;
-	private boolean ableToShoot = true;
-	private float timePassed;
-	private boolean isBulletMovementReversed;
-	private boolean isBigBullets;
-	private final int PLAYER_NUM;
-	private int score;
 	private Sound explosionSound;
 	private Sound exhaustSound;
 	private Sound shootSound;
 	private Sound pauseSound;
 	
-	private boolean exhaustSoundPlaying;
-	
 	/**
-	 * Creates a new player instance
-	 * @param xPos the x position of the player
-	 * @param yPos the y position of the player
-	 * @param texturePath the path to the texture used for the sprite
-	 * @param world the box2D world this player will live in
-	 * @param bodyWidth the width of the player
-	 * @param bodyHeight the height of the player 
-	 * @param PLAYER_NUM the number of the player (1 or 2)
-	 * @param gameMode the current game mode
+	 * Creates a new player instance.
+	 * @param xPos The x position of the player.
+	 * @param yPos The y position of the player.
+	 * @param texturePath The path to the texture used for the sprite.
+	 * @param world The box2D world this player will live in.
+	 * @param bodyWidth The width of the player.
+	 * @param bodyHeight The height of the player. 
+	 * @param PLAYER_NUM The number of the player (1 or 2).
+	 * @param gameMode The current game mode(singleplayer or multiplayer).
 	 */
 	public Player(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight, final int PLAYER_NUM, GameMode gameMode) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
@@ -93,7 +107,7 @@ public class Player extends PhysicalEntity {
 		this.bullets = new Array<Bullet>();
 		this.movementTouchPad = getTouchPad("data/skins/backKnob.png", "data/skins/steerKnob.png", 1, 1);
 		this.gasTouchPad = getTouchPad("data/skins/backKnob.png", "data/skins/gasKnob.png", 100, 5);
-		this.touchPadStage = new Stage(BaseScreen.VIEWPORT_WIDTH, BaseScreen.VIEWPORT_HEIGHT / 4, true);
+		this.touchPadStage = new Stage(BaseScreen.viewportWidth, BaseScreen.viewportHeight / 4, true);
 		gasTouchPad.setPosition(touchPadStage.getWidth() - gasTouchPad.getWidth() - 1, 1);
 		touchPadStage.addActor(movementTouchPad);
 		touchPadStage.addActor(gasTouchPad);
@@ -106,113 +120,113 @@ public class Player extends PhysicalEntity {
 
 	// PROPERTIES -----------------------------------------------------------------------------------------
 	/**
-	 * get the number associated with the player
-	 * @return the number associated with the player
+	 * Get the number associated with the player.
+	 * @return Tthe number associated with the player.
 	 */
 	public int getPlayerNum() {
 		return this.PLAYER_NUM;
 	}
 	
 	/**
-	 * Get the score the player has
-	 * @return the score of the player
+	 * Get the score the player has.
+	 * @return The score of the player.
 	 */
 	public int getScore() {
 		return this.score;
 	}
 	
 	/**
-	 * Returns the exhaust particle emitter
-	 * @return the exhaust particle emitter
+	 * Returns the exhaust particle emitter.
+	 * @return The exhaust particle emitter.
 	 */
 	public ParticleEmitter getExhaust() {
 		return exhaust;
 	}
 	
 	/**
-	 * Set reversed steering
-	 * @param isReversedSteering <b>true</b> to set steering to reversed
+	 * Set reversed steering.
+	 * @param isReversedSteering <b>true</b> to set steering to reversed.
 	 */
 	public void setReversedSteering(boolean isReversedSteering) {
 		this.isReversedSteering = isReversedSteering;
 	}
 	
 	/**
-	 * Set the speed of the bullets
-	 * @param bulletSpeed the speed of the bullets
+	 * Set the speed of the bullets.
+	 * @param bulletSpeed The speed of the bullets.
 	 */
 	public void setBulletSpeed(float bulletSpeed) {
 		this.bulletSpeed = bulletSpeed;
 	}
 	
 	/**
-	 * Set the bullet movement to reversed of not
-	 * @param isBulletMovementReversed <b>true</b> to set bullet movement to reversed
+	 * Set the bullet movement to reversed of not.
+	 * @param isBulletMovementReversed <b>true</b> to set bullet movement to reversed.
 	 */
 	public void setBulletMovementReversed(boolean isBulletMovementReversed) {
 		this.isBulletMovementReversed = isBulletMovementReversed;
 	}
 	
 	/**
-	 * Get the bullets of the player
-	 * @return the bullets of the player
+	 * Get the bullets of the player.
+	 * @return The bullets of the player.
 	 */
 	public Array<Bullet> getBullets() {
 		return bullets;
 	}
 	
 	/**
-	 * Set the speed of the player
-	 * @param speed the speed of the player
+	 * Set the speed of the player.
+	 * @param speed The speed of the player.
 	 */
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
 	
 	/**
-	 * Set the movement vector of the player
-	 * @param x the movement on the x axis
-	 * @param y the movement on the y axis
+	 * Set the movement vector of the player.
+	 * @param x The movement on the x axis.
+	 * @param y The movement on the y axis.
 	 */
 	public void setMovement(float x, float y) {
 		this.movement.set(x, y);
 	}
 	
 	/**
-	 * Set the bullets to be big or not
-	 * @param isBigBullets <b>true</b> to set the bullets to big
+	 * Set the bullets to be big or not.
+	 * @param isBigBullets <b>true</b> to set the bullets to big.
 	 */
 	public void setBigBullets(boolean isBigBullets) {
 		this.isBigBullets = isBigBullets;
 	}
 	
 	/**
-	 * Check if player has crashed
-	 * @return <b>true</b> if the player has crashed
+	 * Check if player has crashed.
+	 * @return <b>true</b> if the player has crashed.
 	 */
 	public boolean isCrashed() {
 		return crashed;
 	}
 	
 	/**
-	 * Get the explosion particle emitter
-	 * @return the explosion particle emitter
+	 * Get the explosion particle emitter.
+	 * @return the explosion particle emitter.
 	 */
 	public ParticleEmitter getExplosion() {
 		return explosion;
 	}
 	
 	/**
-	 * Get the gamepad for the player
-	 * @return the gamepad for the player
+	 * Get the gamepad for the player.
+	 * @return The gamepad for the player.
 	 */
 	public GamePad getGamePad() {
 		return gamePad;
 	}
 	
 	/**
-	 * Get the touchpad stage for the player
-	 * @return the touchpad stage for the player
+	 * Get the touchpad stage for the player.
+	 * @return The touchpad stage for the player.
 	 */
 	public Stage getTouchPadStage() {
 		return touchPadStage;
@@ -222,8 +236,8 @@ public class Player extends PhysicalEntity {
 	
 	/**
 	 * When player dies this should be called. Stops the players sound,
-	 * resets position of the player and creates an explosion particle effect
-	 * @param spawnPoint the spawnpoint on which the player will be transfered to
+	 * resets position of the player and creates an explosion particle effect.
+	 * @param spawnPoint The Spawnpoint to which the player will be transfered to
 	 */
 	public void die(Vector2 spawnPoint) {
 		crashed = true;
@@ -237,9 +251,9 @@ public class Player extends PhysicalEntity {
 	
 	/**
 	 * Handles collision with walls and opposing players bullets.
-	 * @param hardBlocks the walls
-	 * @param spawnPoint the spawnpoint on which this player will be transfered
-	 * @param opponent the opposing player
+	 * @param hardBlocks The walls.
+	 * @param spawnPoint The spawnpoint on which this player will be transfered.
+	 * @param opponent The opposing player.
 	 */
 	public void checkForCollision(Array<Rectangle> hardBlocks, Vector2 spawnPoint, Player opponent) {
 		for(Rectangle rect : hardBlocks) {
@@ -249,7 +263,7 @@ public class Player extends PhysicalEntity {
 			// check if bullets collided with walls
 			for(int i = 0; i < bullets.size; i++) {
 				if(bullets.get(i).getBounds().overlaps(rect)) {
-					if(Settings.bouncingBullets) {
+					if(Settings.reversedBullets) {
 						bullets.get(i).setMovementReversed(true);
 					} else {
 						bullets.get(i).dispose();

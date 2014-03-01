@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /**
- * Class that should be used for multiplayer pop up menus
- * @author johan
+ * Class that should be used for multiplayer pop up menus.
+ * @author Johan Fredin
  *
  */
 public class MultiPlayerDialogue extends Dialogue {
@@ -18,7 +18,13 @@ public class MultiPlayerDialogue extends Dialogue {
 	private Image player2WinsImage;
 	private Image drawImage;
 	
-	
+	/**
+	 * Creates a new MultiPlayerDialogue instance.
+	 * @param game The game instance used for switching screens.
+	 * @param level The current level.
+	 * @param gameMode The selected game mode.
+	 * @param camera The camera responsible for this menu.
+	 */
 	public MultiPlayerDialogue(Game game, Level level, OrthographicCamera camera) {
 		super(game, level, GameMode.MULTI_PLAYER, camera);
 		player1WinsImage = uiHelper.getImage("player 1 wins", dialogImage.getWidth() / 1.33f, dialogImage.getHeight() / 5);
@@ -64,10 +70,4 @@ public class MultiPlayerDialogue extends Dialogue {
 			break;
 		}
 	}
-	
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
-
 }

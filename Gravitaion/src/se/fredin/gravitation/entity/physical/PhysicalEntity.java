@@ -12,8 +12,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- * Class that handles box2D objects. Creates a box2D entity and ads it to a world
- * @author johan
+ * Class that handles box2D objects. Creates a box2D entity and ads it to a world.
+ * @author Johan Fredin
  *
  */
 public abstract class PhysicalEntity extends AbstractEntity {
@@ -25,12 +25,12 @@ public abstract class PhysicalEntity extends AbstractEntity {
 	
 	/**
 	 * Creates a new Physical entity. Gives it a position, width and height, a sprite and gives it to a box2D world.
-	 * @param xPos the x position of the physical entity
-	 * @param yPos the y position of the physical entity
-	 * @param texturePath the path of the texture used for the sprite
-	 * @param world the box2D world to give the physical entity to
-	 * @param bodyWidth the width of the physical entity
-	 * @param bodyHeight the height of the physical entity
+	 * @param xPos The x position of the physical entity.
+	 * @param yPos The y position of the physical entity.
+	 * @param texturePath The path of the texture used for the sprite.
+	 * @param world The box2D world to give the physical entity to.
+	 * @param bodyWidth The width of the physical entity.
+	 * @param bodyHeight The height of the physical entity.
 	 */
 	public PhysicalEntity(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
 		super(xPos, yPos, bodyWidth, bodyHeight, texturePath);
@@ -47,12 +47,12 @@ public abstract class PhysicalEntity extends AbstractEntity {
 	}
 	
 	/**
-	 * Creates a box2D body with a specified position, width and height
-	 * @param xPos the x position of the body
-	 * @param yPos the y position of the body
-	 * @param bodyWidth the width of the body
-	 * @param bodyHeight the height of the body
-	 * @return the body
+	 * Creates a box2D body with a specified position, width and height.
+	 * @param xPos The x position of the body.
+	 * @param yPos The y position of the body.
+	 * @param bodyWidth The width of the body.
+	 * @param bodyHeight The height of the body.
+	 * @return The body.
 	 */
 	public abstract Body getSpecifiedBody(float xPos, float yPos,float bodyWidth, float bodyHeight);
 	
@@ -67,8 +67,8 @@ public abstract class PhysicalEntity extends AbstractEntity {
 	}
 	
 	/**
-	 * Get the sprite of the physical entity
-	 * @return the sprite of the physical entity
+	 * Get the sprite of the physical entity.
+	 * @return The sprite of the physical entity.
 	 */
 	public Sprite getSprite() {
 		return sprite;

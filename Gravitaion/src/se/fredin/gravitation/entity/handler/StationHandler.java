@@ -10,8 +10,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * Handler class for all the stations in the game. Responsible for drawing them and updating them
- * @author johan
+ * Handler class for all the stations in the game. Responsible for drawing them and updating them.
+ * @author Johan Fredin
  *
  */
 public class StationHandler implements Disposable {
@@ -20,35 +20,18 @@ public class StationHandler implements Disposable {
 	private boolean lastStationPassed;
 	
 	/**
-	 * Creates the stations
-	 * @param map the TiledMap to give the stations to
-	 * @param player the player to interact with the powerups
-	 * @param unitScale the unitscale of the map
+	 * Creates the stations.
+	 * @param map The TiledMap object to give the stations to.
+	 * @param player The player to interact with the stations.
+	 * @param unitScale The unit scale of the map.
 	 */
 	public StationHandler(TiledMap map, Player player, float unitScale) {
 		this.stations = getWorldAdaptedStationStations(map, unitScale, player);
 	}
 	
-	/*
-	 * Gets the station position from the map, scales them to the appropriate unitscale and puts them into a Rectangle array.
-	 */
-	private Array<Station> getWorldAdaptedStationStations(TiledMap map, float unitScale, Player player) {
-		Array<RectangleMapObject> objects = map.getLayers().get("stations").getObjects().getByType(RectangleMapObject.class);
-		Array<Station> stations = new Array<Station>();
-		for(byte i = 0; i < objects.size; i++) {
-			Station station = new Station(objects.get(i).getRectangle().x * unitScale, objects.get(i).getRectangle().y * unitScale, 
-					objects.get(i).getRectangle().width * unitScale, objects.get(i).getRectangle().height * unitScale, player, i);
-			if(i == 0) {
-				station.setAlive(true);
-			}
-			stations.add(station);
-		}
-		return stations;
-	}
-	
 	/**
 	 * Updates the stations. Lights up the next station once the player has passed one.
-	 * @param delta the time interval
+	 * @param delta The time interval since last render occurred.
 	 */
 	public void tick(float delta) {
 		for(int i = 0; i < stations.size; i++) {
@@ -66,8 +49,8 @@ public class StationHandler implements Disposable {
 	}
 
 	/**
-	 * Draws the stations to the screen
-	 * @param batch the SpriteBatch responsible for drawing to the screen.
+	 * Draws the stations to the screen.
+	 * @param batch The SpriteBatch responsible for drawing to the screen.
 	 */
 	public void render(SpriteBatch batch) {
 		for(Station station : stations) {
@@ -76,8 +59,8 @@ public class StationHandler implements Disposable {
 	}
 	
 	/**
-	 * Check if the last station has been passed
-	 * @return <b>true</b> if the last station has been passed
+	 * Check if the last station has been passed.
+	 * @return <b>true</b> if the last station has been passed.
 	 */
 	public boolean isLastStationPassed() {
 		return lastStationPassed;
@@ -88,5 +71,22 @@ public class StationHandler implements Disposable {
 		for(Station station : stations) {
 			station.dispose();
 		}
+	}
+	
+	/*
+	 * Gets the station position from the map, scales them to the appropriate unitscale and puts them into a Rectangle array.
+	 */
+	private Array<Station> getWorldAdaptedStationStations(TiledMap map, float unitScale, Player player) {
+		Array<RectangleMapObject> objects = map.getLayers().get("stations").getObjects().getByType(RectangleMapObject.class);
+		Array<Station> stations = new Array<Station>();
+		for(byte i = 0; i < objects.size; i++) {
+			Station station = new Station(objects.get(i).getRectangle().x * unitScale, objects.get(i).getRectangle().y * unitScale, 
+					objects.get(i).getRectangle().width * unitScale, objects.get(i).getRectangle().height * unitScale, player, i);
+			if(i == 0) {
+				station.setAlive(true);
+			}
+			stations.add(station);
+		}
+		return stations;
 	}
 }

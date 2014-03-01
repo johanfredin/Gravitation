@@ -21,28 +21,34 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * The main UI handler class for making in game pop up menus
- * @author johan
+ * The main UI handler class for making in game pop up menus.
+ * @author Johan Fredin
  *
  */
 public abstract class Dialogue implements Disposable {
 
-	protected final byte REPLAY = 1, BACK_TO_MENU = 2;
-	protected Image dialogImage, replayImage, backToMenuImage, whiteRectImage;
+	protected final byte REPLAY = 1;
+	protected final byte BACK_TO_MENU = 2;
+	
+	private boolean isReplayPressed;
+	protected boolean isReturnToMenuPressed;
+	
+	protected Image dialogImage;
+	protected Image backToMenuImage;
+	protected Image whiteRectImage;
+	protected Image replayImage;
 	protected UiHelper uiHelper;
 	protected Stage stage;
 	protected Game game;
 	protected GameMode gameMode;
 	protected Sound buttonPressedSound;
-	private boolean isReplayPressed;
-	protected boolean isReturnToMenuPressed;
 	
 	/**
 	 * Creates a new Dialogue instance.
-	 * @param game the game instance used for switching screens
-	 * @param level the current level
-	 * @param gameMode the selected game mode
-	 * @param camera the camera responsible for this menu
+	 * @param game The game instance used for switching screens.
+	 * @param level The current level.
+	 * @param gameMode The selected game mode.
+	 * @param camera The camera responsible for this menu.
 	 */
 	public Dialogue(Game game, Level level, GameMode gameMode, OrthographicCamera camera) {
 		this.game = game;
@@ -68,16 +74,16 @@ public abstract class Dialogue implements Disposable {
 	}
 	
 	/**
-	 * Puts the stage actors at the specified positions
-	 * @param gameMode the current game mode
-	 * @param centerX the center x position of the menu
-	 * @param height the height of the menu
+	 * Puts the stage actors at the specified positions.
+	 * @param gameMode The current game mode.
+	 * @param centerX The center x position of the menu.
+	 * @param height The height of the menu.
 	 */
 	public abstract void addToStageAndSetPositions(GameMode gameMode, float centerX, float height);
 	
 	/**
-	 * Get the stage of this menu
-	 * @return the stage of this menu
+	 * Get the stage of this menu.
+	 * @return The stage of this menu.
 	 */
 	public Stage getStage() {
 		return stage;
@@ -105,8 +111,8 @@ public abstract class Dialogue implements Disposable {
 	}
 	
 	/**
-	 * Updates this menu
-	 * @param delta the time interval between updates
+	 * Updates this menu.
+	 * @param delta The time interval since last render occurred.
 	 */
 	public void tick(float delta) {
 		stage.act(delta);
@@ -119,7 +125,7 @@ public abstract class Dialogue implements Disposable {
 	}
 	
 	/**
-	 * Renders the menu to the screen
+	 * Renders the menu to the screen.
 	 */
 	public void render() {
 		stage.draw();
@@ -129,8 +135,8 @@ public abstract class Dialogue implements Disposable {
 	}
 	
 	/**
-	 * Renders the menu to the screen
-	 * @param title the title image to be displayed on this menu
+	 * Renders the menu to the screen.
+	 * @param title The title image to be displayed on this menu.
 	 */
 	public void render(String title) {}
 	

@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Array;
 
 /**
  * A powerup that makes the player faster
- * @author johan
+ * @author Johan Fredin
  *
  */
 public class FasterPlayerPowerup extends Powerup {

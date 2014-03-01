@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * A powerup that makes the bullets bigger
- * @author johan
+ * A powerup that makes the bullets bigger.
+ * @author Johan Fredin
  *
  */
 public class BigBulletPowerup extends Powerup {

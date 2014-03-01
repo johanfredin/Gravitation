@@ -9,8 +9,8 @@ import se.fredin.gravitation.utils.Settings;
 import com.badlogic.gdx.Game;
 
 /**
- * Screen that handles rendering and updating the levels. No UI screens use the game screen class
- * @author johan
+ * Screen that handles rendering and updating the levels. No UI screens use the game screen class.
+ * @author Johan Fredin
  *
  */
 public class GameScreen extends BaseScreen {
@@ -19,10 +19,10 @@ public class GameScreen extends BaseScreen {
 	private GameMode gameMode;
 	
 	/**
-	 * Creates a new game screen and starts a new level, multiplayer or single player
-	 * @param game the game instance responsible for switching screens
-	 * @param gameMode the current game mode, multiplayer or single playeer
-	 * @param level_index the current index of the level
+	 * Creates a new game screen and starts a new level, multiplayer or single player.
+	 * @param game The game instance responsible for switching screens.
+	 * @param gameMode The current game mode, multiplayer or single player.
+	 * @param level_index The current index of the level.
 	 */
 	public GameScreen(Game game, GameMode gameMode, int level_index) {
 		super(game);
@@ -33,7 +33,7 @@ public class GameScreen extends BaseScreen {
 			level = new SinglePlayerLevel("data/maps/level_" + level_index + ".tmx", this, gameMode);
 			break;
 		case MULTI_PLAYER:
-			BaseScreen.VIEWPORT_WIDTH = 160;
+			BaseScreen.viewportWidth = 160;
 			level = new MultiPlayerLevel("data/maps/level_" + level_index + ".tmx", this, gameMode);
 		}
 	}
@@ -57,18 +57,6 @@ public class GameScreen extends BaseScreen {
 		super.resize(width, height);
 	}
 	
-	@Override
-	public void show() {}
-
-	@Override
-	public void hide() {}
-
-	@Override
-	public void pause() {}
-
-	@Override
-	public void resume() {}
-
 	@Override
 	public void dispose() {
 		super.dispose();

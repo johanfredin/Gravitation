@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /**
  * The main UI handler for the menus that take up the whole screen.
- * @author johan
+ * @author Johan Fredin
  *
  */
 public abstract class MenuBase extends BaseScreen {
@@ -23,8 +23,8 @@ public abstract class MenuBase extends BaseScreen {
 	protected UiHelper uiHelper;
 	
 	/**
-	 * Creates a new MenuBase instance with a stage and a UiHelper and gives input control to the stage
-	 * @param game the game instance used for switching screens
+	 * Creates a new MenuBase instance with a stage and a UiHelper and gives input control to the stage.
+	 * @param game The game instance used for switching screens.
 	 */
 	public MenuBase(Game game) {
 		super(game);
@@ -35,9 +35,9 @@ public abstract class MenuBase extends BaseScreen {
 	}
 	
 	/**
-	 * Sets up a listener to passed in actor and depending on the action the actor will behave differently
-	 * @param actor the Actor to give a listener to
-	 * @param ACTION the action you wish to happen once this actor has been touched
+	 * Sets up a listener to passed in actor and depending on the action the actor will behave differently.
+	 * @param actor The Actor to give a listener to.
+	 * @param ACTION The action you wish to happen once this actor has been touched.
 	 */
 	protected abstract void setListener(Actor actor, final byte ACTION);
 

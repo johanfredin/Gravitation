@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * A powerup that will make the player slower
- * @author johan
+ * A powerup that will make the player slower.
+ * @author Johan Fredin
  *
  */
 public class SlowerPlayerPowerup extends Powerup {

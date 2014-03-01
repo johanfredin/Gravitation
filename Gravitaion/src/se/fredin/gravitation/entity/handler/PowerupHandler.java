@@ -18,65 +18,30 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * Handler class for all the powerups in the game. Responsible for drawing them and updating them
- * @author johan
+ * Handler class for all the powerups in the game. Responsible for drawing them and updating them.
+ * @author Johan Fredin
  *
  */
 public class PowerupHandler implements Disposable {
 
-	private Array<Rectangle> spawnPoints;
-	private Array<Powerup> powerups, tmpPowerups;
 	private final byte TIME_FOR_POWERUP = 10;
 	private final byte MAX_AMOUNT_OF_POWERUPS_ALLOWED = 10;
+	
+	private Array<Rectangle> spawnPoints;
+	private Array<Powerup> powerups, tmpPowerups;
 	private float timer = 0f;
 	
 	/**
-	 * Creates the powerups
-	 * @param map the TiledMap to give the powerups to
-	 * @param player1 the first player to interact with the powerups
-	 * @param player2 the second player to interact with the powerups
-	 * @param unitScale the unitscale of the map
+	 * Creates the powerups.
+	 * @param map The TiledMap object to give the powerups to.
+	 * @param player1 The first player to interact with the powerups.
+	 * @param player2 The second player to interact with the powerups.
+	 * @param unitScale The unit scale of the map.
 	 */
 	public PowerupHandler(TiledMap map, Player player1, Player player2, float unitScale) {
 		this.spawnPoints = getWorldAdaptedPowerupLocations(map, unitScale);
 		this.powerups = getPowerups(player1, player2);
 		this.tmpPowerups = new Array<Powerup>();
-	}
-	
-	/*
-	 * Get the powerup locations from the map and put them in a Rectangle array.
-	 */
-	private Array<Rectangle> getWorldAdaptedPowerupLocations(TiledMap map, float unitScale) {
-		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("powerups").getObjects().getByType(RectangleMapObject.class);
-		this.spawnPoints = new Array<Rectangle>();
-		for(RectangleMapObject rect : rectangleMapObjects) {
-			rect.getRectangle().set(rect.getRectangle().x * unitScale, rect.getRectangle().y * unitScale, 
-				 rect.getRectangle().width * unitScale, rect.getRectangle().height * unitScale);
-			spawnPoints.add(rect.getRectangle());
-		}
-		return spawnPoints;
-	}
-	
-	/*
-	 * Add the powerups to positions array
-	 */
-	private Array<Powerup> getPowerups(Player player1, Player player2) {
-		Array<Powerup> powerups = new Array<Powerup>();
-		powerups.add(new SlowerPlayerPowerup(spawnPoints, 5, 5, player1, player2));
-		powerups.add(new FasterPlayerPowerup(spawnPoints, 5, 5, player1, player2));
-		powerups.add(new FasterBulletPowerup(spawnPoints, 5, 5, player1, player2));
-		powerups.add(new SlowerBulletPowerup(spawnPoints, 5, 5, player1, player2));
-		powerups.add(new ReverseBulletPowerup(spawnPoints, 5, 5, player1, player2));
-		powerups.add(new ReversedStearingPowerup(spawnPoints, 5, 5, player1, player2));
-		powerups.add(new BigBulletPowerup(spawnPoints, 5, 5, player1, player2));
-		return powerups;
-	}
-	
-	/*
-	 * Get a random powerup
-	 */
-	private Powerup getRandomPowerup() {
-		return powerups.get((int)(Math.random() * powerups.size));
 	}
 	
 	/**
@@ -114,6 +79,42 @@ public class PowerupHandler implements Disposable {
 		for(Powerup powerup : tmpPowerups) {
 			powerup.dispose();
 		}
+	}
+	
+	/*
+	 * Get the powerup locations from the map and put them in a Rectangle array.
+	 */
+	private Array<Rectangle> getWorldAdaptedPowerupLocations(TiledMap map, float unitScale) {
+		Array<RectangleMapObject> rectangleMapObjects = map.getLayers().get("powerups").getObjects().getByType(RectangleMapObject.class);
+		this.spawnPoints = new Array<Rectangle>();
+		for(RectangleMapObject rect : rectangleMapObjects) {
+			rect.getRectangle().set(rect.getRectangle().x * unitScale, rect.getRectangle().y * unitScale, 
+				 rect.getRectangle().width * unitScale, rect.getRectangle().height * unitScale);
+			spawnPoints.add(rect.getRectangle());
+		}
+		return spawnPoints;
+	}
+	
+	/*
+	 * Add the powerups to positions array
+	 */
+	private Array<Powerup> getPowerups(Player player1, Player player2) {
+		Array<Powerup> powerups = new Array<Powerup>();
+		powerups.add(new SlowerPlayerPowerup(spawnPoints, 5, 5, player1, player2));
+		powerups.add(new FasterPlayerPowerup(spawnPoints, 5, 5, player1, player2));
+		powerups.add(new FasterBulletPowerup(spawnPoints, 5, 5, player1, player2));
+		powerups.add(new SlowerBulletPowerup(spawnPoints, 5, 5, player1, player2));
+		powerups.add(new ReverseBulletPowerup(spawnPoints, 5, 5, player1, player2));
+		powerups.add(new ReversedStearingPowerup(spawnPoints, 5, 5, player1, player2));
+		powerups.add(new BigBulletPowerup(spawnPoints, 5, 5, player1, player2));
+		return powerups;
+	}
+	
+	/*
+	 * Get a random powerup
+	 */
+	private Powerup getRandomPowerup() {
+		return powerups.get((int)(Math.random() * powerups.size));
 	}
 	
 }

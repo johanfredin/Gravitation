@@ -9,15 +9,24 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- * Launchpad class creates a launchpad in which the player will spawn. Launchpad is a physical entity
+ * Launchpad class creates a launchpad in which the player will spawn. Launchpad is a physical box2D entity
  * and will interact with the player.
- * @author johan
+ * @author Johan Fredin
  *
  */
 public class LaunchPad extends PhysicalEntity {
 
 	private boolean isTaken;
 	
+	/**
+	 * Creates a new LaunchPad. Gives it a position, width and height, a sprite and gives it to a box2D world.
+	 * @param xPos The x position of the launchpad.
+	 * @param yPos The y position of the launchpad.
+	 * @param texturePath The path of the texture used for the sprite.
+	 * @param world The box2D world to give the physical entity to.
+	 * @param bodyWidth The width of the launchpad.
+	 * @param bodyHeight The height of the launchpad.
+	 */
 	public LaunchPad(float xPos, float yPos, String texturePath, World world, float bodyWidth, float bodyHeight) {
 		super(xPos, yPos, texturePath, world, bodyWidth, bodyHeight);
 	}
@@ -33,10 +42,10 @@ public class LaunchPad extends PhysicalEntity {
 	}
 	
 	/**
-	 * Check if a player is currently positioned on the launchpad
-	 * @param player1 the first player that might be positioned on the launchpad 
-	 * @param player2 the second player that might be positioned on the launchpad
-	 * @param delta the time interval
+	 * Check if a player is currently positioned on the launchpad.
+	 * @param player1 The first player that might be positioned on the launchpad. 
+	 * @param player2 The second player that might be positioned on the launchpad.
+	 * @param delta The time interval since last render occurred.
 	 */
 	public void checkIfTaken(Player player1, Player player2, float delta) {
 		if(this.bounds.overlaps(player1.getBounds()) || this.bounds.overlaps(player2.getBounds())) {
@@ -76,8 +85,8 @@ public class LaunchPad extends PhysicalEntity {
 	}
 	
 	/**
-	 * Check if this launchpad is taken
-	 * @return <b>true</b> if this launchpad is taken
+	 * Check if this launchpad is taken.
+	 * @return <b>true</b> if this launchpad is taken.
 	 */
 	public boolean isTaken() {
 		return isTaken;

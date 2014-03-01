@@ -8,19 +8,19 @@ import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 /**
- * Helper class for getting particle effects
- * @author johan
+ * Helper class for getting particle effects.
+ * @author Johan Fredin
  *
  */
 public class ParticleLoader {
 	
 	/**
-	 * Gets a new ParticleEmitter instance with a specified minimum and maximum height scale
-	 * @param propertiesPath the path to the emitter properties file
-	 * @param texturePath the path to the emitter texture
-	 * @param highMin the high min scale of the emitter
-	 * @param highMax the hight max scale of the emitter
-	 * @return a new ParticleEmitter instance
+	 * Gets a new ParticleEmitter instance with a specified minimum and maximum height scale.
+	 * @param propertiesPath The path to the emitter properties file.
+	 * @param texturePath The path to the emitter texture.
+	 * @param highMin The high min scale of the emitter.
+	 * @param highMax The hight max scale of the emitter.
+	 * @return A new ParticleEmitter instance.
 	 */
 	public static ParticleEmitter getEmitter(String propertiesPath, String texturePath, float highMin, float highMax) {
 		ParticleEmitter emitter = new ParticleEmitter();

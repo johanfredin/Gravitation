@@ -13,8 +13,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * Handler class that is responsible for drawing and updating all the LaunchPad objects in the game
- * @author johan
+ * Handler class that is responsible for drawing and updating all the LaunchPad objects in the game.
+ * @author Johan Fredin
  *
  */
 public class LaunchPadHandler implements Disposable {
@@ -25,9 +25,9 @@ public class LaunchPadHandler implements Disposable {
 	
 	/**
 	 * Creates the launchpads and gives them to the map.
-	 * @param map the TiledMap the launchpads should be given to
-	 * @param UNIT_SCALE the unitscale that this map uses
-	 * @param world the box2D World 
+	 * @param map The TiledMap object the launchpads should be given to.
+	 * @param UNIT_SCALE The units cale that this map uses.
+	 * @param world The box2D World.
 	 */
 	public LaunchPadHandler(TiledMap map, final float UNIT_SCALE, World world) {
 		launchPadPositions = new Array<Vector2>();
@@ -46,8 +46,8 @@ public class LaunchPadHandler implements Disposable {
 	}
 	
 	/**
-	 * Renders the launchpads
-	 * @param batch the SpriteBatch responsible for rendering the launchpads
+	 * Renders the launchpads.
+	 * @param batch The SpriteBatch responsible for rendering the launchpads.
 	 */
 	public void render(SpriteBatch batch) {
 		for(LaunchPad launchPad : launchPads) {
@@ -56,8 +56,8 @@ public class LaunchPadHandler implements Disposable {
 	}
 	
 	/**
-	 * Updates the launchpads
-	 * @param delta the time interval
+	 * Updates the launchpads.
+	 * @param delta The time interval since last render occurred.
 	 */
 	public void tick(float delta) {
 		for(LaunchPad launchPad : launchPads) {
@@ -66,10 +66,10 @@ public class LaunchPadHandler implements Disposable {
 	}
 	
 	/**
-	 * Updates the launchpads and checks if a player is currently on a launchpad
-	 * @param delta the time interval
-	 * @param player1 player one
-	 * @param player2 player two
+	 * Updates the launchpads and checks if a player is currently on a launchpad.
+	 * @param delta The time interval.
+	 * @param player1 Player one.
+	 * @param player2 Player two.
 	 */
 	public void tick(float delta, Player player1, Player player2) {
 		for(LaunchPad launchPad : launchPads) {
@@ -81,7 +81,7 @@ public class LaunchPadHandler implements Disposable {
 	/**
 	 * Checks all the launchpads to see if a player has landed on one. Then returns a random
 	 * launchpad position from the launchpads where a player is not currently positioned.
-	 * @return a randomly selected spawnpoint
+	 * @return A randomly selected spawnpoint.
 	 */
 	public Vector2 getRandomAvailableSpawnPoint() {
 		Array<Vector2> spawnPoints = new Array<Vector2>();
@@ -94,24 +94,24 @@ public class LaunchPadHandler implements Disposable {
 	}
 	
 	/**
-	 * Get the position of the first launchpad
-	 * @return the position of the first launchpad
+	 * Get the position of the first launchpad.
+	 * @return The position of the first launchpad.
 	 */
 	public Vector2 getFirstLaunchPadPosition() {
 		return launchPads.get(0).getPosition();
 	}
 
 	/**
-	 * Get the launchpads
-	 * @return the launchpads
+	 * Get the launchpads.
+	 * @return The launchpads.
 	 */
 	public Array<LaunchPad> getLaunchPads() {
 		return launchPads;
 	}
 	
 	/**
-	 * Get the spawn points
-	 * @return the spawn points
+	 * Get the spawn points.
+	 * @return The spawn points.
 	 */
 	public Array<Vector2> getPlayerSpawnPoints() {
 		return playerSpawnPoints;

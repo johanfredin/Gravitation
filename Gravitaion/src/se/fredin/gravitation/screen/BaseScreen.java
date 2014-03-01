@@ -12,55 +12,62 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
- * The basic screen setting class that all other screen classes extend from
- * @author johan
+ * The basic screen setting class that all other screen classes extend from.
+ * @author Johan Fredin.
  *
  */
 public abstract class BaseScreen implements Disposable, Screen {
 	
-	public static int VIEWPORT_WIDTH = 320;
-	public static int VIEWPORT_HEIGHT = 120;
+	/**
+	 * The viewport width the camera will use.
+	 */
+	public static int viewportWidth = 320;
+	/**
+	 * The viewport height the camera will use.
+	 */
+	public static int viewportHeight = 120;
+	
 	protected Sound buttonPressedSound;
 	protected OrthographicCamera camera, camera2;
 	protected SpriteBatch batch;
 	protected Game game;
 	
 	/**
-	 * Creates a new BaseScreen with a Camera and a SpriteBatch. also sets the viewport for mobile devises and desktop
+	 * Creates a new BaseScreen with a Camera and a SpriteBatch. Also makes the viewport width and height smaller if game is being played on a mobile device.
 	 */
 	public BaseScreen() {
-		camera = new OrthographicCamera();
-		batch = new SpriteBatch();
+		this.camera = new OrthographicCamera();
+		this.batch = new SpriteBatch();
 		if(Gravitation.isMobileDevice()) {
-			VIEWPORT_WIDTH = 160;
-			VIEWPORT_HEIGHT = 80;
+			viewportWidth = 160;
+			viewportHeight = 80;
 		}
-		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+		camera.setToOrtho(false, viewportWidth, viewportHeight);
 		buttonPressedSound = Gdx.audio.newSound(Gdx.files.internal(Paths.MENU_SELECT_SOUND_EFFECT));
 	}
 	
 	/**
-	 * Creates a new BaseScreen with a Camera and a SpriteBatch. also sets the viewport for mobile devises and desktop
-	 * @param game the game instance this screen will use to switch screen
+	 * Creates a new BaseScreen with a Camera and a SpriteBatch. also sets the viewport for mobile devises and desktop.
+	 * @param game The game instance this screen will use to switch screen.
 	 */
 	public BaseScreen(Game game) {
 		this();
 		this.game = game;
 		camera2 = new OrthographicCamera();
-		camera2.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+		camera2.setToOrtho(false, viewportWidth, viewportHeight);
 	}
 	
 	/**
-	 * Get the game instance of the BaseScreen
-	 * @return the game instance
+	 * Get the game instance of the BaseScreen.
+	 * @return The game instance.
 	 */
 	public Game getGame() {
 		return this.game;
 	}
 	
 	/**
-	 * Get the camera of the basescreen
-	 * @return the camera of the basescreen
+	 * Get the camera.
+	 * @return The camera object.
 	 */
 	public OrthographicCamera getCamera() {
 		return camera;
@@ -68,8 +75,8 @@ public abstract class BaseScreen implements Disposable, Screen {
 	
 	@Override
 	public void resize(int width, int height) {
-		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-		camera2.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+		camera.setToOrtho(false, viewportWidth, viewportHeight);
+		camera2.setToOrtho(false, viewportWidth, viewportHeight);
 	}
 
 	@Override

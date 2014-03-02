@@ -385,7 +385,7 @@ public class Player extends PhysicalEntity {
 	public void shoot() {
 		if(ableToShoot) {
 			shootSound.play();
-			bullets.add(new Bullet(getPosition().x, getPosition().y, isBigBullets ? 8 : 2, isBigBullets ? 8 : 2, bulletSpeed, body, isBulletMovementReversed));
+			bullets.add(new Bullet(getPosition().x, getPosition().y, isBigBullets ? 4 : 2, isBigBullets ? 4 : 2, bulletSpeed, body, isBulletMovementReversed));
 		}
 	}
 	

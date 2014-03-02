@@ -10,9 +10,9 @@ public class Main {
 		cfg.title = "Gravitation";
 		cfg.addIcon("data/objects/shipS1.png", FileType.Internal);
 		cfg.useGL20 = true;
-		cfg.width = 600;
-		cfg.height = 480;
-		cfg.fullscreen = false;
+		cfg.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
+		cfg.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
+		cfg.fullscreen = true;
 		
 		new LwjglApplication(new Gravitation(), cfg);
 	}

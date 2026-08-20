@@ -1,11 +1,13 @@
 package se.fredin.gravitation.utils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Array;
 
 /**
  * Helper class for getting particle effects.
@@ -31,8 +33,11 @@ public class ParticleLoader {
 		}
 		Texture exhaustTexture = new Texture(Gdx.files.internal(texturePath));
 		Sprite exhaustSprite = new Sprite(exhaustTexture);
-		emitter.setSprite(exhaustSprite);
-		emitter.getScale().setHigh(highMin, highMax);
+		Array<Sprite> sprites = new Array<Sprite>();
+		sprites.add(exhaustSprite);
+		emitter.setSprites(sprites);
+		emitter.getXScale().setHigh(highMin, highMax);
+		emitter.getYScale().setHigh(highMin, highMax);
 		return emitter;
 	}
 }

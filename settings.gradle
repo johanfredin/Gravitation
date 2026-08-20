@@ -1,0 +1,4 @@
+rootProject.name = 'Gravitation'
+
+include 'Gravitaion'
+include 'Gravitaion-desktop'

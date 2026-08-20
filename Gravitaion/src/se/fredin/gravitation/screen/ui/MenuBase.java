@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 /**
  * The main UI handler for the menus that take up the whole screen.
@@ -28,7 +29,7 @@ public abstract class MenuBase extends BaseScreen {
 	 */
 	public MenuBase(Game game) {
 		super(game);
-		this.stage = new Stage(camera.viewportWidth, camera.viewportHeight, true);
+		this.stage = new Stage(new StretchViewport(camera.viewportWidth, camera.viewportHeight));
 		this.uiHelper = new UiHelper(stage, Paths.MENU_ITEMS);
 		this.whiteCanvasImage = uiHelper.getImage("whiterect", 0, 0, stage.getWidth(), stage.getHeight());
 		Gdx.input.setInputProcessor(stage);
@@ -58,7 +59,7 @@ public abstract class MenuBase extends BaseScreen {
 	@Override
 	public void resize(int width, int height) {
 		super.resize(width, height);
-		stage.setViewport(camera.viewportWidth, camera.viewportHeight);
+		stage.getViewport().update(width, height, true);
 	}
 	
 	@Override

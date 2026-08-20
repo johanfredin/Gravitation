@@ -12,7 +12,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
-import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.controllers.ControllerMapping;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 /**
  * Class that handles the player, also contains a nested class for gamepads and a touchpad for Android/iOS
@@ -107,7 +108,7 @@ public class Player extends PhysicalEntity {
 		this.bullets = new Array<Bullet>();
 		this.movementTouchPad = getTouchPad("data/skins/backKnob.png", "data/skins/steerKnob.png", 1, 1);
 		this.gasTouchPad = getTouchPad("data/skins/backKnob.png", "data/skins/gasKnob.png", 100, 5);
-		this.touchPadStage = new Stage(BaseScreen.viewportWidth, BaseScreen.viewportHeight / 4, true);
+		this.touchPadStage = new Stage(new StretchViewport(BaseScreen.viewportWidth, BaseScreen.viewportHeight / 4));
 		gasTouchPad.setPosition(touchPadStage.getWidth() - gasTouchPad.getWidth() - 1, 1);
 		touchPadStage.addActor(movementTouchPad);
 		touchPadStage.addActor(gasTouchPad);
@@ -464,62 +465,46 @@ public class Player extends PhysicalEntity {
 	 *
 	 */
 	public class GamePad extends ControllerAdapter {
-		private final byte A = 0;
-		private final byte X = 2;
-		private final byte START = 7;
-		
-		@Override
-		public boolean povMoved(Controller controller, int povIndex, PovDirection value) {
-			switch(value) {
-			case west:
-				leftPressed = true;
-				break;
-			case east:
-				rightPressed = true;
-				break;
-			default:
-				rightPressed = false;
-				leftPressed = false;
-				break;
-			}
-			return true;
-		}
-          
+
 		@Override
 		public boolean buttonDown(Controller controller, int buttonIndex) {
-			switch(buttonIndex) {
-			case A:
+			ControllerMapping mapping = controller.getMapping();
+			if(buttonIndex == mapping.buttonDpadLeft) {
+				leftPressed = true;
+			} else if(buttonIndex == mapping.buttonDpadRight) {
+				rightPressed = true;
+			} else if(buttonIndex == mapping.buttonA) {
 				gasPressed = true;
 				exhaust.start();
-				break;
-			case X:
+			} else if(buttonIndex == mapping.buttonX) {
 				shoot();
-				break;
-			case START:
+			} else if(buttonIndex == mapping.buttonStart) {
 				if(Settings.isPaused) {
 					Settings.isPaused = false;
 				} else {
 					Settings.isPaused = true;
 				}
 				pauseSound.play();
-				break;
-			default:
+			} else {
 				return false;
 			}
 			return true;
 		}
-          
+
 		@Override
 		public boolean buttonUp(Controller controller, int buttonIndex) {
-			switch(buttonIndex) {
-			case A:
+			ControllerMapping mapping = controller.getMapping();
+			if(buttonIndex == mapping.buttonDpadLeft) {
+				leftPressed = false;
+			} else if(buttonIndex == mapping.buttonDpadRight) {
+				rightPressed = false;
+			} else if(buttonIndex == mapping.buttonA) {
 				gasPressed = false;
 				movement.set(0, 0);
 				exhaust.allowCompletion();
-				break;
-			case X:
-				break;
-			default:
+			} else if(buttonIndex == mapping.buttonX) {
+				// no-op
+			} else {
 				return false;
 			}
 			return true;

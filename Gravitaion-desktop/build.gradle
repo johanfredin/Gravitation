@@ -1,0 +1,20 @@
+apply plugin: 'application'
+
+mainClassName = 'se.fredin.gravitation.Main'
+
+sourceSets.main.java.srcDirs = ['src']
+sourceSets.main.resources.srcDirs = ['../Gravitaion-android/assets']
+
+dependencies {
+    implementation project(':Gravitaion')
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
+}
+
+run {
+    if (org.gradle.internal.os.OperatingSystem.current().isMacOsX()) {
+        jvmArgs '-XstartOnFirstThread'
+    }
+}

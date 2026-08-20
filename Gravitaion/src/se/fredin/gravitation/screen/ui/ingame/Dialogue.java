@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
  * The main UI handler class for making in game pop up menus.
@@ -53,7 +54,7 @@ public abstract class Dialogue implements Disposable {
 	public Dialogue(Game game, Level level, GameMode gameMode, OrthographicCamera camera) {
 		this.game = game;
 		this.gameMode = gameMode;
-		this.stage = new Stage(camera.viewportWidth, camera.viewportHeight, false);
+		this.stage = new Stage(new FitViewport(camera.viewportWidth, camera.viewportHeight));
 		this.uiHelper = new UiHelper(stage, Paths.MENU_ITEMS);
 		
 		this.dialogImage = uiHelper.getImage("SQUARE", stage.getWidth() / 2, stage.getHeight() / 2.33f);
@@ -129,9 +130,9 @@ public abstract class Dialogue implements Disposable {
 	 */
 	public void render() {
 		stage.draw();
-		stage.getSpriteBatch().begin();
-		whiteRectImage.draw(stage.getSpriteBatch(), 1);
-		stage.getSpriteBatch().end();
+		stage.getBatch().begin();
+		whiteRectImage.draw(stage.getBatch(), 1);
+		stage.getBatch().end();
 	}
 	
 	/**
